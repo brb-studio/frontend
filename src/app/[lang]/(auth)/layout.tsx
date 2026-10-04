@@ -1,7 +1,9 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { getTenant } from "@/entities/tenant/api";
-import { getDictionary } from "@/shared/i18n/dictionary";
+import { getSession, isStaff } from "@/features/auth/session";
+import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { BrandMark } from "@/shared/ui/brand-mark";
 import { LanguageMenu } from "@/shared/ui/language-menu";
 
@@ -10,7 +12,14 @@ export default async function AuthLayout({
 }: {
   children: ReactNode;
 }) {
-  const [dict, tenant] = await Promise.all([getDictionary(), getTenant()]);
+  const [dict, tenant, locale, session] = await Promise.all([
+    getDictionary(),
+    getTenant(),
+    getLocale(),
+    getSession(),
+  ]);
+  // A signed-in team member (e.g. opening the installed app) goes straight to the panel.
+  if (isStaff(session)) redirect(`/${locale}/admin`);
 
   return (
     <div className="relative isolate md:grid md:grid-cols-2">

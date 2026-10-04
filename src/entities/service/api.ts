@@ -1,65 +1,74 @@
+import { cache } from "react";
+import * as z from "zod";
+import { backend } from "@/shared/api/backend";
 import type { Locale } from "@/shared/i18n/locales";
+import { localized, pick } from "@/shared/i18n/localized";
 
+/** Something bookable: a single service, or a package of services at its own price. */
 export type Service = {
+  kind: "service" | "package";
   slug: string;
   name: string;
   description: string;
   durationMin: number;
   image: string;
+  /** Integer minor units of the tenant's currency. */
   price: number;
+  /** For packages: what the services cost separately. */
+  listPrice?: number;
+  /** For packages: the services inside, in order. */
+  includes?: string[];
 };
 
-const sample = [
-  {
-    slug: "haircut",
-    image: "/images/sample/haircut.jpg",
-    durationMin: 45,
-    price: 3500,
-    name: { en: "Haircut", es: "Corte de pelo" },
-    description: {
-      en: "Consultation, cut and styling.",
-      es: "Asesoría, corte y peinado.",
-    },
-  },
-  {
-    slug: "beard",
-    image: "/images/sample/beard.jpg",
-    durationMin: 30,
-    price: 2000,
-    name: { en: "Beard trim", es: "Perfilado de barba" },
-    description: {
-      en: "Shape, line-up and hot towel.",
-      es: "Forma, perfilado y toalla caliente.",
-    },
-  },
-  {
-    slug: "cut-and-beard",
-    image: "/images/sample/cut-and-beard.jpg",
-    durationMin: 75,
-    price: 5000,
-    name: { en: "Cut & beard", es: "Corte y barba" },
-    description: { en: "The full service.", es: "El servicio completo." },
-  },
-  {
-    slug: "shave",
-    image: "/images/sample/shave.jpg",
-    durationMin: 40,
-    price: 3000,
-    name: { en: "Hot towel shave", es: "Afeitado clásico" },
-    description: {
-      en: "Straight razor, hot towel and balm.",
-      es: "Navaja, toalla caliente y bálsamo.",
-    },
-  },
-];
+const item = {
+  slug: z.string(),
+  name: localized,
+  description: localized.optional(),
+  durationMin: z.number().int(),
+  priceMinor: z.number().int(),
+  image: z.string().optional(),
+};
+const apiCatalog = z.object({
+  currency: z.string(),
+  services: z.array(z.object(item)),
+  packages: z.array(
+    z.object({
+      ...item,
+      listPriceMinor: z.number().int(),
+      services: z.array(z.object({ slug: z.string(), name: localized })),
+    }),
+  ),
+});
 
-export async function getServices(locale: Locale): Promise<Service[]> {
-  return sample.map(({ name, description, ...rest }) => ({
-    ...rest,
-    name: name[locale],
-    description: description[locale],
-  }));
+const FALLBACK_IMAGE = "/images/sample/haircut.jpg";
+
+export function toServices(
+  api: z.output<typeof apiCatalog>,
+  locale: Locale,
+): Service[] {
+  const base = (s: z.output<typeof apiCatalog>["services"][number]) => ({
+    slug: s.slug,
+    name: pick(s.name, locale),
+    description: pick(s.description, locale),
+    durationMin: s.durationMin,
+    image: s.image ?? FALLBACK_IMAGE,
+    price: s.priceMinor,
+  });
+  return [
+    ...api.services.map((s) => ({ ...base(s), kind: "service" as const })),
+    ...api.packages.map((p) => ({
+      ...base(p),
+      kind: "package" as const,
+      listPrice: p.listPriceMinor,
+      includes: p.services.map((s) => pick(s.name, locale)),
+    })),
+  ];
 }
+
+/** Services and packages someone can actually book right now, in display order. */
+export const getServices = cache(async (locale: Locale) =>
+  toServices(await backend("/v1/public/catalog", apiCatalog), locale),
+);
 
 export async function getService(slug: string, locale: Locale) {
   return (await getServices(locale)).find((service) => service.slug === slug);

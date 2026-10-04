@@ -7,7 +7,11 @@ export type ErrorKey =
   | "passwordMax"
   | "name"
   | "phone"
-  | "unavailable";
+  | "unavailable"
+  | "invalidCredentials"
+  | "emailTaken"
+  | "rateLimited"
+  | "wrongPassword";
 
 const email = z
   .string({ error: "required" })
@@ -20,6 +24,14 @@ const password = z
   .max(128, { error: "passwordMax" });
 
 export const loginSchema = z.object({ email, password });
+
+export const passwordChangeSchema = z.object({
+  currentPassword: z
+    .string({ error: "required" })
+    .min(1, { error: "required" })
+    .max(128, { error: "passwordMax" }),
+  newPassword: password,
+});
 
 export const registerSchema = z.object({
   name: z
@@ -42,6 +54,7 @@ export type AuthState =
       errors?: Partial<Record<string, ErrorKey[]>>;
       formError?: ErrorKey;
       values?: Record<string, string>;
+      done?: boolean;
     }
   | undefined;
 

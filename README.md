@@ -1,11 +1,14 @@
 # MagicStudio
 
-Premium barbershop PWA. Next.js (App Router) · React · TypeScript · Tailwind · Bun.
+Premium barbershop PWA. Next.js (App Router) · React · TypeScript · Tailwind · Bun. The API lives next door in `../magicstudio-backend`.
+
+**Try it locally: [`DEMO.md`](DEMO.md)** lists the ports, demo barbershops and accounts. Where development stopped: [`BREAKPOINT.md`](BREAKPOINT.md).
 
 ## Requirements
 
 - Node 24 LTS (`.node-version`; fnm/nvm pick it up). Next.js runs on Node.
 - Bun 1.4.2 (`packageManager` in `package.json`) for installs, scripts and tests.
+- The backend running (`BACKEND_URL`, see `.env.example`).
 
 ## Scripts
 
@@ -18,7 +21,7 @@ Premium barbershop PWA. Next.js (App Router) · React · TypeScript · Tailwind 
 | `bun run format` | Biome fix + format |
 | `bun run typecheck` | Standalone type-check |
 | `bun run test` | Unit/component tests (`bun test`, files in `src/`) |
-| `bun run test:e2e` | Production build + Playwright (Chromium, iPhone WebKit) with axe a11y checks |
+| `bun run test:e2e` | Production build + Playwright (Chromium, iPhone WebKit) with axe a11y checks. **Paused:** still written for the old demo mode, not the backend |
 | `bun run audit` | Fails on high/critical advisories |
 
 Use `bun run <script>`, not `bunx`: scripts only run installed binaries; `bunx` fetches from the registry if missing.
@@ -27,21 +30,32 @@ Use `bun run <script>`, not `bunx`: scripts only run installed binaries; `bunx` 
 
 `src/app → widgets → features → entities → shared`, imports flow downward only (enforced by Biome `noRestrictedImports`). No `utils/`, `helpers/`, `common/`.
 
+### Data
+
+- The browser never talks to the API. Server code calls it through `backend()` (`src/shared/api/backend.ts`): forwards the tenant host, the visitor IP and the session token, validates every response with Zod. The visitor IP is read `TRUSTED_PROXY_HOPS` entries from the right of `X-Forwarded-For` (what our own proxies wrote) and sent with `PROXY_SECRET`, the only way the API accepts it.
+- Server Components read with cached `get*()` functions (`entities/*/api.ts`, `features/*/data.ts`).
+- Client Components use TanStack Query (`features/*/model.ts`: `queryOptions` + Zod) against thin route handlers under `src/app/api/*`; pages prefetch on the server and hydrate (`HydrationBoundary`), so nothing loads twice.
+- Writes are Server Actions called from `useMutation`; on success they invalidate the affected queries.
+- Session: opaque token in the httpOnly `ms_session` cookie, sent as `Authorization: Bearer`. Staff live updates: `/api/staff/notifications/stream` proxies the API's SSE stream.
+
 ## Screens
 
 - `/` → `/{lang}` (entry): welcome screen, "Get started" opens a sheet with sign in / create account / guest. `/{lang}/login`, `/{lang}/register`: frosted sheet over the photo. All in the `(auth)` route group: full-bleed photo on phones, split screen on desktop.
 - App, `(app)` route group: `/home`, `/services`, `/services/[slug]`, `/branches`, `/account`. Top bar + nav on desktop; floating black tab bar on phones; one centered column. Mobile-first.
 - Look: white canvas + transparent cards + ink (light), black + glass (dark), one vivid orange accent. Orange fills use ink text (white on it fails AA). Tokens and contrast tests: `src/app/globals.css`, `globals.test.ts`.
-- **Auth is UI + real validation only** (no backend yet). Login/register validate with Zod on the server; with `AUTH_DEMO=true` a valid form enters the app (no session, credentials not checked). Without it the form answers "not available yet", so production can't ship a login that accepts anything. `bun run dev`: put `AUTH_DEMO=true` in `.env.local` to try it, or use "Explore without an account".
-- **Booking** (`/services/[slug]`, rendered per request): barber → date → free time. Free times come from the branch hours, the barber's bookings and the service duration, in the branch timezone (`src/features/booking/slots.ts`); the server re-checks the slot on submit. Nothing is stored yet: with `BOOKING_DEMO=true` a free slot shows the confirmation, without it the form says online booking isn't available.
+- **Auth**: login/register validate with Zod, then the API checks credentials and returns a session (per tenant: an account belongs to one barbershop). "Explore without an account" still works; guests can book with name + phone.
+- **Booking** (`/services/[slug]`): branch → barber → date → free time → (guest details) → optional promo code with a live quote → confirm. Free times come from the API's availability engine (branch timezone, refreshed every 30 s); the API re-checks the slot in a transaction, so a taken slot answers "pick another".
+- **Account**: customers see and cancel their appointments; staff get a link to the panel.
+- **Admin panel** (`/{lang}/admin`, staff only, sections by role in `features/admin/sections.ts`): live desk (new-booking notifications over SSE + Web Push toggle), agenda, services and packages, barbers, branches and hours, time off, promotions, team, settings (brand and theme). The API enforces the same role limits on every request.
+- **PWA**: per-tenant manifest and icons, `public/sw.js` shows push notifications. On iPhone, push needs "Add to Home Screen" (iOS 16.4+); everywhere it needs HTTPS.
 - Sample photos: `public/images/sample` (Unsplash License, sources in `CREDITS.md`). Barbers stay as monograms until each tenant uploads real staff portraits.
 
-## Tenants (template)
+## Tenants
 
-The site is a template for many barbershop companies (tenants), each with one or more branches.
+One deployment serves many barbershop companies (tenants), each with one or more branches.
 
-- Today: one SAMPLE default tenant in `src/entities/tenant/api.ts` (`getTenant()`), plus sample services/barbers. Brand name, footer, metadata and the branch list all read from it.
-- Later (with the backend): `src/proxy.ts` resolves the tenant from the request host (subdomain or custom domain) and rewrites to an internal `app/[tenant]/[lang]` route; `getTenant()` fetches that tenant. Components keep calling the same functions.
+- The tenant is the request host: `<slug>.<platform domain>` or the tenant's custom domain (dev: `magicstudio.localhost:3000`, `elite.localhost:3000`). `backend()` forwards it; the API maps it to a tenant. `TENANT_HOST` pins one tenant for single-tenant installs.
+- `getTenant()` (`src/entities/tenant/api.ts`) returns name, currency, languages, brand, theme and branches; theme colors become CSS variables (`entities/tenant/theme.ts`), so each tenant gets its own look with the same code.
 - The backend owns tenant isolation: the tenant comes from the host mapping, never from client input.
 
 ## Languages

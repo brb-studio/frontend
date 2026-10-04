@@ -30,6 +30,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { default: tenant.name, template: `%s · ${tenant.name}` },
     description: meta.description,
     openGraph: { siteName: tenant.name, type: "website" },
+    // Opens full screen from the iPhone home screen, which iOS requires for push notifications.
+    appleWebApp: {
+      capable: true,
+      title: tenant.name,
+      statusBarStyle: "black-translucent",
+    },
   };
 }
 

@@ -1,5 +1,10 @@
-import type { TenantTheme } from "./theme";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+import * as z from "zod";
+import { ApiError, backend } from "@/shared/api/backend";
+import { type TenantTheme, themeTokens } from "./theme";
 
+/** Opening hours for a run of weekdays (0 = Sunday … 6 = Saturday), as the pages display them. */
 export type Hours = { from: number; to: number; open: string; close: string };
 
 export type Branch = {
@@ -26,42 +31,106 @@ export type Tenant = {
   branches: Branch[];
 };
 
-const sample: Tenant = {
-  slug: "magicstudio",
-  name: "MagicStudio",
-  currency: "USD",
-  instagramUrl: "https://www.instagram.com/",
-  authImage: "/images/sample/beard.jpg",
-  coverImage: "/images/sample/cover.jpg",
-  branches: [
-    {
-      slug: "centro",
-      name: "MagicStudio Centro",
-      address: ["123 Sample Street", "Sample City"],
-      phone: "+10000000000",
-      phoneDisplay: "+1 000 000 0000",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=MagicStudio",
-      image: "/images/sample/branch-centro.jpg",
-      timeZone: "America/Mexico_City",
-      hours: [
-        { from: 1, to: 5, open: "10:00", close: "20:00" },
-        { from: 6, to: 6, open: "10:00", close: "18:00" },
-      ],
-    },
-    {
-      slug: "norte",
-      name: "MagicStudio Norte",
-      address: ["456 Example Avenue", "Sample City"],
-      phone: "+10000000001",
-      phoneDisplay: "+1 000 000 0001",
-      mapsUrl: "https://www.google.com/maps/search/?api=1&query=MagicStudio",
-      image: "/images/sample/branch-norte.jpg",
-      timeZone: "America/Mexico_City",
-      hours: [{ from: 2, to: 6, open: "11:00", close: "21:00" }],
-    },
-  ],
-};
+const color = z.string();
+const apiHours = z.array(
+  z.object({ weekday: z.number().int(), open: z.string(), close: z.string() }),
+);
+const apiTenant = z.object({
+  slug: z.string(),
+  name: z.string(),
+  currency: z.string(),
+  theme: z.partialRecord(
+    z.enum(themeTokens),
+    z.union([color, z.object({ light: color, dark: color })]),
+  ),
+  brand: z.object({
+    instagramUrl: z.string().optional(),
+    authImage: z.string().optional(),
+    coverImage: z.string().optional(),
+  }),
+  branches: z.array(
+    z.object({
+      slug: z.string(),
+      name: z.string(),
+      address: z.array(z.string()),
+      phone: z.string().optional(),
+      mapsUrl: z.string().optional(),
+      image: z.string().optional(),
+      timeZone: z.string(),
+      hours: apiHours,
+    }),
+  ),
+});
 
-export async function getTenant(): Promise<Tenant> {
-  return sample;
+const FALLBACK_IMAGE = "/images/sample/cover.jpg";
+// Display order: Monday first, Sunday last.
+const WEEK = [1, 2, 3, 4, 5, 6, 0];
+
+/**
+ * Per-weekday intervals → runs of consecutive days with the same intervals, so "Mon–Fri 10–20"
+ * stays one line. A split shift gives one row per interval for the same run.
+ */
+export function groupHours(hours: z.output<typeof apiHours>): Hours[] {
+  const signature = (day: number) =>
+    hours
+      .filter((h) => h.weekday === day)
+      .map((h) => `${h.open}-${h.close}`)
+      .sort()
+      .join(",");
+  const runs: { from: number; to: number; key: string }[] = [];
+  for (const day of WEEK) {
+    const key = signature(day);
+    const last = runs.at(-1);
+    if (!key) continue;
+    if (
+      last &&
+      last.key === key &&
+      WEEK.indexOf(last.to) === WEEK.indexOf(day) - 1
+    ) {
+      last.to = day;
+    } else {
+      runs.push({ from: day, to: day, key });
+    }
+  }
+  return runs.flatMap(({ from, to, key }) =>
+    key.split(",").map((interval) => {
+      const [open = "", close = ""] = interval.split("-");
+      return { from, to, open, close };
+    }),
+  );
 }
+
+export function toTenant(api: z.output<typeof apiTenant>): Tenant {
+  return {
+    slug: api.slug,
+    name: api.name,
+    currency: api.currency,
+    instagramUrl: api.brand.instagramUrl ?? "https://www.instagram.com/",
+    authImage: api.brand.authImage ?? FALLBACK_IMAGE,
+    coverImage: api.brand.coverImage ?? FALLBACK_IMAGE,
+    theme: api.theme,
+    branches: api.branches.map((b) => ({
+      slug: b.slug,
+      name: b.name,
+      address: b.address,
+      phone: b.phone ?? "",
+      phoneDisplay: b.phone ?? "",
+      mapsUrl:
+        b.mapsUrl ??
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address.join(", "))}`,
+      image: b.image ?? FALLBACK_IMAGE,
+      hours: groupHours(b.hours),
+      timeZone: b.timeZone,
+    })),
+  };
+}
+
+/** The tenant for this request's host. Deduplicated per request; an unknown host is a 404. */
+export const getTenant = cache(async (): Promise<Tenant> => {
+  try {
+    return toTenant(await backend("/v1/public/tenant", apiTenant));
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) notFound();
+    throw error;
+  }
+});

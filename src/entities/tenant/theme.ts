@@ -1,5 +1,5 @@
 /** Tokens a tenant may override. Mirrors the `--color-*` names in globals.css. */
-const tokens = [
+export const themeTokens = [
   "canvas",
   "surface",
   "card",
@@ -14,7 +14,7 @@ const tokens = [
   "accent-text",
 ] as const;
 
-export type ThemeToken = (typeof tokens)[number];
+export type ThemeToken = (typeof themeTokens)[number];
 
 /** A string applies to both schemes; a pair swaps with light/dark mode. */
 export type TenantTheme = Partial<
@@ -35,7 +35,8 @@ const valid = (v: string | { light: string; dark: string }) =>
 export function themeCss(theme?: TenantTheme): string {
   const decls = Object.entries(theme ?? {})
     .filter(
-      ([token, value]) => tokens.includes(token as ThemeToken) && valid(value),
+      ([token, value]) =>
+        themeTokens.includes(token as ThemeToken) && valid(value),
     )
     .map(([token, value]) =>
       typeof value === "string"

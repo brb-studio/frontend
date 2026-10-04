@@ -1,14 +1,23 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { ChevronLeft, Clock, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import { getService, getServices } from "@/entities/service/api";
 import { ServiceCard } from "@/entities/service/service-card";
 import { getTenant } from "@/entities/tenant/api";
-import { getBookingOptions } from "@/features/booking/availability";
+import { getSession } from "@/features/auth/session";
 import { BookingForm } from "@/features/booking/booking-form";
+import { getAvailability } from "@/features/booking/data";
+import {
+  availabilityQuery,
+  type BookingTarget,
+} from "@/features/booking/model";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -28,17 +37,38 @@ export async function generateMetadata({
 
 export default async function ServicePage({
   params,
+  searchParams,
 }: PageProps<"/[lang]/services/[slug]">) {
-  await connection();
-  const [{ slug }, locale] = await Promise.all([params, getLocale()]);
-  const [dict, tenant, services] = await Promise.all([
+  const [{ slug }, query, locale] = await Promise.all([
+    params,
+    searchParams,
+    getLocale(),
+  ]);
+  const [dict, tenant, services, session] = await Promise.all([
     getDictionary(),
     getTenant(),
     getServices(locale),
+    getSession(),
   ]);
   const service = services.find((s) => s.slug === slug);
   if (!service) notFound();
-  const booking = await getBookingOptions(service.durationMin, locale);
+  const branch =
+    tenant.branches.find((b) => b.slug === query.branch) ?? tenant.branches[0];
+
+  // The first branch's free times come with the page; TanStack Query takes over in the browser.
+  const queryClient = new QueryClient();
+  const target: BookingTarget | undefined = branch && {
+    branch: branch.slug,
+    kind: service.kind,
+    slug: service.slug,
+  };
+  if (target) {
+    await queryClient.prefetchQuery({
+      ...availabilityQuery(target),
+      queryFn: () => getAvailability(target),
+    });
+  }
+
   const price = (minor: number) => formatMoney(minor, tenant.currency, locale);
   const others = services.filter((s) => s.slug !== slug);
 
@@ -69,6 +99,11 @@ export default async function ServicePage({
         <div className="relative -mt-8 grid animate-sheet gap-2 rounded-t-[2rem] bg-canvas px-4 pt-7 md:mt-8 md:rounded-none md:px-0 md:pt-0">
           <h1 className="text-title font-medium">{service.name}</h1>
           <p className="max-w-md text-fg-muted">{service.description}</p>
+          {service.includes && (
+            <p className="text-sm text-fg-muted">
+              {dict.services.includes}: {service.includes.join(" + ")}
+            </p>
+          )}
         </div>
       </div>
 
@@ -88,18 +123,38 @@ export default async function ServicePage({
             {dict.services.price}
           </dt>
           <dd className="text-2xl font-semibold">{price(service.price)}</dd>
+          {service.listPrice !== undefined &&
+            service.listPrice > service.price && (
+              <dd className="text-sm text-fg-muted">
+                {dict.services.separately}: <s>{price(service.listPrice)}</s>
+              </dd>
+            )}
         </div>
       </dl>
 
-      <div className="animate-rise [animation-delay:160ms]">
-        <BookingForm
-          lang={locale}
-          service={service.slug}
-          serviceName={service.name}
-          options={booking}
-          t={dict.booking}
-        />
-      </div>
+      {branch && (
+        <div className="animate-rise [animation-delay:160ms]">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <BookingForm
+              lang={locale}
+              item={{
+                kind: service.kind,
+                slug: service.slug,
+                name: service.name,
+                price: service.price,
+              }}
+              branches={tenant.branches.map((b) => ({
+                slug: b.slug,
+                name: b.name,
+              }))}
+              initialBranch={branch.slug}
+              signedInCustomer={session?.role === "customer"}
+              currency={tenant.currency}
+              t={dict.booking}
+            />
+          </HydrationBoundary>
+        </div>
+      )}
 
       {others.length > 0 && (
         <section
