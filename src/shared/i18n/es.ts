@@ -389,6 +389,10 @@ const es: Dictionary = {
         canceled: "Cancelada",
       },
       renews: "Se renueva el",
+      cancelling: "Se cancelará",
+      cancelsOn: "Tu suscripción se cancela el",
+      cancelHint:
+        "Hasta entonces todo sigue funcionando. Puedes reactivarla en Administrar pago.",
       endsOn: "Termina el",
       subscribe: "Suscribirme",
       manage: "Administrar pago",

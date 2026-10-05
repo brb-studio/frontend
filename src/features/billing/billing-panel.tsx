@@ -100,11 +100,11 @@ function SubscriptionCard({
   const [pending, startTransition] = useTransition();
   const lifetime = billing.plan === "lifetime";
   const canSubscribe = !lifetime && !billing.subscribed && billing.price;
-  const end =
-    billing.currentPeriodEnd &&
-    new Intl.DateTimeFormat(lang, { dateStyle: "long" }).format(
-      new Date(billing.currentPeriodEnd),
-    );
+  const date = (iso?: string) =>
+    iso &&
+    new Intl.DateTimeFormat(lang, { dateStyle: "long" }).format(new Date(iso));
+  const end = date(billing.currentPeriodEnd);
+  const cancelling = billing.subscribed && date(billing.cancelAt);
 
   function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -144,7 +144,7 @@ function SubscriptionCard({
           )}
         </div>
         <span className="rounded-full border border-line px-3 py-1 text-sm">
-          {t.status[billing.status]}
+          {cancelling ? t.cancelling : t.status[billing.status]}
         </span>
       </div>
 
@@ -152,7 +152,12 @@ function SubscriptionCard({
       {!lifetime && !billing.price && (
         <p className="text-sm text-fg-muted">{t.disabled}</p>
       )}
-      {!lifetime && end && (
+      {cancelling && (
+        <p className="rounded-2xl border border-line p-3 text-sm">
+          {t.cancelsOn} {cancelling}. {t.cancelHint}
+        </p>
+      )}
+      {!lifetime && end && !cancelling && (
         <p className="text-sm text-fg-muted">
           {billing.subscribed && billing.status !== "canceled"
             ? t.renews

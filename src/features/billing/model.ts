@@ -12,6 +12,8 @@ export const billingSchema = z.object({
   plan: z.enum(["trial", "basic", "pro", "lifetime"]),
   status: z.enum(["trialing", "active", "past_due", "canceled"]),
   currentPeriodEnd: z.string().optional(),
+  /** Cancelled, still active until this date. */
+  cancelAt: z.string().optional(),
   subscribed: z.boolean(),
   creditMinor: z.number().int(),
   referral: z.object({

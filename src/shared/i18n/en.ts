@@ -384,6 +384,10 @@ const en = {
         canceled: "Canceled",
       },
       renews: "Renews on",
+      cancelling: "Ending",
+      cancelsOn: "Your subscription ends on",
+      cancelHint:
+        "Everything keeps working until then. You can reactivate it in Manage payment.",
       endsOn: "Ends on",
       subscribe: "Subscribe",
       manage: "Manage payment",
