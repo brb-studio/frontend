@@ -37,9 +37,12 @@ export function MyAppointments({
   const queryClient = useQueryClient();
   const appointments = useQuery(myAppointmentsQuery());
   const [error, setError] = useState<"tooLate" | "unavailable" | null>(null);
+  // The appointment whose cancel button was pressed, waiting for the customer to confirm.
+  const [confirming, setConfirming] = useState<string | null>(null);
   const cancelling = useMutation({
     mutationFn: cancelAppointment,
     onSuccess: (result) => {
+      setConfirming(null);
       setError(result.ok ? null : result.error);
       void queryClient.invalidateQueries({ queryKey: myAppointmentsKey });
     },
@@ -71,10 +74,10 @@ export function MyAppointments({
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
         </span>
-        {a.cancellable && (
+        {a.cancellable && confirming !== a.id && (
           <Button
             variant="secondary"
-            onClick={() => cancelling.mutate(a.id)}
+            onClick={() => setConfirming(a.id)}
             disabled={cancelling.isPending}
           >
             <CalendarX size={16} aria-hidden="true" />
@@ -82,6 +85,30 @@ export function MyAppointments({
           </Button>
         )}
       </p>
+      {a.cancellable && confirming === a.id && (
+        <div
+          role="alert"
+          className="mt-2 grid gap-3 border-t border-line pt-3 text-fg"
+        >
+          <p className="font-medium">{t.cancelConfirm}</p>
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setConfirming(null)}
+              disabled={cancelling.isPending}
+            >
+              {t.cancelKeep}
+            </Button>
+            <Button
+              onClick={() => cancelling.mutate(a.id)}
+              disabled={cancelling.isPending}
+            >
+              <CalendarX size={16} aria-hidden="true" />
+              {t.cancelYes}
+            </Button>
+          </div>
+        </div>
+      )}
     </li>
   );
 

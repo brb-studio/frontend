@@ -24,7 +24,7 @@ export function ServiceCard({
 }: Props) {
   return (
     <li
-      className={`group relative grid content-start gap-3 rounded-[1.75rem] border border-line bg-card p-2 pb-4 shadow-soft has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-accent-text ${className}`}
+      className={`group relative flex flex-col gap-3 rounded-[1.75rem] border border-line bg-card p-2 pb-4 shadow-soft has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-accent-text ${className}`}
     >
       <div className="relative isolate aspect-square overflow-hidden rounded-[1.375rem] bg-canvas">
         <Image
@@ -39,7 +39,7 @@ export function ServiceCard({
           {service.durationMin} {minutesLabel}
         </p>
       </div>
-      <div className="grid gap-1 px-2">
+      <div className="flex flex-1 flex-col gap-1 px-2">
         <Heading className="text-base font-medium leading-tight sm:text-lg">
           <Link
             href={href}
@@ -51,11 +51,11 @@ export function ServiceCard({
         <p className="hidden text-sm text-fg-muted sm:line-clamp-2">
           {service.description}
         </p>
-        <div className="mt-1 flex items-center justify-between gap-2">
+        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
           <span className="text-lg font-semibold">{price}</span>
           <span
             aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-transform duration-500 ease-out-expo group-has-[a:hover]:rotate-45 max-[22.5rem]:hidden"
+            className="pointer-events-none grid size-9 shrink-0 place-items-center rounded-full bg-accent text-accent-fg transition-transform duration-500 ease-out-expo group-has-[a:hover]:rotate-45 max-[22.5rem]:hidden"
           >
             <ArrowUpRight size={18} />
           </span>

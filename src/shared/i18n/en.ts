@@ -145,6 +145,9 @@ const en = {
     noAppointments: "You have no appointments yet.",
     book: "Book an appointment",
     cancel: "Cancel",
+    cancelConfirm: "Are you sure you want to cancel this appointment?",
+    cancelYes: "Yes, cancel",
+    cancelKeep: "No, keep it",
     loading: "Loading…",
     status: {
       confirmed: "Confirmed",

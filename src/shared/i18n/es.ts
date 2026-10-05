@@ -149,6 +149,9 @@ const es: Dictionary = {
     noAppointments: "Aún no tienes citas.",
     book: "Reservar una cita",
     cancel: "Cancelar",
+    cancelConfirm: "¿Seguro que quieres cancelar esta cita?",
+    cancelYes: "Sí, cancelar",
+    cancelKeep: "No, conservarla",
     loading: "Cargando…",
     status: {
       confirmed: "Confirmada",

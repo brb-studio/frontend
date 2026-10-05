@@ -36,6 +36,8 @@ export default async function AccountPage() {
   const instagram = (
     <a
       href={tenant.instagramUrl}
+      target="_blank"
+      rel="noopener noreferrer"
       className="flex border border-line bg-card animate-rise items-center justify-between rounded-3xl px-5 py-4 transition-colors hover:border-accent-text [animation-delay:160ms]"
     >
       {t.instagram}
