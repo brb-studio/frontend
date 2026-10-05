@@ -65,12 +65,12 @@ export function ReschedulePanel({
   const failure = move.data && !move.data.ok ? move.data : null;
 
   return (
-    <div className="grid gap-4 rounded-3xl border border-line bg-card px-4 py-4">
+    <div className="grid min-w-0 gap-4 rounded-3xl border border-line bg-card px-4 py-4">
       <p className="flex items-center gap-2 text-sm font-medium">
         <CalendarClock
           size={18}
           aria-hidden="true"
-          className="text-accent-text"
+          className="shrink-0 text-accent-text"
         />
         {t.pickNewTime} · {barber?.name ?? appointment.barber?.name}
       </p>
@@ -85,9 +85,9 @@ export function ReschedulePanel({
         </div>
       ) : (
         <>
-          <fieldset>
+          <fieldset className="min-w-0">
             <legend className="sr-only">{t.pickNewTime}</legend>
-            <div className="-mx-4 flex snap-x gap-2 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
+            <div className="flex snap-x gap-2 overflow-x-auto pb-1 [scrollbar-width:none] md:flex-wrap">
               {barber.days.map((d) => (
                 <label key={d.date} className={pill}>
                   <input
@@ -106,7 +106,7 @@ export function ReschedulePanel({
               ))}
             </div>
           </fieldset>
-          <div className="-mx-4 flex snap-x gap-2 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
+          <div className="flex snap-x gap-2 overflow-x-auto pb-1 [scrollbar-width:none] md:flex-wrap">
             {day.times.map((x) => (
               <label key={x.value} className={pill}>
                 <input
@@ -127,11 +127,12 @@ export function ReschedulePanel({
           {failure && (
             <FormAlert>{t.rescheduleErrors[failure.error]}</FormAlert>
           )}
-          <div className="flex items-center justify-between gap-3">
-            <p aria-live="polite" className="text-sm text-fg-muted">
+          <div className="grid gap-3 sm:flex sm:items-center sm:justify-between">
+            <p aria-live="polite" className="min-w-0 text-sm text-fg-muted">
               {slot ? `${day.long} · ${slot.label} – ${slot.end}` : t.loading}
             </p>
             <Button
+              className="w-full sm:w-auto"
               disabled={!slot || isCurrent || move.isPending}
               onClick={() => slot && void move.mutate(slot.value)}
             >

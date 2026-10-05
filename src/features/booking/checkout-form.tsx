@@ -55,8 +55,6 @@ export function CheckoutForm({
       onPaid();
       return;
     }
-    // Redirect-based methods leave through return_url, and slow ones settle
-    // asynchronously; either way the API confirms them through its webhook.
     setPending(false);
     setProcessing(true);
   }
