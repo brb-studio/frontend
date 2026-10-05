@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarX } from "lucide-react";
+import { CalendarClock, CalendarX } from "lucide-react";
 import { useState } from "react";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
@@ -15,6 +15,7 @@ import {
   myAppointmentsKey,
   myAppointmentsQuery,
 } from "./model";
+import { ReschedulePanel } from "./reschedule-panel";
 
 const when = (a: Appointment, locale: Locale) =>
   new Intl.DateTimeFormat(locale, {
@@ -37,6 +38,8 @@ export function MyAppointments({
   const queryClient = useQueryClient();
   const appointments = useQuery(myAppointmentsQuery());
   const [error, setError] = useState<"tooLate" | "unavailable" | null>(null);
+  const [rescheduling, setRescheduling] = useState<string | null>(null);
+  const [moved, setMoved] = useState(false);
   // The appointment whose cancel button was pressed, waiting for the customer to confirm.
   const [confirming, setConfirming] = useState<string | null>(null);
   const cancelling = useMutation({
@@ -44,6 +47,7 @@ export function MyAppointments({
     onSuccess: (result) => {
       setConfirming(null);
       setError(result.ok ? null : result.error);
+      setMoved(false);
       void queryClient.invalidateQueries({ queryKey: myAppointmentsKey });
     },
   });
@@ -73,18 +77,44 @@ export function MyAppointments({
       <p className="flex items-center justify-between gap-3 text-fg-muted">
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
+          {a.payment?.status === "paid" && <> · {t.paidBadge}</>}
         </span>
         {a.cancellable && confirming !== a.id && (
-          <Button
-            variant="secondary"
-            onClick={() => setConfirming(a.id)}
-            disabled={cancelling.isPending}
-          >
-            <CalendarX size={16} aria-hidden="true" />
-            {t.cancel}
-          </Button>
+          <span className="flex shrink-0 gap-2">
+            <Button
+              variant="secondary"
+              onClick={() =>
+                setRescheduling((current) => (current === a.id ? null : a.id))
+              }
+            >
+              <CalendarClock size={16} aria-hidden="true" />
+              {t.reschedule}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setConfirming(a.id)}
+              disabled={cancelling.isPending}
+            >
+              <CalendarX size={16} aria-hidden="true" />
+              {t.cancel}
+            </Button>
+          </span>
         )}
       </p>
+      {a.cancellable && a.payment?.status === "paid" && (
+        <p className="text-xs text-fg-muted">{t.refundNote}</p>
+      )}
+      {rescheduling === a.id && (
+        <ReschedulePanel
+          appointment={a}
+          locale={locale}
+          t={t}
+          onMoved={() => {
+            setRescheduling(null);
+            setMoved(true);
+          }}
+        />
+      )}
       {a.cancellable && confirming === a.id && (
         <div
           role="alert"
@@ -115,6 +145,14 @@ export function MyAppointments({
   return (
     <div className="grid gap-6">
       {error && <FormAlert>{t.cancelErrors[error]}</FormAlert>}
+      {moved && (
+        <p
+          role="status"
+          className="rounded-2xl border border-accent/40 bg-card p-4 text-sm"
+        >
+          {t.moved}
+        </p>
+      )}
       <section aria-labelledby="upcoming-title" className="grid gap-3">
         <h2 id="upcoming-title" className="text-xl font-medium">
           {t.upcoming}

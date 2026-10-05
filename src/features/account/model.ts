@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import * as z from "zod";
+import { availabilitySchema } from "@/features/booking/model";
 import { localized } from "@/shared/i18n/localized";
 
 export const appointmentSchema = z.object({
@@ -13,6 +14,13 @@ export const appointmentSchema = z.object({
   items: z.array(z.object({ name: localized, durationMin: z.number().int() })),
   currency: z.string(),
   totalMinor: z.number().int(),
+  payment: z
+    .object({
+      status: z.enum(["requires_payment", "paid", "refunded", "failed"]),
+      amountMinor: z.number().int(),
+    })
+    .nullable()
+    .optional(),
   cancellable: z.boolean().optional(),
   customer: z
     .object({ name: z.string(), phone: z.string().optional() })
@@ -22,7 +30,6 @@ export type Appointment = z.output<typeof appointmentSchema>;
 
 export const myAppointmentsKey = ["me", "appointments"] as const;
 
-/** The signed-in customer's appointments, newest first. */
 export const myAppointmentsQuery = () =>
   queryOptions({
     queryKey: myAppointmentsKey,
@@ -32,4 +39,21 @@ export const myAppointmentsQuery = () =>
       return z.array(appointmentSchema).parse(await response.json());
     },
     staleTime: 30_000,
+  });
+
+export const rescheduleSlotsKey = (id: string) =>
+  ["me", "appointments", id, "slots"] as const;
+
+export const rescheduleSlotsQuery = (id: string) =>
+  queryOptions({
+    queryKey: rescheduleSlotsKey(id),
+    queryFn: async ({ signal }) => {
+      const response = await fetch(`/api/me/appointments/${id}/slots`, {
+        signal,
+      });
+      if (!response.ok) throw new Error(`slots ${response.status}`);
+      return availabilitySchema.parse(await response.json());
+    },
+    staleTime: 30_000,
+    refetchInterval: 30_000,
   });

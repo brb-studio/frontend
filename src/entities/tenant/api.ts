@@ -26,8 +26,8 @@ export type Tenant = {
   instagramUrl: string;
   authImage: string;
   coverImage: string;
-  /** Omit to keep the default black/white + orange palette. */
   theme?: TenantTheme;
+  paymentsOnline: boolean;
   branches: Branch[];
 };
 
@@ -48,6 +48,7 @@ const apiTenant = z.object({
     authImage: z.string().optional(),
     coverImage: z.string().optional(),
   }),
+  payments: z.object({ online: z.boolean() }).optional(),
   branches: z.array(
     z.object({
       slug: z.string(),
@@ -63,13 +64,8 @@ const apiTenant = z.object({
 });
 
 const FALLBACK_IMAGE = "/images/sample/cover.jpg";
-// Display order: Monday first, Sunday last.
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
-/**
- * Per-weekday intervals → runs of consecutive days with the same intervals, so "Mon–Fri 10–20"
- * stays one line. A split shift gives one row per interval for the same run.
- */
 export function groupHours(hours: z.output<typeof apiHours>): Hours[] {
   const signature = (day: number) =>
     hours
@@ -109,6 +105,7 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
     authImage: api.brand.authImage ?? FALLBACK_IMAGE,
     coverImage: api.brand.coverImage ?? FALLBACK_IMAGE,
     theme: api.theme,
+    paymentsOnline: api.payments?.online ?? false,
     branches: api.branches.map((b) => ({
       slug: b.slug,
       name: b.name,

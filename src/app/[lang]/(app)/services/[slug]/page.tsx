@@ -150,6 +150,7 @@ export default async function ServicePage({
               initialBranch={branch.slug}
               signedInCustomer={session?.role === "customer"}
               currency={tenant.currency}
+              paymentsOnline={tenant.paymentsOnline}
               t={dict.booking}
             />
           </HydrationBoundary>

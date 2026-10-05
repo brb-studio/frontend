@@ -23,6 +23,7 @@ import {
   type BookingTarget,
   toBookingOptions,
 } from "./model";
+import { PayOnline } from "./pay-online";
 
 const focusRing =
   "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent-text";
@@ -39,6 +40,7 @@ export function BookingForm({
   initialBranch,
   signedInCustomer,
   currency,
+  paymentsOnline,
   t,
 }: {
   lang: Locale;
@@ -52,6 +54,7 @@ export function BookingForm({
   initialBranch: string;
   signedInCustomer: boolean;
   currency: string;
+  paymentsOnline: boolean;
   t: Dictionary["booking"];
 }) {
   const queryClient = useQueryClient();
@@ -120,7 +123,18 @@ export function BookingForm({
         <p className="font-medium">
           {t.total}: {price(booking.data.appointment.totalMinor)}
         </p>
-        <p className="text-sm text-fg-muted">{t.confirmedLead}</p>
+        {paymentsOnline && booking.data.appointment.totalMinor > 0 ? (
+          <PayOnline
+            lang={lang}
+            appointmentId={booking.data.appointment.id}
+            amountMinor={booking.data.appointment.totalMinor}
+            currency={booking.data.appointment.currency}
+            signedInCustomer={signedInCustomer}
+            t={t}
+          />
+        ) : (
+          <p className="text-sm text-fg-muted">{t.confirmedLead}</p>
+        )}
         <ButtonLink href={`/${lang}/home`} className="mt-2">
           {t.home}
         </ButtonLink>

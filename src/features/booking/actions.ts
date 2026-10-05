@@ -138,3 +138,68 @@ export async function quote(
     return { ok: false, error: errorOf(error) };
   }
 }
+
+const intentSchema = z.object({
+  appointmentId: z.string(),
+  clientSecret: z.string(),
+  accountId: z.string(),
+  publishableKey: z.string().nullable(),
+  amountMinor: z.number().int(),
+  currency: z.string(),
+});
+
+export type PaymentIntent = Omit<
+  z.output<typeof intentSchema>,
+  "publishableKey"
+> & {
+  publishableKey: string;
+};
+
+export type PaymentIntentResult =
+  | { ok: true; intent: PaymentIntent }
+  | {
+      ok: false;
+      error:
+        | "notConnected"
+        | "alreadyPaid"
+        | "nothingToCharge"
+        | "rateLimited"
+        | "unavailable";
+    };
+
+/**
+ * A PaymentIntent on the business's own Stripe account, for the Payment
+ * Element. The card is confirmed in the browser; the API learns about it
+ * through its webhook.
+ */
+export async function createPaymentIntent(
+  appointmentId: string,
+): Promise<PaymentIntentResult> {
+  if (!/^[a-f\d]{24}$/.test(appointmentId))
+    return { ok: false, error: "unavailable" };
+  try {
+    const intent = await backend("/v1/public/payments/intent", intentSchema, {
+      method: "POST",
+      body: { appointmentId },
+    });
+    const { publishableKey, ...rest } = intent;
+    if (!publishableKey) return { ok: false, error: "notConnected" };
+    return { ok: true, intent: { ...rest, publishableKey } };
+  } catch (error) {
+    if (!(error instanceof ApiError))
+      return { ok: false, error: "unavailable" };
+    switch (error.code) {
+      case "STRIPE_NOT_CONNECTED":
+      case "PAYMENTS_DISABLED":
+        return { ok: false, error: "notConnected" };
+      case "ALREADY_PAID":
+        return { ok: false, error: "alreadyPaid" };
+      case "NOTHING_TO_CHARGE":
+        return { ok: false, error: "nothingToCharge" };
+      case "RATE_LIMITED":
+        return { ok: false, error: "rateLimited" };
+      default:
+        return { ok: false, error: "unavailable" };
+    }
+  }
+}

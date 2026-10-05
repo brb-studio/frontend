@@ -109,6 +109,20 @@ const en = {
     confirmedTitle: "You're booked!",
     confirmedLead: "See you there. Please arrive 5 minutes early.",
     home: "Back to home",
+    seeVisits: "See my visits",
+    payOnline: "Pay online",
+    payPreparing: "Preparing secure payment…",
+    payNow: "Pay now",
+    payAtBranch: "I'll pay at the branch",
+    paySucceeded: "Payment received. See you there!",
+    payProcessing:
+      "Your payment is processing. It will show in My visits shortly.",
+    payFailed: "The payment didn't go through. Try another card.",
+    payUnavailable:
+      "Online payment isn't available right now. You can pay at the branch.",
+    alreadyPaid: "This visit is already paid.",
+    secureNote: "Secure payment with Stripe.",
+    close: "Close",
     errors: {
       required: "Choose a barber, a date and a time.",
       invalid: "Check your name and phone number.",
@@ -158,6 +172,21 @@ const en = {
     cancelErrors: {
       tooLate: "It's too late to cancel online. Please call the branch.",
       unavailable: "Couldn't cancel right now. Please try again.",
+    },
+    reschedule: "Reschedule",
+    paidBadge: "Paid online",
+    refundNote: "Online payments are refunded to your card.",
+    currentSlot: "Current time",
+    pickNewTime: "Choose a new time",
+    confirmMove: "Confirm change",
+    retry: "Retry",
+    moved: "Visit moved.",
+    rescheduleErrors: {
+      tooLate: "It's too late to move online. Please call the branch.",
+      slotTaken: "That time was just taken. Pick another one.",
+      barberUnavailable:
+        "That barber can't take this visit anymore. Please call the branch.",
+      unavailable: "Couldn't move right now. Please try again.",
     },
     agendaTitle: "Your agenda",
     noAgenda: "Nothing booked in the next 7 days.",
