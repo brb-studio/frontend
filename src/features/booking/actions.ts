@@ -46,7 +46,12 @@ export type BookingError =
 export type BookingResult =
   | {
       ok: true;
-      appointment: { id: string; totalMinor: number; currency: string };
+      appointment: {
+        id: string;
+        totalMinor: number;
+        currency: string;
+        paymentToken?: string;
+      };
     }
   | { ok: false; error: BookingError; fields?: ("name" | "phone")[] };
 
@@ -83,6 +88,8 @@ const booked = z.object({
   id: z.string(),
   totalMinor: z.number().int(),
   currency: z.string(),
+  /** Lets a guest (no session) pay this booking; the id alone is not enough. */
+  paymentToken: z.string().optional(),
 });
 
 /** Books through the API. Expected failures come back as values, so the form can show them. */
@@ -174,13 +181,14 @@ export type PaymentIntentResult =
  */
 export async function createPaymentIntent(
   appointmentId: string,
+  paymentToken?: string,
 ): Promise<PaymentIntentResult> {
   if (!/^[a-f\d]{24}$/.test(appointmentId))
     return { ok: false, error: "unavailable" };
   try {
     const intent = await backend("/v1/public/payments/intent", intentSchema, {
       method: "POST",
-      body: { appointmentId },
+      body: { appointmentId, ...(paymentToken && { paymentToken }) },
     });
     const { publishableKey, ...rest } = intent;
     if (!publishableKey) return { ok: false, error: "notConnected" };

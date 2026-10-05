@@ -11,9 +11,9 @@ import { Button, ButtonLink } from "@/shared/ui/button";
 import { createPaymentIntent } from "./actions";
 import { PaymentForm } from "./payment-form";
 
-const intentQuery = (appointmentId: string) => ({
+const intentQuery = (appointmentId: string, paymentToken?: string) => ({
   queryKey: ["payment-intent", appointmentId],
-  queryFn: () => createPaymentIntent(appointmentId),
+  queryFn: () => createPaymentIntent(appointmentId, paymentToken),
   staleTime: Number.POSITIVE_INFINITY,
   retry: false,
 });
@@ -21,6 +21,7 @@ const intentQuery = (appointmentId: string) => ({
 export function PayOnline({
   lang,
   appointmentId,
+  paymentToken,
   amountMinor,
   currency,
   signedInCustomer,
@@ -28,6 +29,7 @@ export function PayOnline({
 }: {
   lang: Locale;
   appointmentId: string;
+  paymentToken?: string;
   amountMinor: number;
   currency: string;
   signedInCustomer: boolean;
@@ -37,7 +39,7 @@ export function PayOnline({
   const [open, setOpen] = useState(false);
   const [paid, setPaid] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const intent = useQuery(intentQuery(appointmentId));
+  const intent = useQuery(intentQuery(appointmentId, paymentToken));
 
   useEffect(() => {
     setMounted(true);

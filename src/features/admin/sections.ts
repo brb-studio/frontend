@@ -11,6 +11,7 @@ export const SECTIONS = {
   promotions: "/promotions",
   team: "/team",
   settings: "/settings",
+  billing: "/billing",
   account: "/account",
 } as const;
 export type Section = keyof typeof SECTIONS;
@@ -26,6 +27,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "promotions",
     "team",
     "settings",
+    "billing",
     "account",
   ],
   admin: [

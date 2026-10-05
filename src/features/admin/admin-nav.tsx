@@ -5,6 +5,7 @@ import {
   CalendarDays,
   CalendarOff,
   CircleUserRound,
+  CreditCard,
   Ellipsis,
   LayoutDashboard,
   type LucideIcon,
@@ -30,6 +31,7 @@ const ICONS: Record<Section, LucideIcon> = {
   promotions: BadgePercent,
   team: UserCog,
   settings: Settings,
+  billing: CreditCard,
   account: CircleUserRound,
 };
 

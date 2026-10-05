@@ -127,6 +127,7 @@ export function BookingForm({
           <PayOnline
             lang={lang}
             appointmentId={booking.data.appointment.id}
+            paymentToken={booking.data.appointment.paymentToken}
             amountMinor={booking.data.appointment.totalMinor}
             currency={booking.data.appointment.currency}
             signedInCustomer={signedInCustomer}
