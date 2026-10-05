@@ -63,7 +63,12 @@ export function BranchPicker({
         </dl>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-3">
-        <a href={branch.mapsUrl} className={buttonClass("secondary")}>
+        <a
+          href={branch.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonClass("secondary")}
+        >
           <Navigation size={16} aria-hidden="true" />
           {labels.directions}
         </a>
