@@ -1,6 +1,6 @@
 # MagicStudio
 
-Premium barbershop PWA. Next.js (App Router) · React · TypeScript · Tailwind · Bun. The API lives next door in `../magicstudio-backend`.
+Premium barbershop PWA. Next.js (App Router) · React · TypeScript · Tailwind · Bun. The API is [brb-studio/backend](https://github.com/brb-studio/backend), cloned next to this repo as `../backend` (setup in its README).
 
 **Try it locally: [`DEMO.md`](DEMO.md)** lists the ports, demo barbershops and accounts. Where development stopped: [`BREAKPOINT.md`](BREAKPOINT.md).
 
@@ -91,3 +91,7 @@ A small dependency tree is a security feature.
 4. No patch → mitigate via config, document the accepted risk, or remove the package.
 
 Deadlines: critical 48 h, high 7 days, medium next routine update.
+
+## Specs (OpenSpec)
+
+Frontend rules live in `openspec/specs/` (staff-panel, server-gateway, photo-galleries, customer-booking); business rules are in `../backend/openspec/specs/`. `openspec list --specs`, `openspec validate --specs --strict`, and `/opsx:propose` in Claude Code to start a change.

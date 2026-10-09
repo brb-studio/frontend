@@ -16,6 +16,15 @@ export const SECTIONS = {
 } as const;
 export type Section = keyof typeof SECTIONS;
 
+/** How the menu groups the sections (each role only sees its own). */
+export const GROUPS = {
+  daily: ["home", "agenda", "timeOff"],
+  catalog: ["services", "barbers", "branches", "promotions"],
+  business: ["team", "settings", "billing"],
+  personal: ["account"],
+} as const satisfies Record<string, readonly Section[]>;
+export type Group = keyof typeof GROUPS;
+
 const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
   owner: [
     "home",

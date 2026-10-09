@@ -9,7 +9,7 @@ import { formatMoney, toMajor, toMinor } from "@/shared/i18n/money";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
-import { ImageField } from "./image-field";
+import { ImagesField } from "./image-field";
 import {
   type AdminPackage,
   type AdminService,
@@ -47,11 +47,10 @@ function both(form: FormData, es: string, en: string) {
 function commonFields(form: FormData, isNew: boolean) {
   const name = both(form, "nameEs", "nameEn");
   const description = both(form, "descriptionEs", "descriptionEn");
-  const image = value(form, "image");
   return {
     name,
     ...(description ? { description } : {}),
-    ...(image ? { image } : {}),
+    images: form.getAll("images").map(String),
     ...(isNew
       ? { slug: value(form, "slug") || slugify(name?.es ?? name?.en ?? "") }
       : {}),
@@ -67,9 +66,9 @@ function CommonInputs({
 }) {
   return (
     <>
-      <ImageField
+      <ImagesField
         label={t.images.photo}
-        defaultValue={item?.image}
+        defaultValue={item?.images}
         t={t.images}
       />
       <div className="grid gap-3 sm:grid-cols-2">

@@ -1,0 +1,45 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Proyecto: MagicStudio frontend, PWA mobile-first de un SaaS multi-barbería y multi-sucursal.
+  Las reglas de negocio viven en el API (repo brb-studio/backend, clonado junto a este como
+  ../backend, con sus propios specs en ../backend/openspec/specs); aquí se especifica lo que
+  decide el frontend: acceso al panel, puerta al API, fotos y experiencia del cliente.
+
+  Stack: Next.js 16 (App Router, leer node_modules/next/dist/docs antes de usar APIs), React 19,
+  TypeScript estricto, Tailwind 4, TanStack Query 5, Zod 4, Bun para instalar y probar, Biome.
+
+  Convenciones:
+  - Capas FSD: app → widgets → features → entities → shared; imports solo hacia abajo.
+  - El navegador nunca llama al API: Server Components, route handlers /api/* y Server Actions.
+  - Datos del cliente con TanStack Query (queryOptions + Zod); escrituras con Server Actions.
+  - Textos en src/shared/i18n/es.ts y en.ts (es por defecto); accesibilidad WCAG AA.
+  - El equipo solo ve el panel (/{lang}/admin); los clientes nunca lo ven.
+  - Dependencias con versión exacta, 3 días mínimos de antigüedad, sin scripts de instalación.
+  - Sin commits automáticos y sin borrar archivos sin confirmar.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

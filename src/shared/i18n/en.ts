@@ -75,6 +75,7 @@ const en = {
     call: "Call",
   },
   services: {
+    photos: "photos · swipe",
     title: "Services",
     lead: "Every service starts with a conversation.",
     minutes: "min",
@@ -228,6 +229,12 @@ const en = {
       account: "My account",
       more: "More",
     },
+    navGroups: {
+      daily: "Day to day",
+      catalog: "Catalog",
+      business: "Business",
+      personal: "You",
+    },
     home: {
       greeting: "Hi",
       today: "Appointments today",
@@ -261,10 +268,13 @@ const en = {
       minutes: "min",
     },
     images: {
-      photo: "Photo",
-      upload: "Upload photo",
-      change: "Change photo",
+      photo: "Photos",
+      add: "Add photos",
       uploading: "Uploading…",
+      cover: "Cover",
+      makeCover: "Use as cover",
+      remove: "Remove photo",
+      hint: "Up to 12 photos. The first one is the cover; you can pick several at once.",
       failed: "Couldn't upload the photo. Try again.",
       unreadable: "That file isn't a photo this browser can open.",
       limit: "This shop has reached its photo limit.",

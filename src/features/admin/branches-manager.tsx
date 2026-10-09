@@ -8,7 +8,7 @@ import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
 import { HoursEditor } from "./hours-editor";
-import { ImageField } from "./image-field";
+import { ImagesField } from "./image-field";
 import {
   type AdminBranch,
   type BookingRules,
@@ -44,7 +44,6 @@ function BranchForm({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const phone = value(form, "phone");
-    const image = value(form, "image");
     const booking = Object.fromEntries(
       RULES.map((rule) => [rule, Number(value(form, rule))]),
     );
@@ -55,7 +54,7 @@ function BranchForm({
         .map((line) => line.trim())
         .filter(Boolean),
       ...(phone ? { phone } : {}),
-      ...(image ? { image } : {}),
+      images: form.getAll("images").map(String),
       timeZone: value(form, "timeZone"),
       hours,
       booking,
@@ -73,9 +72,9 @@ function BranchForm({
 
   return (
     <form onSubmit={submit} className="grid w-full gap-4">
-      <ImageField
+      <ImagesField
         label={t.images.photo}
-        defaultValue={branch?.image}
+        defaultValue={branch?.images}
         t={t.images}
       />
       <Field

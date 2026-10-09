@@ -76,18 +76,30 @@ export default async function ServicePage({
     <div className="grid gap-8">
       <div className="-mx-4 -mt-6 md:mx-0 md:mt-0">
         <div className="relative isolate aspect-[4/3] animate-rise overflow-hidden md:aspect-[16/9] md:rounded-[2rem] md:shadow-soft">
-          <Image
-            src={service.image}
-            alt=""
-            fill
-            preload
-            sizes="(min-width: 48rem) 46rem, 100vw"
-            className="-z-20 object-cover"
-          />
+          {/* Swipe through the photos: native scroll snapping, no script. */}
+          <div className="absolute inset-0 -z-20 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]">
+            {service.images.map((src, index) => (
+              <div key={src} className="relative size-full shrink-0 snap-start">
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  preload={index === 0}
+                  sizes="(min-width: 48rem) 46rem, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-10 bg-linear-to-b from-black/35 to-black/0 to-40%"
+            className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-black/35 to-black/0 to-40%"
           />
+          {service.images.length > 1 && (
+            <span className="pointer-events-none absolute right-4 bottom-12 rounded-full bg-black/55 px-3 py-1 text-xs font-medium text-white md:bottom-4">
+              {service.images.length} {dict.services.photos}
+            </span>
+          )}
           <Link
             href={`/${locale}/services`}
             className="absolute left-4 top-4 grid size-11 place-items-center rounded-full border border-white/20 bg-white/15 text-white backdrop-blur-xl transition-colors hover:bg-white/25"

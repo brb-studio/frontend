@@ -11,7 +11,10 @@ export type Service = {
   name: string;
   description: string;
   durationMin: number;
+  /** The cover photo. */
   image: string;
+  /** Every photo, cover first (at least one: the cover or a sample). */
+  images: string[];
   /** Integer minor units of the tenant's currency. */
   price: number;
   /** For packages: what the services cost separately. */
@@ -27,6 +30,7 @@ const item = {
   durationMin: z.number().int(),
   priceMinor: z.number().int(),
   image: z.string().optional(),
+  images: z.array(z.string()).optional(),
 };
 const apiCatalog = z.object({
   currency: z.string(),
@@ -52,6 +56,7 @@ export function toServices(
     description: pick(s.description, locale),
     durationMin: s.durationMin,
     image: s.image ?? FALLBACK_IMAGE,
+    images: s.images?.length ? s.images : [s.image ?? FALLBACK_IMAGE],
     price: s.priceMinor,
   });
   return [

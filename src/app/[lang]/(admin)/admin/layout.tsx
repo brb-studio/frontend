@@ -56,7 +56,7 @@ export default async function AdminLayout({
       >
         {dict.a11y.skipToContent}
       </a>
-      <aside className="sticky top-0 hidden h-dvh flex-col gap-8 border-r border-line bg-card p-4 md:flex">
+      <aside className="sticky top-0 hidden h-dvh flex-col gap-6 overflow-y-auto border-r border-line bg-card p-4 md:flex">
         <div className="flex items-center gap-2.5 px-2 pt-2">
           <BrandMark />
           <div className="grid min-w-0">
@@ -64,7 +64,12 @@ export default async function AdminLayout({
             <span className="text-xs text-fg-muted">{t.nav.label}</span>
           </div>
         </div>
-        <AdminSidebarNav locale={locale} sections={sections} labels={t.nav} />
+        <AdminSidebarNav
+          locale={locale}
+          sections={sections}
+          labels={t.nav}
+          groups={t.navGroups}
+        />
         <div className="mt-auto grid gap-2 border-t border-line pt-4">
           <div className="grid px-3">
             <span className="truncate text-sm font-medium">{session.name}</span>
@@ -92,7 +97,12 @@ export default async function AdminLayout({
           <Providers>{children}</Providers>
         </main>
       </div>
-      <AdminTabBar locale={locale} sections={sections} labels={t.nav} />
+      <AdminTabBar
+        locale={locale}
+        sections={sections}
+        labels={t.nav}
+        groups={t.navGroups}
+      />
     </div>
   );
 }

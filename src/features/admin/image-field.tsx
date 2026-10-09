@@ -1,13 +1,12 @@
 "use client";
 
-import { Camera, ImageIcon } from "lucide-react";
+import { Camera, Star, X } from "lucide-react";
 import Image from "next/image";
 import { type ChangeEvent, useId, useState, useTransition } from "react";
 import { uploadImage } from "./actions";
 import type { AdminText } from "./ui";
 
 const MAX_SIDE = 1600;
-// Under the server action's 1 MB body limit, multipart overhead included.
 const MAX_BYTES = 900 * 1024;
 
 /**
@@ -35,84 +34,132 @@ async function shrink(file: File) {
   throw new Error("too big");
 }
 
-/** A photo picker for a form: uploads right away and keeps the stored path in a hidden input. */
-export function ImageField({
-  name = "image",
+const MAX_PHOTOS = 12;
+
+/**
+ * A gallery for a form, cover first: pick several photos at once, remove any, promote one to cover.
+ * Each photo uploads as soon as it's picked; the form posts the ordered paths as `images`.
+ */
+export function ImagesField({
   label,
-  defaultValue,
+  defaultValue = [],
   t,
 }: {
-  name?: string;
   label: string;
-  defaultValue?: string;
+  defaultValue?: string[];
   t: AdminText["images"];
 }) {
   const id = useId();
-  const [path, setPath] = useState(defaultValue ?? "");
+  const [paths, setPaths] = useState(defaultValue);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
-  function pick(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+  function add(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []).slice(
+      0,
+      MAX_PHOTOS - paths.length,
+    );
     event.target.value = "";
-    if (!file) return;
+    if (files.length === 0) return;
     setError("");
     startTransition(async () => {
-      try {
-        const form = new FormData();
-        form.set(
-          "file",
-          new File([await shrink(file)], "photo.jpg", { type: "image/jpeg" }),
-        );
-        const result = await uploadImage(form);
-        if (result.ok) setPath(result.path);
-        else setError(result.code === "IMAGE_LIMIT" ? t.limit : t.failed);
-      } catch {
-        setError(t.unreadable);
+      // One at a time, in the order picked: the gallery keeps that order and uploads never pile up.
+      for (const file of files) {
+        try {
+          const form = new FormData();
+          form.set(
+            "file",
+            new File([await shrink(file)], "photo.jpg", { type: "image/jpeg" }),
+          );
+          const result = await uploadImage(form);
+          if (!result.ok) {
+            setError(result.code === "IMAGE_LIMIT" ? t.limit : t.failed);
+            return;
+          }
+          setPaths((list) => [...list, result.path]);
+        } catch {
+          setError(t.unreadable);
+          return;
+        }
       }
     });
   }
+  const remove = (path: string) =>
+    setPaths((list) => list.filter((p) => p !== path));
+  const cover = (path: string) =>
+    setPaths((list) => [path, ...list.filter((p) => p !== path)]);
+  const badge =
+    "absolute top-1.5 grid size-8 place-items-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80";
 
   return (
-    <div className="grid gap-2">
-      <span className="text-sm font-medium">{label}</span>
-      <div className="flex items-center gap-4">
-        <span className="relative grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl border border-line bg-surface text-fg-muted">
-          {path ? (
+    <fieldset className="grid gap-2">
+      <legend className="mb-2 text-sm font-medium">{label}</legend>
+      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+        {paths.map((path, index) => (
+          <li
+            key={path}
+            className="relative aspect-square overflow-hidden rounded-2xl border border-line bg-surface"
+          >
             <Image
               src={path}
               alt=""
               fill
-              sizes="80px"
+              sizes="160px"
               className="object-cover"
             />
-          ) : (
-            <ImageIcon size={24} aria-hidden="true" />
-          )}
-        </span>
-        <label
-          htmlFor={id}
-          aria-disabled={pending}
-          className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent-text has-focus-visible:outline-2 has-focus-visible:outline-accent-text aria-disabled:pointer-events-none aria-disabled:opacity-50"
-        >
-          <Camera size={16} aria-hidden="true" />
-          {pending ? t.uploading : path ? t.change : t.upload}
-          <input
-            id={id}
-            type="file"
-            accept="image/*"
-            onChange={pick}
-            disabled={pending}
-            className="sr-only"
-          />
-        </label>
-      </div>
-      <input type="hidden" name={name} value={path} />
+            {index === 0 ? (
+              <span className="absolute left-1.5 top-1.5 rounded-full bg-accent px-2 py-1 text-[0.6875rem] font-medium text-accent-fg">
+                {t.cover}
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => cover(path)}
+                aria-label={`${t.makeCover} (${index + 1})`}
+                className={`${badge} left-1.5`}
+              >
+                <Star size={14} aria-hidden="true" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => remove(path)}
+              aria-label={`${t.remove} (${index + 1})`}
+              className={`${badge} right-1.5`}
+            >
+              <X size={14} aria-hidden="true" />
+            </button>
+            <input type="hidden" name="images" value={path} />
+          </li>
+        ))}
+        {paths.length < MAX_PHOTOS && (
+          <li>
+            <label
+              htmlFor={id}
+              aria-disabled={pending}
+              className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-line-strong px-2 text-center text-xs text-fg-muted transition-colors hover:border-accent-text hover:text-fg has-focus-visible:outline-2 has-focus-visible:outline-accent-text aria-disabled:pointer-events-none aria-disabled:opacity-60"
+            >
+              <Camera size={22} aria-hidden="true" />
+              {pending ? t.uploading : t.add}
+              <input
+                id={id}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={add}
+                disabled={pending}
+                className="sr-only"
+              />
+            </label>
+          </li>
+        )}
+      </ul>
+      <p className="text-xs text-fg-muted">{t.hint}</p>
       {error && (
         <p role="alert" className="text-sm text-danger">
           {error}
         </p>
       )}
-    </div>
+    </fieldset>
   );
 }

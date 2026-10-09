@@ -78,6 +78,7 @@ const es: Dictionary = {
     call: "Llamar",
   },
   services: {
+    photos: "fotos · desliza",
     title: "Servicios",
     lead: "Cada servicio empieza con una conversación.",
     minutes: "min",
@@ -232,6 +233,12 @@ const es: Dictionary = {
       account: "Mi cuenta",
       more: "Más",
     },
+    navGroups: {
+      daily: "Día a día",
+      catalog: "Catálogo",
+      business: "Negocio",
+      personal: "Tú",
+    },
     home: {
       greeting: "Hola",
       today: "Citas hoy",
@@ -266,10 +273,13 @@ const es: Dictionary = {
       minutes: "min",
     },
     images: {
-      photo: "Foto",
-      upload: "Subir foto",
-      change: "Cambiar foto",
+      photo: "Fotos",
+      add: "Agregar fotos",
       uploading: "Subiendo…",
+      cover: "Portada",
+      makeCover: "Usar como portada",
+      remove: "Quitar foto",
+      hint: "Hasta 12 fotos. La primera es la portada; puedes elegir varias a la vez.",
       failed: "No se pudo subir la foto. Intenta de nuevo.",
       unreadable: "Ese archivo no es una foto que este navegador pueda abrir.",
       limit: "Esta barbería llegó a su límite de fotos.",

@@ -1,6 +1,6 @@
 # Demo local: barberías, usuarios y puertos
 
-Guía rápida para probar el portal completo en tu máquina: frontend (este repo) + backend (`../magicstudio-backend`) + MongoDB local.
+Guía rápida para probar el portal completo en tu máquina: frontend (este repo) + backend (`../backend`) + MongoDB local.
 
 ## Puertos
 
@@ -12,18 +12,20 @@ Guía rápida para probar el portal completo en tu máquina: frontend (este repo
 
 ## Arrancar (3 terminales)
 
+Cada terminal parte de la carpeta que contiene los dos repos (`brb-studio/`).
+
 ```sh
 # 1. MongoDB (una vez por arranque de la Mac)
 brew services start mongodb-community@8.0
 
 # 2. Backend
-cd ~/Documents/magicstudio-backend
+cd backend
 bun install
 bun run seed      # crea las 2 barberías demo (si ya existen, las salta)
 bun run dev       # http://127.0.0.1:4000
 
 # 3. Frontend
-cd ~/Documents/magicstudio
+cd frontend
 bun install
 bun run dev       # abre http://localhost:3000 (MagicStudio)
 ```
@@ -86,7 +88,7 @@ El equipo (owner, admin, encargado, barberos) entra directo al panel `/es/admin`
 
 ```sh
 mongosh --quiet "mongodb://127.0.0.1:27017/?replicaSet=rs0" --eval 'db.getSiblingDB("magicstudio").dropDatabase()'
-cd ~/Documents/magicstudio-backend && bun run seed
+cd backend && bun run seed   # desde brb-studio/
 ```
 
 ## Estado

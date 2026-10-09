@@ -10,7 +10,7 @@ import { Field } from "@/shared/ui/field";
 import { Select } from "@/shared/ui/select";
 import { adminQuery, useAdminAction } from "./api";
 import { HoursEditor } from "./hours-editor";
-import { ImageField } from "./image-field";
+import { ImagesField } from "./image-field";
 import {
   type AdminBarber,
   type AdminService,
@@ -61,7 +61,6 @@ function BarberEditor({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const specialty = value(form, "specialty");
-    const image = value(form, "image");
     action.mutate(
       {
         method: "PATCH",
@@ -69,7 +68,7 @@ function BarberEditor({
         body: {
           name: value(form, "name"),
           ...(specialty ? { specialty: { es: specialty } } : {}),
-          ...(image ? { image } : {}),
+          images: form.getAll("images").map(String),
           hours,
           serviceIds,
         },
@@ -80,9 +79,9 @@ function BarberEditor({
 
   return (
     <form onSubmit={submit} className="grid w-full gap-4">
-      <ImageField
+      <ImagesField
         label={t.images.photo}
-        defaultValue={barber.image}
+        defaultValue={barber.images}
         t={t.images}
       />
       <Field
