@@ -25,6 +25,8 @@ El servidor SHALL elegir la barbería así:
 2. Si no, se usa el host del visitante.
 3. Un host sin barbería (`localhost` o una IP) usa `DEFAULT_TENANT_HOST` si existe.
 
+El host elegido se envía al API en `X-Tenant-Host` (Vercel sobrescribe `X-Forwarded-Host` y `X-Forwarded-For` en el camino al API).
+
 En producción, `DEFAULT_TENANT_HOST` MUST quedar vacío para que un host desconocido sea 404.
 
 #### Scenario: Desarrollo en localhost
@@ -36,7 +38,7 @@ En producción, `DEFAULT_TENANT_HOST` MUST quedar vacío para que un host descon
 - **THEN** ve la barbería Elite, aunque exista `DEFAULT_TENANT_HOST`
 
 ### Requirement: IP real del visitante
-El servidor SHALL tomar la IP del visitante contando `TRUSTED_PROXY_HOPS` entradas (por defecto 1) desde la derecha de `X-Forwarded-For`: ahí está lo que escribieron los proxies propios. Todo lo que está a la izquierda lo escribió el cliente y MUST ignorarse. Solo envía la IP al API junto con `PROXY_SECRET`. Si el valor no parece una IP, no envía nada.
+El servidor SHALL tomar la IP del visitante contando `TRUSTED_PROXY_HOPS` entradas (por defecto 1) desde la derecha de `X-Forwarded-For`: ahí está lo que escribieron los proxies propios. Todo lo que está a la izquierda lo escribió el cliente y MUST ignorarse. Solo envía la IP al API en `X-Visitor-IP` junto con `PROXY_SECRET`. Si el valor no parece una IP, no envía nada.
 
 #### Scenario: Cabecera falsificada detrás de un proxy
 - **WHEN** llega `X-Forwarded-For: 6.6.6.6, 203.0.113.7` y hay un proxy propio

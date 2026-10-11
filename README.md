@@ -32,7 +32,7 @@ Use `bun run <script>`, not `bunx`: scripts only run installed binaries; `bunx` 
 
 ### Data
 
-- The browser never talks to the API. Server code calls it through `backend()` (`src/shared/api/backend.ts`): forwards the tenant host, the visitor IP and the session token, validates every response with Zod. The visitor IP is read `TRUSTED_PROXY_HOPS` entries from the right of `X-Forwarded-For` (what our own proxies wrote) and sent with `PROXY_SECRET`, the only way the API accepts it.
+- The browser never talks to the API. Server code calls it through `backend()` (`src/shared/api/backend.ts`): forwards the tenant host (`X-Tenant-Host`), the visitor IP and the session token, validates every response with Zod. The visitor IP is read `TRUSTED_PROXY_HOPS` entries from the right of `X-Forwarded-For` (what our own proxies wrote) and sent as `X-Visitor-IP` with `PROXY_SECRET`, the only way the API accepts it. Own header names because Vercel overwrites `X-Forwarded-Host`/`-For` on the way to the API.
 - Server Components read with cached `get*()` functions (`entities/*/api.ts`, `features/*/data.ts`).
 - Client Components use TanStack Query (`features/*/model.ts`: `queryOptions` + Zod) against thin route handlers under `src/app/api/*`; pages prefetch on the server and hydrate (`HydrationBoundary`), so nothing loads twice.
 - Writes are Server Actions called from `useMutation`; on success they invalidate the affected queries.

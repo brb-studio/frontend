@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   try {
     upstream = await fetch(new URL("/v1/notifications/stream", base), {
       headers: {
-        "X-Forwarded-Host": host,
+        "X-Tenant-Host": host,
         Authorization: `Bearer ${token}`,
         Accept: "text/event-stream",
       },

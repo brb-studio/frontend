@@ -103,9 +103,9 @@ export async function backend<S extends z.ZodType>(
       method: options.method ?? "GET",
       cache: "no-store",
       headers: {
-        "X-Forwarded-Host": host,
+        "X-Tenant-Host": host,
         ...(ip && secret
-          ? { "X-Forwarded-For": ip, "X-Proxy-Secret": secret }
+          ? { "X-Visitor-IP": ip, "X-Proxy-Secret": secret }
           : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.body === undefined

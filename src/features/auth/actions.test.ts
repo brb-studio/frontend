@@ -57,7 +57,7 @@ test("a valid login stores the session in an httpOnly cookie and enters the app"
   });
   const [url, init] = spy.mock.calls[0] ?? [];
   expect(String(url)).toBe("http://api.test/v1/auth/login");
-  expect(new Headers(init?.headers).get("x-forwarded-host")).toBe(
+  expect(new Headers(init?.headers).get("x-tenant-host")).toBe(
     "magicstudio.localhost:3000",
   );
   expect(jar.get("ms_session")).toMatchObject({
