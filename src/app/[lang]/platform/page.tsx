@@ -9,7 +9,6 @@ import { BrandMark } from "@/shared/ui/brand-mark";
 import { LanguageMenu } from "@/shared/ui/language-menu";
 import { Providers } from "../providers";
 
-/** Global staff dashboard. Only platform staff get in: everyone else is sent to the platform sign-in. */
 export default async function PlatformPage() {
   const [dict, locale, staff] = await Promise.all([
     getDictionary(),

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getTenant } from "@/entities/tenant/api";
 
-/** Each tenant installs as its own app: its name and colors, opening full screen like a native app. */
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const tenant = await getTenant();
   const canvas = tenant.theme?.canvas;

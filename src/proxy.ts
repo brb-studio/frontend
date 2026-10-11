@@ -25,6 +25,5 @@ function redirect(request: NextRequest, pathname: string) {
 }
 
 export const config = {
-  // Not for internals, files, the API routes or the generated icons.
   matcher: ["/((?!_next/|api/|pwa/|icon|apple-icon|.*\\..*).*)"],
 };

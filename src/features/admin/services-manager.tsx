@@ -32,7 +32,6 @@ type Props = { locale: Locale; currency: string; t: AdminText };
 const servicesQuery = adminQuery("services", z.array(serviceSchema));
 const packagesQuery = adminQuery("packages", z.array(packageSchema));
 
-/** A text in both languages; English is optional (the site falls back to Spanish). */
 function both(form: FormData, es: string, en: string) {
   const textEs = value(form, es);
   const textEn = value(form, en);
@@ -43,7 +42,6 @@ function both(form: FormData, es: string, en: string) {
   };
 }
 
-/** What services and packages share: names, description, photo and, when new, the URL name. */
 function commonFields(form: FormData, isNew: boolean) {
   const name = both(form, "nameEs", "nameEn");
   const description = both(form, "descriptionEs", "descriptionEn");
@@ -227,7 +225,6 @@ function PackageForm({
   );
 }
 
-/** Services and packages: photos, prices, durations, which ones are bookable. */
 export function ServicesManager(props: Props) {
   const { locale, currency, t } = props;
   const services = useQuery(servicesQuery);
@@ -313,7 +310,6 @@ export function ServicesManager(props: Props) {
           </ul>
         )}
       </Panel>
-
       <Panel
         title={t.services.packages}
         action={addButton("package", t.services.newPackage)}

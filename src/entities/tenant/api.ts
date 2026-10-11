@@ -4,7 +4,6 @@ import * as z from "zod";
 import { ApiError, backend } from "@/shared/api/backend";
 import { type TenantTheme, themeTokens } from "./theme";
 
-/** Opening hours for a run of weekdays (0 = Sunday … 6 = Saturday), as the pages display them. */
 export type Hours = { from: number; to: number; open: string; close: string };
 
 export type Branch = {
@@ -27,7 +26,7 @@ export type Tenant = {
   authImage: string;
   coverImage: string;
   theme?: TenantTheme;
-  paymentsOnline: boolean;
+  paymentsTransfer: boolean;
   branches: Branch[];
 };
 
@@ -48,7 +47,7 @@ const apiTenant = z.object({
     authImage: z.string().optional(),
     coverImage: z.string().optional(),
   }),
-  payments: z.object({ online: z.boolean() }).optional(),
+  payments: z.object({ transfer: z.boolean() }).optional(),
   branches: z.array(
     z.object({
       slug: z.string(),
@@ -105,7 +104,7 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
     authImage: api.brand.authImage ?? FALLBACK_IMAGE,
     coverImage: api.brand.coverImage ?? FALLBACK_IMAGE,
     theme: api.theme,
-    paymentsOnline: api.payments?.online ?? false,
+    paymentsTransfer: api.payments?.transfer ?? false,
     branches: api.branches.map((b) => ({
       slug: b.slug,
       name: b.name,
@@ -122,7 +121,6 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
   };
 }
 
-/** The tenant for this request's host. Deduplicated per request; an unknown host is a 404. */
 export const getTenant = cache(async (): Promise<Tenant> => {
   try {
     return toTenant(await backend("/v1/public/tenant", apiTenant));

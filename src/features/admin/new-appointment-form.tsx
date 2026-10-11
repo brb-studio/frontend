@@ -22,10 +22,6 @@ const staffAvailability = availabilitySchema.extend({
   ),
 });
 
-/**
- * Walk-ins and phone bookings: what, when (free times from the same engine as online booking, without
- * the online notice and window limits) and who. The API re-checks the slot, so a race answers SLOT_TAKEN.
- */
 export function NewAppointmentForm({
   locale,
   t,

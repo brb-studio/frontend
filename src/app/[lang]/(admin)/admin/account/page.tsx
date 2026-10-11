@@ -5,7 +5,6 @@ import { PasswordForm } from "@/features/auth/password-form";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { Button } from "@/shared/ui/button";
 
-/** The signed-in team member: who they are, password, sign out. */
 export default async function AdminAccount() {
   const locale = await getLocale();
   const session = await adminSession("account", locale);

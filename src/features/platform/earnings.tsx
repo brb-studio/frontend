@@ -32,7 +32,6 @@ import {
 
 const LIMIT = 25;
 
-/** The global dashboard goes through /platform; a barbershop's admin panel through its own /v1/earnings. */
 export type Scope = "platform" | "admin";
 
 type WriteInput = Parameters<typeof platformWrite>[0];
@@ -100,7 +99,6 @@ function Feedback({
   );
 }
 
-/** Pay a barber for specific completed cuts of the day. The amount is computed by the API from their commissions. */
 function PayPanel({
   scope: where,
   barber,
@@ -279,7 +277,6 @@ function PayPanel({
   );
 }
 
-/** The barber's commission rate: set it, change it, or remove it. Never defaulted. */
 function RatePanel({
   scope: where,
   barber,
@@ -377,7 +374,6 @@ function RatePanel({
   );
 }
 
-/** Pick a day: every barber's cuts, sales, commission earned, paid and balance, with payment and rate actions. */
 export function Earnings({
   scope,
   filters,

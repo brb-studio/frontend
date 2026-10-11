@@ -17,7 +17,6 @@ export async function markAllRead(): Promise<Result> {
   }
 }
 
-/** What `PushSubscription.toJSON()` gives in the browser; the API re-checks the endpoint's host. */
 const subscription = z.object({
   endpoint: z.url({ protocol: /^https$/ }).max(2048),
   keys: z.object({ p256dh: z.string().max(200), auth: z.string().max(50) }),

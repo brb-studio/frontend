@@ -34,7 +34,6 @@ export default function StyleguidePage() {
           Clean studio barbering. White and ink, black and glass, one orange.
         </p>
       </header>
-
       <div className="grid grid-cols-4 gap-3">
         {swatches.map(([name, bg]) => (
           <div key={name} className="grid gap-2">
@@ -43,7 +42,6 @@ export default function StyleguidePage() {
           </div>
         ))}
       </div>
-
       <div className="grid gap-3">
         <h2 className="font-medium text-title">Sharp cuts, calm hands</h2>
         <p className="max-w-prose">
@@ -52,7 +50,6 @@ export default function StyleguidePage() {
           in both themes.
         </p>
       </div>
-
       <div className="flex flex-wrap gap-3">
         <Button>Book now</Button>
         <Button variant="secondary">View services</Button>
@@ -61,7 +58,6 @@ export default function StyleguidePage() {
           Link button
         </ButtonLink>
       </div>
-
       <div className="glass grid gap-2 rounded-3xl p-6 shadow-glow">
         <p className="font-medium text-title">Glass + glow</p>
         <p className="text-fg-muted">
@@ -69,7 +65,6 @@ export default function StyleguidePage() {
           transparency.
         </p>
       </div>
-
       <form className="grid gap-6">
         <Field
           name="name"

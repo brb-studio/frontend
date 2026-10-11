@@ -152,7 +152,6 @@ export const staffSchema = z.object({
   staff: z.object({ id: z.string(), name: z.string(), email: z.string() }),
 });
 
-/** Everything the dashboard filters on; lives in the URL so views can be shared and the back button works. */
 export type Filters = {
   from: string;
   to: string;
@@ -167,7 +166,6 @@ export type Level = "overview" | "tenant" | "branch" | "barber";
 export const levelOf = (f: Filters): Level =>
   f.barber ? "barber" : f.branch ? "branch" : f.tenant ? "tenant" : "overview";
 
-/** The API's query string for these filters (ids go by their API names). */
 export const apiQuery = (
   f: Filters,
   extra: Record<string, string | number> = {},
@@ -187,7 +185,6 @@ export class PlatformError extends Error {
   }
 }
 
-/** A platform resource read through /api/platform, validated against its schema. */
 export const platformQuery = <S extends z.ZodType>(path: string, schema: S) =>
   queryOptions({
     queryKey: ["platform", path],
@@ -205,5 +202,26 @@ export const today = () => new Date().toLocaleDateString("en-CA");
 export const daysAgo = (days: number) =>
   new Date(Date.now() - days * 864e5).toLocaleDateString("en-CA");
 
-/** "2025-03-01" for the first day of this month. */
 export const monthStart = () => `${today().slice(0, 7)}-01`;
+
+export const SUBSCRIPTION_STATUSES = [
+  "pending",
+  "paid",
+  "rejected",
+  "expired",
+] as const;
+
+export const subscriptionRow = z.object({
+  id: z.string(),
+  status: z.enum(SUBSCRIPTION_STATUSES),
+  amountMinor: z.number().int(),
+  listPriceMinor: z.number().int(),
+  currency: z.string(),
+  expiresAt: z.string(),
+  tenantName: z.string().nullable(),
+  tenantSlug: z.string().nullable(),
+  referralCode: z.string().optional(),
+  reference: z.string().optional(),
+  rejectionReason: z.string().optional(),
+});
+export type SubscriptionRow = z.output<typeof subscriptionRow>;

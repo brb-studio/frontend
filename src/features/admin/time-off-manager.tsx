@@ -15,7 +15,6 @@ const barbersQuery = adminQuery("barbers", z.array(barberSchema));
 const branchesQuery = adminQuery("branches", z.array(branchSchema));
 const KINDS = ["break", "time_off", "vacation", "block"] as const;
 
-/** Breaks, days off and closures, entered in the branch's own local time. */
 export function TimeOffManager({
   t,
   canCloseBranch,

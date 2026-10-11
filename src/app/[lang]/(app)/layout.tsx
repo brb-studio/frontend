@@ -6,7 +6,6 @@ import { AppNav } from "@/widgets/app-nav";
 import { AppTopBar } from "@/widgets/app-top-bar";
 import { Providers } from "../providers";
 
-/** The customer app. The team never lands here: their app is the admin panel. */
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const [dict, locale, session] = await Promise.all([
     getDictionary(),

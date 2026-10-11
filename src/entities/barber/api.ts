@@ -8,7 +8,7 @@ export type Barber = {
   slug: string;
   name: string;
   specialty: string;
-  /** The branch's slug. */
+
   branch: string;
 };
 
@@ -21,7 +21,6 @@ const apiBarbers = z.array(
   }),
 );
 
-/** Active barbers of active branches. */
 export const getBarbers = cache(
   async (locale: Locale): Promise<Barber[]> =>
     (await backend("/v1/public/barbers", apiBarbers)).map((b) => ({

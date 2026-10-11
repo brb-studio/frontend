@@ -1,13 +1,10 @@
 import { cookies, headers } from "next/headers";
 import * as z from "zod";
 
-/** httpOnly cookie holding the API session token. The browser never reads it; only this server does. */
 export const SESSION_COOKIE = "ms_session";
 
-/** Same idea for global platform staff, who sign in apart from any barbershop. */
 export const PLATFORM_COOKIE = "ms_platform";
 
-/** A failed API call: `code` is the API's stable error code (SLOT_TAKEN, EMAIL_TAKEN…). */
 export type Issue = { path: string; message: string };
 
 export class ApiError extends Error {
@@ -33,17 +30,12 @@ const errorBody = z.object({
 
 type Options = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
-  /** JSON, or a Blob sent as-is with its own type (image uploads). */
+
   body?: unknown;
-  /** Use the platform staff session (/platform API) instead of the barbershop session. */
+
   platform?: boolean;
 };
 
-/**
- * The host that names the tenant. TENANT_HOST pins one tenant for every request. Otherwise it's the
- * visitor's host; a host with no tenant in it (localhost or a bare IP, e.g. a phone on the LAN) falls
- * back to DEFAULT_TENANT_HOST, so `http://localhost:3000` opens a shop instead of a 404.
- */
 export function tenantHostOf(requestHeaders: Headers) {
   if (process.env.TENANT_HOST) return process.env.TENANT_HOST;
   const host =
@@ -54,12 +46,6 @@ export function tenantHostOf(requestHeaders: Headers) {
   return (bare && process.env.DEFAULT_TENANT_HOST) || host;
 }
 
-/**
- * The visitor's IP from X-Forwarded-For. Each reverse proxy in front of this server appends the address
- * it saw; everything left of those entries is whatever the client typed. TRUSTED_PROXY_HOPS (default 1)
- * is how many proxies we run in front of Next, so the entry that many places from the right is the one
- * our own edge wrote. Without a proxy (local dev) Next fills the header with the socket address.
- */
 export function visitorIp(
   header: string | null,
   hops = Number(process.env.TRUSTED_PROXY_HOPS ?? 1),
@@ -73,12 +59,6 @@ export function visitorIp(
   return ip && /^[\da-fA-F:.]{2,45}$/.test(ip) ? ip : undefined;
 }
 
-/**
- * Calls the MagicStudio API. Server only: it forwards the tenant's host (the visitor's host, or
- * TENANT_HOST for development and single-tenant installs), the visitor's IP for rate limits (vouched
- * for with PROXY_SECRET, which only this server and the API know) and the session token from its
- * httpOnly cookie. The response is validated against `schema`.
- */
 export async function backend<S extends z.ZodType>(
   path: string,
   schema: S,
@@ -149,17 +129,14 @@ export async function backend<S extends z.ZodType>(
   return schema.parse(data);
 }
 
-/** The session token, for streaming calls that can't go through `backend()`. */
 export async function sessionToken() {
   return (await cookies()).get(SESSION_COOKIE)?.value;
 }
 
-/** Same tenant host rule as `backend()`, for streaming calls. */
 export async function tenantHost() {
   return tenantHostOf(await headers());
 }
 
-/** An API failure as a route-handler response: the API's code and status, never internals. */
 export function errorResponse(error: unknown) {
   if (error instanceof ApiError) {
     return Response.json(

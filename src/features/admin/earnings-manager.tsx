@@ -6,7 +6,6 @@ import { today } from "@/features/platform/model";
 import type { PlatformText } from "@/features/platform/ui";
 import type { Locale } from "@/shared/i18n/locales";
 
-/** Barber pay for this barbershop: commission rates, a day's earnings and payments. Owner and admin only. */
 export function EarningsManager({
   locale,
   t,

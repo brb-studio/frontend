@@ -157,7 +157,6 @@ function BranchForm({
   );
 }
 
-/** Branches: address, timezone, opening hours and booking rules. */
 export function BranchesManager({
   locale,
   t,

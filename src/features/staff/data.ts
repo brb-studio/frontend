@@ -5,7 +5,6 @@ import { notificationsSchema } from "./model";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** From now until 7 days ahead. */
 export function getAgenda() {
   const from = new Date();
   const to = new Date(from.getTime() + 7 * DAY_MS);
@@ -18,7 +17,6 @@ export function getAgenda() {
 export const getNotifications = () =>
   backend("/v1/notifications", notificationsSchema);
 
-/** The VAPID key phones need to subscribe, or null when push isn't configured on the API. */
 export async function getPushKey() {
   try {
     return (

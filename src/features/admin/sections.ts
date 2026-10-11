@@ -1,6 +1,5 @@
 import type { SessionUser } from "@/features/auth/session";
 
-/** Panel sections and their paths under /{lang}/admin. Safe for client components. */
 export const SECTIONS = {
   home: "",
   agenda: "/agenda",
@@ -10,6 +9,7 @@ export const SECTIONS = {
   timeOff: "/time-off",
   promotions: "/promotions",
   earnings: "/earnings",
+  payments: "/payments",
   team: "/team",
   settings: "/settings",
   billing: "/billing",
@@ -17,11 +17,10 @@ export const SECTIONS = {
 } as const;
 export type Section = keyof typeof SECTIONS;
 
-/** How the menu groups the sections (each role only sees its own). */
 export const GROUPS = {
   daily: ["home", "agenda", "timeOff"],
   catalog: ["services", "barbers", "branches", "promotions"],
-  business: ["earnings", "team", "settings", "billing"],
+  business: ["payments", "earnings", "team", "settings", "billing"],
   personal: ["account"],
 } as const satisfies Record<string, readonly Section[]>;
 export type Group = keyof typeof GROUPS;
@@ -35,6 +34,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "branches",
     "timeOff",
     "promotions",
+    "payments",
     "earnings",
     "team",
     "settings",
@@ -49,6 +49,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "branches",
     "timeOff",
     "promotions",
+    "payments",
     "earnings",
     "team",
     "settings",
@@ -58,6 +59,5 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
   barber: ["home", "agenda", "timeOff", "account"],
 };
 
-/** The panel sections a role sees. The API enforces the same limits on every request. */
 export const sectionsFor = (role: SessionUser["role"]) =>
   role === "customer" ? [] : BY_ROLE[role];

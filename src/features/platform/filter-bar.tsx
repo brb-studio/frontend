@@ -34,7 +34,6 @@ function Labeled({
   );
 }
 
-/** Period, barbershop, branch, barber and status. Picking a barbershop narrows the branch and barber lists. */
 export function FilterBar({
   state,
   t,
@@ -201,12 +200,11 @@ export function FilterBar({
   );
 }
 
-/** Names for the filter selects and the breadcrumb, from the API's options endpoint. */
 export function useOptions(filters: { tenant?: string; branch?: string }) {
   const q = new URLSearchParams();
   if (filters.tenant) q.set("tenantId", filters.tenant);
   if (filters.branch) q.set("branchId", filters.branch);
-  // Branches are listed per tenant only, so a chosen branch must not hide its siblings.
+
   const branches = useQuery(
     platformQuery(
       `options${filters.tenant ? `?tenantId=${filters.tenant}` : ""}`,

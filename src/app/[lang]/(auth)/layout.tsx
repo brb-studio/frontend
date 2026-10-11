@@ -18,7 +18,7 @@ export default async function AuthLayout({
     getLocale(),
     getSession(),
   ]);
-  // A signed-in team member (e.g. opening the installed app) goes straight to the panel.
+
   if (isStaff(session)) redirect(`/${locale}/admin`);
 
   return (
@@ -45,7 +45,6 @@ export default async function AuthLayout({
           />
         </div>
       </div>
-
       <div className="flex min-h-dvh flex-col">
         <header className="flex items-center justify-between p-4 text-white md:px-10 md:text-fg">
           <span className="flex animate-rise items-center gap-2.5 text-lg font-medium">

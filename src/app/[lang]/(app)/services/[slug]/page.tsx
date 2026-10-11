@@ -55,7 +55,6 @@ export default async function ServicePage({
   const branch =
     tenant.branches.find((b) => b.slug === query.branch) ?? tenant.branches[0];
 
-  // The first branch's free times come with the page; TanStack Query takes over in the browser.
   const queryClient = new QueryClient();
   const target: BookingTarget | undefined = branch && {
     branch: branch.slug,
@@ -76,7 +75,6 @@ export default async function ServicePage({
     <div className="grid gap-8">
       <div className="-mx-4 -mt-6 md:mx-0 md:mt-0">
         <div className="relative isolate aspect-[4/3] animate-rise overflow-hidden md:aspect-[16/9] md:rounded-[2rem] md:shadow-soft">
-          {/* Swipe through the photos: native scroll snapping, no script. */}
           <div className="absolute inset-0 -z-20 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]">
             {service.images.map((src, index) => (
               <div key={src} className="relative size-full shrink-0 snap-start">
@@ -118,7 +116,6 @@ export default async function ServicePage({
           )}
         </div>
       </div>
-
       <dl className="grid animate-rise grid-cols-2 gap-3 [animation-delay:100ms]">
         <div className="grid gap-1 rounded-3xl border border-line bg-card p-5">
           <dt className="flex items-center gap-2 text-sm text-fg-muted">
@@ -162,7 +159,7 @@ export default async function ServicePage({
               initialBranch={branch.slug}
               signedInCustomer={session?.role === "customer"}
               currency={tenant.currency}
-              paymentsOnline={tenant.paymentsOnline}
+              transfersOn={tenant.paymentsTransfer}
               t={dict.booking}
             />
           </HydrationBoundary>

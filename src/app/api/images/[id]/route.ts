@@ -1,6 +1,5 @@
 const TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-/** Shop photos, streamed from the API. Ids are random and a file never changes, so browsers keep it a year. */
 export async function GET(
   _: Request,
   { params }: RouteContext<"/api/images/[id]">,

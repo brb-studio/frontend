@@ -1,24 +1,106 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Check, CreditCard, LoaderCircle, X } from "lucide-react";
+import { Copy, Landmark, LoaderCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
 import { Button, ButtonLink } from "@/shared/ui/button";
-import { createPaymentIntent } from "./actions";
-import { PaymentForm } from "./payment-form";
+import { createTransfer, type Transfer } from "./actions";
 
-const intentQuery = (appointmentId: string, paymentToken?: string) => ({
-  queryKey: ["payment-intent", appointmentId],
-  queryFn: () => createPaymentIntent(appointmentId, paymentToken),
+const transferQuery = (appointmentId: string, paymentToken?: string) => ({
+  queryKey: ["payment-transfer", appointmentId],
+  queryFn: () => createTransfer(appointmentId, paymentToken),
   staleTime: Number.POSITIVE_INFINITY,
   retry: false,
 });
 
-export function PayOnline({
+function CopyButton({ text, t }: { text: string; t: Dictionary["booking"] }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        void navigator.clipboard
+          .writeText(text)
+          .then(() => setCopied(true))
+          .catch(() => {});
+      }}
+      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm transition-colors hover:border-accent"
+    >
+      <Copy size={14} aria-hidden="true" className="text-accent" />
+      {copied ? t.copied : t.copy}
+    </button>
+  );
+}
+
+function TransferDetails({
+  lang,
+  transfer,
+  signedInCustomer,
+  onClose,
+  t,
+}: {
+  lang: Locale;
+  transfer: Transfer;
+  signedInCustomer: boolean;
+  onClose: () => void;
+  t: Dictionary["booking"];
+}) {
+  const rows = [
+    { label: t.transferHolder, value: transfer.holder },
+    { label: t.transferClabe, value: transfer.clabe, copy: true },
+    {
+      label: t.transferAmount,
+      value: formatMoney(transfer.amountMinor, transfer.currency, lang),
+    },
+  ];
+  const until = new Intl.DateTimeFormat(lang, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(transfer.expiresAt));
+  return (
+    <div className="grid gap-4">
+      <p className="text-sm text-fg-muted">{t.transferLead}</p>
+      <dl className="grid gap-3">
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-line bg-surface px-4 py-3"
+          >
+            <div className="grid min-w-0">
+              <dt className="text-xs text-fg-muted">{row.label}</dt>
+              <dd className="font-medium break-all tabular-nums">
+                {row.value}
+              </dd>
+            </div>
+            {row.copy && <CopyButton text={row.value} t={t} />}
+          </div>
+        ))}
+      </dl>
+      <p className="text-xs text-fg-muted">
+        {t.transferExpires.replace("{date}", until)}
+      </p>
+      <p role="status" className="text-sm">
+        {t.transferPending}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="secondary" onClick={onClose}>
+          {t.close}
+        </Button>
+        {signedInCustomer && (
+          <ButtonLink variant="secondary" href={`/${lang}/account`}>
+            {t.seeVisits}
+          </ButtonLink>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function PayByTransfer({
   lang,
   appointmentId,
   paymentToken,
@@ -37,9 +119,8 @@ export function PayOnline({
 }) {
   const [dismissed, setDismissed] = useState(false);
   const [open, setOpen] = useState(false);
-  const [paid, setPaid] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const intent = useQuery(intentQuery(appointmentId, paymentToken));
+  const transfer = useQuery(transferQuery(appointmentId, paymentToken));
 
   useEffect(() => {
     setMounted(true);
@@ -65,49 +146,25 @@ export function PayOnline({
 
   if (dismissed) return null;
 
-  const result = intent.data;
+  const result = transfer.data;
   const failure =
     result !== undefined && !result.ok && result.error === "alreadyPaid"
       ? "alreadyPaid"
       : "payUnavailable";
 
-  const handlePaid = () => {
-    setOpen(false);
-    setPaid(true);
-  };
-
   return (
     <div className="grid justify-items-center gap-2">
-      {paid ? (
-        <div
-          role="status"
-          className="grid animate-rise justify-items-center gap-3"
-        >
-          <span className="grid size-12 place-items-center rounded-full bg-accent text-accent-fg shadow-glow">
-            <Check size={24} aria-hidden="true" />
-          </span>
-          <p className="font-medium">{t.paySucceeded}</p>
-          {signedInCustomer && (
-            <ButtonLink variant="secondary" href={`/${lang}/account`}>
-              {t.seeVisits}
-            </ButtonLink>
-          )}
-        </div>
-      ) : (
-        <>
-          <Button onClick={() => setOpen(true)} className="min-w-56">
-            <CreditCard size={18} aria-hidden="true" />
-            {t.payOnline}
-          </Button>
-          <button
-            type="button"
-            onClick={() => setDismissed(true)}
-            className="text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg"
-          >
-            {t.payAtBranch}
-          </button>
-        </>
-      )}
+      <Button onClick={() => setOpen(true)} className="min-w-56">
+        <Landmark size={18} aria-hidden="true" />
+        {t.payTransfer}
+      </Button>
+      <button
+        type="button"
+        onClick={() => setDismissed(true)}
+        className="text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg"
+      >
+        {t.payAtBranch}
+      </button>
 
       {mounted &&
         createPortal(
@@ -134,13 +191,13 @@ export function PayOnline({
                 />
                 <div className="flex items-center justify-between gap-3 border-b border-line pb-3">
                   <p className="flex min-w-0 items-center gap-2 text-base font-medium">
-                    <CreditCard
+                    <Landmark
                       size={18}
                       aria-hidden="true"
                       className="shrink-0 text-accent"
                     />
                     <span id="pay-sheet-title" className="truncate">
-                      {t.payOnline}
+                      {t.payTransfer}
                     </span>
                   </p>
                   <p className="flex shrink-0 items-center gap-3">
@@ -160,7 +217,7 @@ export function PayOnline({
               </header>
               <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
                 {open &&
-                  (intent.isPending ? (
+                  (transfer.isPending ? (
                     <p
                       role="status"
                       className="flex items-center gap-2 py-2 text-sm text-fg-muted"
@@ -173,11 +230,11 @@ export function PayOnline({
                       {t.payPreparing}
                     </p>
                   ) : result?.ok === true ? (
-                    <PaymentForm
+                    <TransferDetails
                       lang={lang}
-                      intent={result.intent}
-                      onPaid={handlePaid}
-                      onPayAtBranch={() => setDismissed(true)}
+                      transfer={result.transfer}
+                      signedInCustomer={signedInCustomer}
+                      onClose={() => setOpen(false)}
                       t={t}
                     />
                   ) : (

@@ -6,7 +6,6 @@ import { LiveDesk } from "@/features/staff/live-desk";
 import { PushToggle } from "@/features/staff/push-toggle";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 
-/** Today for the team: the day in numbers, phone alerts, live notifications and the next 7 days. */
 export default async function AdminHome() {
   const locale = await getLocale();
   const session = await adminSession("home", locale);

@@ -35,7 +35,6 @@ export default async function HomePage() {
           {dict.home.lead}
         </h1>
       </header>
-
       <section
         aria-labelledby="hero-title"
         className="relative isolate grid min-h-52 animate-rise content-between gap-6 overflow-hidden rounded-[2rem] bg-neutral-950 p-6 text-white shadow-soft [animation-delay:80ms] sm:min-h-72 sm:p-8"
@@ -63,7 +62,6 @@ export default async function HomePage() {
           <ArrowRight size={18} aria-hidden="true" />
         </ButtonLink>
       </section>
-
       <BranchPicker
         className="animate-rise [animation-delay:160ms]"
         labels={dict.branch}
@@ -76,7 +74,6 @@ export default async function HomePage() {
           hours: formatHours(b.hours, locale),
         }))}
       />
-
       <section
         aria-labelledby="popular-title"
         className="grid animate-rise gap-4 [animation-delay:240ms]"
@@ -107,7 +104,6 @@ export default async function HomePage() {
           ))}
         </ul>
       </section>
-
       <section
         aria-labelledby="team-title"
         className="grid animate-rise gap-4 [animation-delay:320ms]"

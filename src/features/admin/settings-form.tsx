@@ -11,7 +11,6 @@ import { type AdminText, Panel, Result, value } from "./ui";
 
 const tenantQuery = adminQuery("tenant", tenantSchema);
 
-/** The business's name and look; changes show on the public site on the next page load. */
 export function SettingsForm({ t }: { t: AdminText }) {
   const tenant = useQuery(tenantQuery);
   const action = useAdminAction();
@@ -24,7 +23,7 @@ export function SettingsForm({ t }: { t: AdminText }) {
     const instagram = value(form, "instagram");
     const light = value(form, "canvasLight");
     const dark = value(form, "canvasDark");
-    // Defaults aren't stored: leaving them unset keeps following the app's own palette.
+
     const { canvas: _old, ...rest } = tenant.data?.theme ?? {};
     const isDefault =
       light.toLowerCase() === DEFAULT_LIGHT &&

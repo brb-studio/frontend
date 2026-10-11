@@ -14,7 +14,6 @@ const teamQuery = adminQuery("users", z.array(staffSchema));
 const branchesQuery = adminQuery("branches", z.array(branchSchema));
 const created = z.object({ temporaryPassword: z.string() });
 
-/** Staff accounts. New members get a one-time password to share; only the owner hands out admin. */
 export function TeamManager({
   t,
   isOwner,

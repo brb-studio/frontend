@@ -7,7 +7,6 @@ import { formatMoney } from "@/shared/i18n/money";
 import { dayQuery, today } from "./agenda-manager";
 import type { AdminText } from "./ui";
 
-/** Four numbers for the start of the day; they refresh when a booking lands (the live desk invalidates them). */
 export function TodayStats({
   locale,
   currency,

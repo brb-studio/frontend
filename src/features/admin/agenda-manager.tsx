@@ -12,7 +12,6 @@ import { NewAppointmentForm } from "./new-appointment-form";
 import { type AdminAppointment, staffAppointmentSchema } from "./schemas";
 import { type AdminText, Panel, Result, Row, smallButton } from "./ui";
 
-/** This device's calendar day, YYYY-MM-DD. */
 export const today = () => {
   const now = new Date();
   return new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
@@ -20,7 +19,6 @@ export const today = () => {
     .slice(0, 10);
 };
 
-/** The appointments of one calendar day of this device. */
 export function dayQuery(day: string) {
   const from = new Date(`${day}T00:00`);
   const to = new Date(from.getTime() + 24 * 60 * 60 * 1000);
@@ -30,7 +28,6 @@ export function dayQuery(day: string) {
   );
 }
 
-/** One day of appointments (this device's calendar day), with what staff do at the chair. */
 export function AgendaManager({
   locale,
   t,

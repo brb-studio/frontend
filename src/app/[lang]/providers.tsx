@@ -6,7 +6,6 @@ import type { ReactNode } from "react";
 const make = () =>
   new QueryClient({
     defaultOptions: {
-      // One quick retry for a flaky network; never hammer a failing API.
       queries: { retry: 1 },
       mutations: { retry: false },
     },
@@ -14,7 +13,6 @@ const make = () =>
 
 let browserQueryClient: QueryClient | undefined;
 
-/** A fresh client per server render (requests never share data); one client for the browser's life. */
 function getQueryClient() {
   if (typeof window === "undefined") return make();
   browserQueryClient ??= make();

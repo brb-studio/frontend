@@ -16,7 +16,15 @@ export const appointmentSchema = z.object({
   totalMinor: z.number().int(),
   payment: z
     .object({
-      status: z.enum(["requires_payment", "paid", "refunded", "failed"]),
+      status: z.enum([
+        "requires_payment",
+        "paid",
+        "refunded",
+        "failed",
+        "pending",
+        "rejected",
+        "expired",
+      ]),
       amountMinor: z.number().int(),
     })
     .nullable()

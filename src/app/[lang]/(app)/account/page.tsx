@@ -81,7 +81,6 @@ export default async function AccountPage() {
     );
   }
 
-  // A customer's visits come with the page; TanStack Query keeps them fresh after cancelling.
   const queryClient = new QueryClient();
   if (session.role === "customer") {
     await queryClient.prefetchQuery({

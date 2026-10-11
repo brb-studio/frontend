@@ -7,7 +7,6 @@ import type { AdminResult } from "./actions";
 
 export type AdminText = Dictionary["admin"];
 
-/** A titled card holding one admin list or form. */
 export function Panel({
   title,
   action,
@@ -28,7 +27,6 @@ export function Panel({
   );
 }
 
-/** What the API said about the last save: "Saved." or the failure with each field issue. */
 export function Result({
   result,
   t,
@@ -66,7 +64,6 @@ export function Result({
   );
 }
 
-/** A labeled checkbox styled like the rest of the forms. */
 export function Toggle({
   label,
   checked,
@@ -92,7 +89,6 @@ export function Toggle({
   );
 }
 
-/** A row in an admin list: an optional photo, a title line, details, and its actions. */
 export function Row({
   title,
   meta,
@@ -102,7 +98,7 @@ export function Row({
 }: {
   title: ReactNode;
   meta?: ReactNode;
-  /** Shows a thumbnail (or an empty frame when "" is passed for an item without a photo). */
+
   image?: string;
   muted?: boolean;
   children?: ReactNode;
@@ -135,7 +131,6 @@ export function Row({
   );
 }
 
-/** A URL name from a display name: "Corte clásico" → "corte-clasico". */
 export const slugify = (name: string) =>
   name
     .normalize("NFD")
@@ -148,10 +143,8 @@ export const slugify = (name: string) =>
 export const smallButton =
   "inline-flex h-10 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent disabled:opacity-50";
 
-/** A radio styled as a pill: hide the input with sr-only inside the label; checked fills with the accent. */
 export const pill =
   "relative cursor-pointer rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors hover:border-accent has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";
 
-/** A form's string value, trimmed. */
 export const value = (form: FormData, key: string) =>
   String(form.get(key) ?? "").trim();

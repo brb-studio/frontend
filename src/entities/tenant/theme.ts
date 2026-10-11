@@ -1,4 +1,3 @@
-/** Tokens a tenant may override. Mirrors the `--color-*` names in globals.css. */
 export const themeTokens = [
   "canvas",
   "surface",
@@ -16,12 +15,10 @@ export const themeTokens = [
 
 export type ThemeToken = (typeof themeTokens)[number];
 
-/** A string applies to both schemes; a pair swaps with light/dark mode. */
 export type TenantTheme = Partial<
   Record<ThemeToken, string | { light: string; dark: string }>
 >;
 
-// ponytail: allowlist instead of a CSS parser — values land inside a <style> tag.
 const COLOR =
   /^(#[0-9a-f]{3,8}|[a-z]+|(rgb|rgba|hsl|hsla|oklch|oklab|color-mix)\([^;{}<>"']*\))$/i;
 

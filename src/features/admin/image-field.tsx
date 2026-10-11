@@ -9,10 +9,6 @@ import type { AdminText } from "./ui";
 const MAX_SIDE = 1600;
 const MAX_BYTES = 900 * 1024;
 
-/**
- * Re-encodes any photo the browser can open (iPhone HEIC included) as a JPEG of at most 1600 px and
- * 900 KB. Re-encoding also drops EXIF metadata such as GPS location.
- */
 async function shrink(file: File) {
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
@@ -36,10 +32,6 @@ async function shrink(file: File) {
 
 const MAX_PHOTOS = 12;
 
-/**
- * A gallery for a form, cover first: pick several photos at once, remove any, promote one to cover.
- * Each photo uploads as soon as it's picked; the form posts the ordered paths as `images`.
- */
 export function ImagesField({
   label,
   defaultValue = [],
@@ -63,7 +55,6 @@ export function ImagesField({
     if (files.length === 0) return;
     setError("");
     startTransition(async () => {
-      // One at a time, in the order picked: the gallery keeps that order and uploads never pile up.
       for (const file of files) {
         try {
           const form = new FormData();

@@ -2,7 +2,6 @@ import { adminSession } from "@/features/admin/access";
 import { EarningsManager } from "@/features/admin/earnings-manager";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 
-/** Commission rates and payments to this barbershop's barbers (owner and admin). */
 export default async function EarningsAdminPage() {
   const locale = await getLocale();
   await adminSession("earnings", locale);

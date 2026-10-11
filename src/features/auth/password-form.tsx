@@ -8,7 +8,6 @@ import { PasswordField } from "@/shared/ui/password-field";
 import { changePassword } from "./actions";
 import { useAuthForm } from "./use-auth-form";
 
-/** Change password, folded away under a native disclosure until needed. */
 export function PasswordForm({
   t,
   text,

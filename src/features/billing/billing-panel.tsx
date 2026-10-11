@@ -1,82 +1,134 @@
 "use client";
 
-import { Check, Copy, CreditCard, Gift, LoaderCircle } from "lucide-react";
+import { Check, Copy, Gift, Landmark, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useEffect, useState, useTransition } from "react";
+import { type FormEvent, useState, useTransition } from "react";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
-import { checkReferralCode, openPortal, startCheckout } from "./actions";
-import type { Billing, BillingError } from "./model";
+import { checkReferralCode, requestPayment } from "./actions";
+import type { Billing, BillingError, SubscriptionPayment } from "./model";
 
 type Text = Dictionary["admin"]["billing"];
-
-/** After Stripe sends the owner back, the webhook may still be on its way: re-read a few times. */
-const POLL_MS = 2_000;
-const POLL_TIMES = 10;
 
 export function BillingPanel({
   billing,
   lang,
-  returned,
   t,
 }: {
   billing: Billing;
   lang: Locale;
-  returned?: "success" | "cancel";
   t: Text;
 }) {
-  const router = useRouter();
   const lifetime = billing.plan === "lifetime";
-  const waiting = returned === "success" && !billing.subscribed;
-  const [gaveUp, setGaveUp] = useState(false);
-
-  useEffect(() => {
-    if (!waiting) return;
-    let times = 0;
-    const timer = setInterval(() => {
-      times += 1;
-      router.refresh();
-      if (times >= POLL_TIMES) {
-        clearInterval(timer);
-        setGaveUp(true);
-      }
-    }, POLL_MS);
-    return () => clearInterval(timer);
-  }, [waiting, router]);
-
   const money = (minor: number) =>
-    formatMoney(minor, billing.price?.currency ?? "MXN", lang);
+    formatMoney(minor, billing.price.currency, lang);
 
   return (
     <div className="grid max-w-xl gap-6">
-      {returned === "success" && (
-        <p
-          role="status"
-          className="flex items-center gap-2 rounded-2xl border border-accent/40 p-3 text-sm text-accent-text"
-        >
-          {waiting && !gaveUp ? (
-            <LoaderCircle size={16} className="animate-spin" aria-hidden />
-          ) : (
-            <Check size={16} aria-hidden />
-          )}
-          {!waiting ? t.activated : gaveUp ? t.slow : t.success}
-        </p>
-      )}
-      {returned === "cancel" && (
-        <p role="status" className="text-sm text-fg-muted">
-          {t.cancelled}
-        </p>
-      )}
-
       <SubscriptionCard billing={billing} lang={lang} money={money} t={t} />
 
-      {!lifetime && billing.price && (
-        <ReferralCard billing={billing} money={money} t={t} />
+      {!lifetime && billing.pending && (
+        <TransferCard
+          payment={billing.pending}
+          lang={lang}
+          money={money}
+          t={t}
+        />
       )}
+
+      {!lifetime && <ReferralCard billing={billing} money={money} t={t} />}
     </div>
+  );
+}
+
+function CopyButton({ text, t }: { text: string; t: Text }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <Button
+      variant="secondary"
+      className="h-10"
+      onClick={() => {
+        void navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2_000);
+          })
+          .catch(() => {});
+      }}
+    >
+      {copied ? (
+        <Check size={16} aria-hidden />
+      ) : (
+        <Copy size={16} aria-hidden />
+      )}
+      {copied ? t.copied : t.copy}
+    </Button>
+  );
+}
+
+function TransferCard({
+  payment,
+  lang,
+  money,
+  t,
+}: {
+  payment: SubscriptionPayment;
+  lang: Locale;
+  money: (minor: number) => string;
+  t: Text;
+}) {
+  const until = new Intl.DateTimeFormat(lang, {
+    dateStyle: "long",
+    timeStyle: "short",
+  }).format(new Date(payment.expiresAt));
+  const rows = [
+    { label: t.transferHolder, value: payment.holder },
+    { label: t.transferClabe, value: payment.clabe, copy: true },
+    { label: t.transferAmount, value: money(payment.amountMinor) },
+  ];
+  return (
+    <section className="grid gap-4 rounded-[2rem] border border-line bg-card p-6">
+      <h2 className="flex items-center gap-2 text-lg font-medium">
+        <Landmark size={20} aria-hidden className="text-accent" />
+        {t.transferTitle}
+      </h2>
+      <p className="text-sm text-fg-muted">{t.transferLead}</p>
+      <dl className="grid gap-3">
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-line bg-surface px-4 py-3"
+          >
+            <div className="grid min-w-0">
+              <dt className="text-xs text-fg-muted">{row.label}</dt>
+              <dd className="break-all font-medium tabular-nums">
+                {row.value}
+              </dd>
+            </div>
+            {row.copy && <CopyButton text={row.value} t={t} />}
+          </div>
+        ))}
+      </dl>
+      {(payment.discountMinor > 0 || payment.creditAppliedMinor > 0) && (
+        <p className="text-xs text-fg-muted">
+          {money(payment.listPriceMinor)}
+          {payment.discountMinor > 0 &&
+            ` − ${money(payment.discountMinor)} (${t.referralDiscount})`}
+          {payment.creditAppliedMinor > 0 &&
+            ` − ${money(payment.creditAppliedMinor)} (${t.credit})`}
+        </p>
+      )}
+      <p className="text-xs text-fg-muted">
+        {t.transferExpires} {until}
+      </p>
+      <p role="status" className="text-sm">
+        {t.transferPending}
+      </p>
+    </section>
   );
 }
 
@@ -91,6 +143,7 @@ function SubscriptionCard({
   money: (minor: number) => string;
   t: Text;
 }) {
+  const router = useRouter();
   const [code, setCode] = useState("");
   const [applied, setApplied] = useState<{
     code: string;
@@ -99,12 +152,12 @@ function SubscriptionCard({
   const [error, setError] = useState<BillingError>();
   const [pending, startTransition] = useTransition();
   const lifetime = billing.plan === "lifetime";
-  const canSubscribe = !lifetime && !billing.subscribed && billing.price;
+  const canPay = !lifetime && !billing.pending;
+  const firstMonth = !billing.referredBy && billing.referral.code === null;
   const date = (iso?: string) =>
     iso &&
     new Intl.DateTimeFormat(lang, { dateStyle: "long" }).format(new Date(iso));
   const end = date(billing.currentPeriodEnd);
-  const cancelling = billing.subscribed && date(billing.cancelAt);
 
   function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -115,28 +168,28 @@ function SubscriptionCard({
     });
   }
 
-  /** Stripe's pages live on stripe.com: a full navigation, not a client-side route. */
-  function go(action: () => ReturnType<typeof openPortal>) {
+  function pay() {
     startTransition(async () => {
-      const result = await action();
-      if (result.ok) window.location.assign(result.data.url);
-      else setError(result.error);
+      const result = await requestPayment(applied?.code);
+      if (result.ok) {
+        setError(undefined);
+        router.refresh();
+      } else setError(result.error);
     });
   }
 
-  const discounted =
-    applied && billing.price
-      ? Math.round(
-          (billing.price.amountMinor * (100 - applied.discountPercent)) / 100,
-        )
-      : undefined;
+  const discounted = applied
+    ? Math.round(
+        (billing.price.amountMinor * (100 - applied.discountPercent)) / 100,
+      )
+    : undefined;
 
   return (
     <section className="grid gap-5 rounded-[2rem] border border-line bg-card p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="grid gap-1">
           <p className="text-sm text-fg-muted">{t.product}</p>
-          {billing.price && !lifetime && (
+          {!lifetime && (
             <p className="text-3xl font-medium">
               {money(billing.price.amountMinor)}
               <span className="text-base text-fg-muted">{t.perMonth}</span>
@@ -144,25 +197,14 @@ function SubscriptionCard({
           )}
         </div>
         <span className="rounded-full border border-line px-3 py-1 text-sm">
-          {cancelling ? t.cancelling : t.status[billing.status]}
+          {billing.subscribed ? t.status.active : t.status[billing.status]}
         </span>
       </div>
 
       {lifetime && <p className="text-sm text-fg-muted">{t.lifetime}</p>}
-      {!lifetime && !billing.price && (
-        <p className="text-sm text-fg-muted">{t.disabled}</p>
-      )}
-      {cancelling && (
-        <p className="rounded-2xl border border-line p-3 text-sm">
-          {t.cancelsOn} {cancelling}. {t.cancelHint}
-        </p>
-      )}
-      {!lifetime && end && !cancelling && (
+      {!lifetime && end && (
         <p className="text-sm text-fg-muted">
-          {billing.subscribed && billing.status !== "canceled"
-            ? t.renews
-            : t.endsOn}{" "}
-          {end}
+          {billing.subscribed ? t.paidUntil : t.endedOn} {end}
         </p>
       )}
       {billing.referredBy && (
@@ -171,8 +213,13 @@ function SubscriptionCard({
           {t.referredBy} {billing.referredBy.discountPercent}% {t.off}.
         </p>
       )}
+      {!lifetime && billing.creditMinor > 0 && (
+        <p className="text-sm text-fg-muted">
+          {t.credit}: {money(billing.creditMinor)}. {t.creditHint}
+        </p>
+      )}
 
-      {canSubscribe && (
+      {canPay && firstMonth && (
         <form onSubmit={apply} className="grid gap-2">
           <Field
             name="code"
@@ -210,7 +257,7 @@ function SubscriptionCard({
               <span className="text-fg">
                 {t.firstMonth}:{" "}
                 <s className="text-fg-muted">
-                  {money(billing.price?.amountMinor ?? 0)}
+                  {money(billing.price.amountMinor)}
                 </s>{" "}
                 <strong>{money(discounted)}</strong>
               </span>
@@ -235,27 +282,17 @@ function SubscriptionCard({
         </p>
       )}
 
-      {canSubscribe && (
+      {canPay && (
         <Button
           disabled={pending || Boolean(code.trim() && !applied)}
-          onClick={() => go(() => startCheckout(lang, applied?.code))}
+          onClick={pay}
         >
           {pending ? (
             <LoaderCircle size={18} className="animate-spin" aria-hidden />
           ) : (
-            <CreditCard size={18} aria-hidden />
+            <Landmark size={18} aria-hidden />
           )}
-          {t.subscribe}
-        </Button>
-      )}
-      {!lifetime && billing.subscribed && (
-        <Button
-          variant="secondary"
-          disabled={pending}
-          onClick={() => go(() => openPortal(lang))}
-        >
-          <CreditCard size={18} aria-hidden />
-          {t.manage}
+          {billing.subscribed ? t.renew : t.pay}
         </Button>
       )}
     </section>
@@ -279,9 +316,7 @@ function ReferralCard({
       await navigator.clipboard.writeText(code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2_000);
-    } catch {
-      // No clipboard permission: the code stays visible and selectable.
-    }
+    } catch {}
   }
 
   return (

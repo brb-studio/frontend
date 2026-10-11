@@ -36,7 +36,6 @@ export default async function WelcomePage() {
           href={`/${locale}/login`}
         />
       </div>
-
       <div
         id="auth-sheet"
         popover="auto"

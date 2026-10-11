@@ -52,7 +52,7 @@ function BarberEditor({
   const action = useAdminAction();
   const [hours, setHours] = useState<HoursRow[]>(barber.hours);
   const [serviceIds, setServiceIds] = useState(barber.serviceIds);
-  // A barber can only do services for every branch or for their own.
+
   const available = services.filter(
     (s) => s.active && (!s.branchId || s.branchId === barber.branchId),
   );
@@ -167,7 +167,6 @@ function NewBarber({ t, onDone }: { t: AdminText; onDone: () => void }) {
   );
 }
 
-/** Barbers: who works where, what they do and when. */
 export function BarbersManager({ locale, t, canCreate }: Props) {
   const barbers = useQuery(barbersQuery);
   const services = useQuery(servicesQuery);

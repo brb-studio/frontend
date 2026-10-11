@@ -17,6 +17,7 @@ import {
   platformQuery,
   summarySchema,
 } from "./model";
+import { Subscriptions } from "./subscriptions";
 import {
   Async,
   type Column,
@@ -123,7 +124,6 @@ function Kpis({
   );
 }
 
-/** Overview → barbershop → branch → barber: each level is a table whose rows open the next one. */
 function Drill({
   state,
   locale,
@@ -295,7 +295,6 @@ function Drill({
   );
 }
 
-/** Where you are in Overview → barbershop → branch → barber → cut, each step a way back up. */
 function Breadcrumb({
   state,
   names,
@@ -391,13 +390,12 @@ export function Dashboard({ locale, t }: { locale: Locale; t: PlatformText }) {
   const names = useOptions(state.filters);
   if (!hydrated) return null;
   const { view, set, filters } = state;
-  const views: View[] = ["overview", "cuts", "earnings"];
+  const views: View[] = ["overview", "cuts", "earnings", "subscriptions"];
 
   return (
     <div className="grid gap-6">
       <FilterBar state={state} t={t} names={names} />
       <Kpis filters={filters} locale={locale} t={t} />
-
       <div
         role="tablist"
         aria-label={t.tabs.label}
@@ -418,7 +416,6 @@ export function Dashboard({ locale, t }: { locale: Locale; t: PlatformText }) {
           </button>
         ))}
       </div>
-
       <div
         id="view"
         role="tabpanel"
@@ -432,6 +429,7 @@ export function Dashboard({ locale, t }: { locale: Locale; t: PlatformText }) {
           </>
         )}
         {view === "cuts" && <CutsTable state={state} locale={locale} t={t} />}
+        {view === "subscriptions" && <Subscriptions locale={locale} t={t} />}
         {view === "earnings" && (
           <Earnings
             scope="platform"

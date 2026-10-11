@@ -27,7 +27,6 @@ const when = (a: Appointment, locale: Locale) =>
     timeZone: a.timeZone,
   }).format(new Date(a.startAt));
 
-/** The customer's upcoming visits (cancellable while the branch's notice allows) and history. */
 export function MyAppointments({
   locale,
   t,
@@ -40,7 +39,7 @@ export function MyAppointments({
   const [error, setError] = useState<"tooLate" | "unavailable" | null>(null);
   const [rescheduling, setRescheduling] = useState<string | null>(null);
   const [moved, setMoved] = useState(false);
-  // The appointment whose cancel button was pressed, waiting for the customer to confirm.
+
   const [confirming, setConfirming] = useState<string | null>(null);
   const cancelling = useMutation({
     mutationFn: cancelAppointment,
@@ -78,6 +77,7 @@ export function MyAppointments({
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
           {a.payment?.status === "paid" && <> · {t.paidBadge}</>}
+          {a.payment?.status === "pending" && <> · {t.pendingBadge}</>}
         </span>
         {a.cancellable && confirming !== a.id && (
           <span className="flex shrink-0 gap-2">
@@ -101,9 +101,6 @@ export function MyAppointments({
           </span>
         )}
       </p>
-      {a.cancellable && a.payment?.status === "paid" && (
-        <p className="text-xs text-fg-muted">{t.refundNote}</p>
-      )}
       {rescheduling === a.id && (
         <ReschedulePanel
           appointment={a}

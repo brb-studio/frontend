@@ -18,7 +18,6 @@ import {
   type StaffNotification,
 } from "./model";
 
-/** "sáb 10 oct, 11:00" in the appointment's own timezone. */
 export function when(at: string, timeZone: string, locale: Locale) {
   return new Intl.DateTimeFormat(locale, {
     weekday: "short",
@@ -30,7 +29,6 @@ export function when(at: string, timeZone: string, locale: Locale) {
   }).format(new Date(at));
 }
 
-/** A notification's local start ("2026-10-10T11:00") formatted without shifting it. */
 const localStart = (start: string, locale: Locale) =>
   new Intl.DateTimeFormat(locale, {
     weekday: "short",
@@ -41,10 +39,6 @@ const localStart = (start: string, locale: Locale) =>
     timeZone: "UTC",
   }).format(new Date(`${start}:00Z`));
 
-/**
- * A barber's live desk: the next 7 days, notifications, and a Server-Sent Events connection that
- * refreshes both the moment a booking lands. The browser reconnects on its own if the line drops.
- */
 export function LiveDesk({
   locale,
   t,
@@ -93,7 +87,6 @@ export function LiveDesk({
           ? `${t.notificationTypes[latest.type]}: ${latest.summary.customerName}`
           : ""}
       </p>
-
       <section aria-labelledby="agenda-title" className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
           <h2 id="agenda-title" className="text-xl font-medium">
@@ -132,7 +125,6 @@ export function LiveDesk({
           <p className="text-fg-muted">{t.noAgenda}</p>
         )}
       </section>
-
       <section aria-labelledby="notifications-title" className="grid gap-3">
         <div className="flex items-center justify-between gap-3">
           <h2 id="notifications-title" className="text-xl font-medium">

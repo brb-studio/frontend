@@ -11,7 +11,6 @@ const query = z
   .object({ branch: slug, service: slug.optional(), package: slug.optional() })
   .refine((q) => !q.service !== !q.package);
 
-/** Browser → this server → API: the API stays private and the tenant comes from this request's host. */
 export async function GET(request: NextRequest) {
   const parsed = query.safeParse(
     Object.fromEntries(request.nextUrl.searchParams),

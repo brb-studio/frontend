@@ -80,7 +80,6 @@ const write = z.discriminatedUnion("kind", [
   }),
 ]);
 
-/** The dashboard's only two writes: a barber's commission rate, and paying commission on specific cuts. */
 export async function platformWrite(
   input: z.input<typeof write>,
 ): Promise<WriteResult> {
@@ -110,6 +109,54 @@ export async function platformWrite(
               ...(body.reference ? { reference: body.reference } : {}),
             },
           });
+    return { ok: true, data };
+  } catch (error) {
+    return error instanceof ApiError
+      ? { ok: false, code: error.code, message: error.message }
+      : { ok: false, code: "UNAVAILABLE", message: "Unavailable" };
+  }
+}
+
+const subscriptionWrite = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("confirm"),
+    id,
+    receivedMinor: z.number().int().min(1),
+    reference: z.string().trim().max(120).optional(),
+  }),
+  z.object({
+    action: z.literal("reject"),
+    id,
+    reason: z.string().trim().max(500).optional(),
+  }),
+]);
+
+export async function platformSubscription(
+  input: z.input<typeof subscriptionWrite>,
+): Promise<WriteResult> {
+  const parsed = subscriptionWrite.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, code: "VALIDATION", message: "Invalid request" };
+  }
+  const body = parsed.data;
+  try {
+    const data = await backend(
+      `/platform/subscriptions/${body.id}/${body.action}`,
+      z.unknown(),
+      {
+        method: "POST",
+        platform: true,
+        body:
+          body.action === "confirm"
+            ? {
+                receivedMinor: body.receivedMinor,
+                ...(body.reference ? { reference: body.reference } : {}),
+              }
+            : body.reason
+              ? { reason: body.reason }
+              : {},
+      },
+    );
     return { ok: true, data };
   } catch (error) {
     return error instanceof ApiError

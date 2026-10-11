@@ -7,10 +7,9 @@ import { daysAgo, type Filters, STATUSES, today } from "./model";
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[a-f\d]{24}$/;
 
-export type View = "overview" | "cuts" | "earnings";
-const VIEWS: View[] = ["overview", "cuts", "earnings"];
+export type View = "overview" | "cuts" | "earnings" | "subscriptions";
+const VIEWS: View[] = ["overview", "cuts", "earnings", "subscriptions"];
 
-/** Dashboard state lives in the URL (shareable, back button works). Changing a filter returns to page 1. */
 export function useDashboardState() {
   const params = useSearchParams();
   const router = useRouter();

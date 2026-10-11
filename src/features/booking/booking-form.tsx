@@ -23,7 +23,7 @@ import {
   type BookingTarget,
   toBookingOptions,
 } from "./model";
-import { PayOnline } from "./pay-online";
+import { PayByTransfer } from "./pay-transfer";
 
 const focusRing =
   "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";
@@ -40,7 +40,7 @@ export function BookingForm({
   initialBranch,
   signedInCustomer,
   currency,
-  paymentsOnline,
+  transfersOn,
   t,
 }: {
   lang: Locale;
@@ -54,7 +54,7 @@ export function BookingForm({
   initialBranch: string;
   signedInCustomer: boolean;
   currency: string;
-  paymentsOnline: boolean;
+  transfersOn: boolean;
   t: Dictionary["booking"];
 }) {
   const queryClient = useQueryClient();
@@ -66,7 +66,6 @@ export function BookingForm({
     [availability.data, lang],
   );
 
-  // Choices fall back to the first available one, so the form never points at a vanished slot.
   const [barberSlug, setBarberSlug] = useState("");
   const [date, setDate] = useState("");
   const [startAt, setStartAt] = useState("");
@@ -123,8 +122,8 @@ export function BookingForm({
         <p className="font-medium">
           {t.total}: {price(booking.data.appointment.totalMinor)}
         </p>
-        {paymentsOnline && booking.data.appointment.totalMinor > 0 ? (
-          <PayOnline
+        {transfersOn && booking.data.appointment.totalMinor > 0 ? (
+          <PayByTransfer
             lang={lang}
             appointmentId={booking.data.appointment.id}
             paymentToken={booking.data.appointment.paymentToken}
@@ -325,7 +324,6 @@ export function BookingForm({
                       })}
                     </div>
                   </fieldset>
-
                   <fieldset className="min-w-0">
                     <legend className="mb-2 text-base font-medium">
                       {t.time}
@@ -347,7 +345,6 @@ export function BookingForm({
                     </div>
                   </fieldset>
                 </div>
-
                 <p
                   aria-live="polite"
                   className="flex items-center justify-between gap-4 rounded-3xl border border-line bg-card px-4 py-3 text-sm"
@@ -411,7 +408,6 @@ export function BookingForm({
                     {t.apply}
                   </Button>
                 </div>
-
                 <dl
                   aria-live="polite"
                   className="grid gap-1 rounded-3xl border border-line bg-card px-4 py-3 text-sm"

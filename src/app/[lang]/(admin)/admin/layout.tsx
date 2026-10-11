@@ -16,10 +16,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: dict.admin.title, robots: { index: false, follow: false } };
 }
 
-/**
- * The team's app: its own shell (sidebar on desktop, tab bar on phones), no customer pages. Signed-out
- * visitors go to sign in; customers go back to the shop.
- */
 export default async function AdminLayout({
   children,
 }: {
@@ -80,7 +76,6 @@ export default async function AdminLayout({
           {signOut}
         </div>
       </aside>
-
       <div className="min-w-0">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-3 border-b border-line bg-canvas/85 px-4 backdrop-blur-xl md:hidden">
           <span className="flex min-w-0 items-center gap-2 font-medium">

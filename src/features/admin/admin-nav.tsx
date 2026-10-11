@@ -2,6 +2,7 @@
 
 import {
   BadgePercent,
+  Banknote,
   CalendarDays,
   CalendarOff,
   CircleUserRound,
@@ -30,6 +31,7 @@ const ICONS: Record<Section, LucideIcon> = {
   branches: Store,
   timeOff: CalendarOff,
   promotions: BadgePercent,
+  payments: Banknote,
   earnings: Wallet,
   team: UserCog,
   settings: Settings,
@@ -37,7 +39,6 @@ const ICONS: Record<Section, LucideIcon> = {
   account: CircleUserRound,
 };
 
-// The phone tab bar fits four tabs plus "More"; the rest open from "More".
 const TABS = 4;
 
 type Props = {
@@ -55,7 +56,6 @@ function useHref(locale: Locale) {
   return { href, current };
 }
 
-/** The role's sections, grouped in menu order; empty groups are dropped. */
 const grouped = (sections: Section[]) =>
   (Object.keys(GROUPS) as Group[])
     .map((group) => ({
@@ -64,7 +64,6 @@ const grouped = (sections: Section[]) =>
     }))
     .filter(({ items }) => items.length > 0);
 
-/** Desktop: the panel's sections down the sidebar, in labeled groups. */
 export function AdminSidebarNav({ locale, sections, labels, groups }: Props) {
   const { href, current } = useHref(locale);
   return (
@@ -97,10 +96,6 @@ export function AdminSidebarNav({ locale, sections, labels, groups }: Props) {
   );
 }
 
-/**
- * Phones: a solid tab bar within thumb reach. Past five sections, the first four stay as tabs and
- * the rest open in a "More" sheet anchored above the bar (native popover: Esc and tapping outside close it).
- */
 export function AdminTabBar({ locale, sections, labels, groups }: Props) {
   const { href, current } = useHref(locale);
   const overflow = sections.length > TABS + 1;

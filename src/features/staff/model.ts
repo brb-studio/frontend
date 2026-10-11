@@ -31,7 +31,6 @@ export const notificationsSchema = z.object({
 export const agendaKey = ["staff", "agenda"] as const;
 export const notificationsKey = ["staff", "notifications"] as const;
 
-/** The next 7 days of appointments this staff member may see. */
 export const agendaQuery = () =>
   queryOptions({
     queryKey: agendaKey,

@@ -15,7 +15,6 @@ export const formatDay = (iso: string, locale: Locale) =>
     new Date(iso),
   );
 
-/** 4000 → "40%", 1250 → "12.5%". */
 export const formatBps = (bps: number, locale: Locale) =>
   new Intl.NumberFormat(locale, {
     style: "percent",

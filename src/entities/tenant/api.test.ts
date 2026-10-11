@@ -18,7 +18,7 @@ test("per-weekday hours group into runs of identical days, Monday first, split s
     { from: 6, to: 6, open: "10:00", close: "14:00" },
     { from: 6, to: 6, open: "15:00", close: "18:00" },
   ]);
-  // A closed day in the middle breaks the run.
+
   expect(
     groupHours([
       { weekday: 1, open: "09:00", close: "17:00" },

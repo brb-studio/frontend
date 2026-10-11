@@ -1,9 +1,5 @@
 import { sessionToken, tenantHost } from "@/shared/api/backend";
 
-/**
- * Live notifications: this server opens the API's Server-Sent Events stream with the session from
- * the httpOnly cookie and pipes it to the browser. Closing the tab aborts the upstream request.
- */
 export async function GET(request: Request) {
   const base = process.env.BACKEND_URL;
   const [token, host] = await Promise.all([sessionToken(), tenantHost()]);

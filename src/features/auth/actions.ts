@@ -17,7 +17,6 @@ import {
 const text = (formData: FormData, key: string) =>
   String(formData.get(key) ?? "");
 
-/** Only a known locale steers redirects, so a crafted `lang` can't send anyone elsewhere. */
 const localeOf = (formData: FormData) => {
   const lang = text(formData, "lang");
   return hasLocale(lang) ? lang : defaultLocale;
@@ -29,7 +28,6 @@ const session = z.object({
   user: z.object({ role: z.string() }),
 });
 
-/** The API token lives only in an httpOnly cookie: page scripts can never read it. */
 async function startSession({ token, expiresAt }: z.output<typeof session>) {
   (await cookies()).set(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -66,7 +64,7 @@ export async function login(
   } catch (error) {
     return { formError: errorKey(error), values };
   }
-  // The team works in the panel; customers go to the shop.
+
   redirect(`/${localeOf(formData)}/${role === "customer" ? "home" : "admin"}`);
 }
 
@@ -98,7 +96,6 @@ export async function register(
   redirect(`/${localeOf(formData)}/home`);
 }
 
-/** Changes the signed-in user's password. This session stays; the API signs out every other one. */
 export async function changePassword(
   _: AuthState,
   formData: FormData,
@@ -119,7 +116,6 @@ export async function changePassword(
   return { done: true };
 }
 
-/** Revokes the session at the API (best effort) and always clears the cookie. */
 export async function logout(formData: FormData) {
   await backend("/v1/auth/logout", z.undefined(), { method: "POST" }).catch(
     () => undefined,

@@ -23,7 +23,6 @@ import {
 
 const promotionsQuery = adminQuery("promotions", z.array(promotionSchema));
 
-/** Discounts: a code or automatic, percentage or fixed, with optional first-visit and usage limits. */
 export function PromotionsManager({
   locale,
   currency,

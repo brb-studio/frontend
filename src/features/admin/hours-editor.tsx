@@ -5,7 +5,6 @@ import type { Locale } from "@/shared/i18n/locales";
 import type { HoursRow } from "./schemas";
 import type { AdminText } from "./ui";
 
-// Monday first; weekday numbers are 0 = Sunday … 6 = Saturday.
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 const timeInput =
   "h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg focus:border-accent";
@@ -15,10 +14,6 @@ const dayName = (weekday: number, locale: Locale) =>
     new Date(Date.UTC(2024, 0, 7 + weekday)),
   );
 
-/**
- * Weekly hours: each day open or closed, with an optional second shift (the gap between the two is
- * the break). Times are wall-clock in the branch's timezone.
- */
 export function HoursEditor({
   value,
   onChange,

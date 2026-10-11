@@ -4,22 +4,21 @@ import { backend } from "@/shared/api/backend";
 import type { Locale } from "@/shared/i18n/locales";
 import { localized, pick } from "@/shared/i18n/localized";
 
-/** Something bookable: a single service, or a package of services at its own price. */
 export type Service = {
   kind: "service" | "package";
   slug: string;
   name: string;
   description: string;
   durationMin: number;
-  /** The cover photo. */
+
   image: string;
-  /** Every photo, cover first (at least one: the cover or a sample). */
+
   images: string[];
-  /** Integer minor units of the tenant's currency. */
+
   price: number;
-  /** For packages: what the services cost separately. */
+
   listPrice?: number;
-  /** For packages: the services inside, in order. */
+
   includes?: string[];
 };
 
@@ -70,7 +69,6 @@ export function toServices(
   ];
 }
 
-/** Services and packages someone can actually book right now, in display order. */
 export const getServices = cache(async (locale: Locale) =>
   toServices(await backend("/v1/public/catalog", apiCatalog), locale),
 );

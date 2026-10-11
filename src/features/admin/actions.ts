@@ -21,7 +21,6 @@ export type UploadResult =
   | { ok: true; path: string }
   | { ok: false; code: string; message: string };
 
-/** One photo (already shrunk in the browser) to the API; returns the path to store in `image`. */
 export async function uploadImage(form: FormData): Promise<UploadResult> {
   const file = form.get("file");
   if (
@@ -45,10 +44,6 @@ export async function uploadImage(form: FormData): Promise<UploadResult> {
   }
 }
 
-/**
- * Every admin write goes through here: an allow-listed staff path, the session from the httpOnly
- * cookie, and the API's answer back as a value (field issues included) so forms can show it.
- */
 export async function adminRequest(
   input: z.input<typeof request>,
 ): Promise<AdminResult> {

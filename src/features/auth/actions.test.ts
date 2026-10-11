@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, expect, mock, spyOn, test } from "bun:test";
 
-// Server actions read the request's cookies and headers; stand in for Next's request scope.
 const jar = new Map<string, { value: string; options?: unknown }>();
 mock.module("next/headers", () => ({
   cookies: async () => ({
@@ -27,7 +26,6 @@ const validLogin = {
   password: "supersecret",
 };
 
-/** The API answering every call with `status` and `body`. */
 const api = (status: number, body: unknown) =>
   spyOn(globalThis, "fetch").mockImplementation(
     Object.assign(async () => Response.json(body, { status }), {

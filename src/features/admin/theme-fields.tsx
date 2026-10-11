@@ -20,7 +20,6 @@ const ACCENTS = [
 const LIGHTS = ["#ffffff", "#f6f3ec", "#efefed", "#e4e4e1", "#f3ebe2"];
 const DARKS = ["#050505", "#0d0f12", "#16181d", "#1f1d1b", "#0b1220"];
 
-/** The saved page background for a scheme, or the built-in default (also for non-#rrggbb values). */
 function savedCanvas(canvas: unknown, scheme: "light" | "dark") {
   const fallback = scheme === "light" ? DEFAULT_LIGHT : DEFAULT_DARK;
   const color =
@@ -122,7 +121,6 @@ function ColorField({
   );
 }
 
-/** Accent plus light and dark page backgrounds: swatch preview, ready-made colors and a free picker. */
 export function ThemeFields({
   t,
   accent,

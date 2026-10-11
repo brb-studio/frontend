@@ -4,7 +4,6 @@ import { getTenant } from "@/entities/tenant/api";
 const DEFAULT_ACCENT = "#ff6a1a";
 const INK = "#111111";
 
-/** The tenant's accent as a plain hex (the image renderer doesn't take every CSS color). */
 async function brand() {
   try {
     const tenant = await getTenant();
@@ -19,7 +18,6 @@ async function brand() {
   }
 }
 
-/** A square app icon: the business's initial on its accent color, safe for maskable crops. */
 export async function brandIcon(size: number) {
   const { letter, accent } = await brand();
   return new ImageResponse(

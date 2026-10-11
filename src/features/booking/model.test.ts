@@ -4,7 +4,7 @@ import { type Availability, toBookingOptions } from "./model";
 const availability: Availability = {
   branch: { slug: "centro", name: "Centro", timeZone: "America/Tijuana" },
   today: "2026-10-07",
-  // Wednesday 7 → Tuesday 20 October 2026.
+
   dates: Array.from(
     { length: 14 },
     (_, i) => `2026-10-${String(7 + i).padStart(2, "0")}`,

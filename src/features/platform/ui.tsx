@@ -8,7 +8,6 @@ import { PlatformError } from "./model";
 
 export type PlatformText = Dictionary["platform"];
 
-/** "Page {page} of {pages}" → filled in. */
 export const fill = (text: string, values: Record<string, string | number>) =>
   text.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ""));
 
@@ -23,7 +22,6 @@ export const outlineButton =
 export const solidButton =
   "inline-flex h-10 items-center justify-center gap-2 rounded-full bg-accent px-5 text-sm font-medium text-accent-fg transition-[box-shadow,filter] hover:shadow-glow disabled:pointer-events-none disabled:opacity-50";
 
-/** Loading, error and empty states around a query; `children` only ever sees data. */
 export function Async<T>({
   query,
   t,
@@ -97,11 +95,10 @@ export type Column<T> = {
   header: string;
   cell: (row: T) => ReactNode;
   align?: "right";
-  /** The column that names the row; it becomes the title of the phone card. */
+
   primary?: boolean;
 };
 
-/** A table from md up; on phones every row becomes a card (no sideways scrolling to read a number). */
 export function DataTable<T extends { id: string }>({
   columns,
   rows,
@@ -209,7 +206,6 @@ export function Pager({
   );
 }
 
-/** A native modal: focus trap, Escape and backdrop come from the browser. */
 export function Modal({
   title,
   closeLabel,
@@ -223,7 +219,6 @@ export function Modal({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    // No cleanup: unmounting removes the dialog, and closing it here would fire onClose a second time.
     const dialog = ref.current;
     if (dialog && !dialog.open) dialog.showModal();
   }, []);
@@ -233,7 +228,6 @@ export function Modal({
       ref={ref}
       aria-label={title}
       onClose={onClose}
-      // Backdrop click closes; keyboards close with Escape, which <dialog> handles itself.
       onClick={(event) => {
         if (event.target === ref.current) onClose();
       }}

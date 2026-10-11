@@ -8,17 +8,12 @@ import { removePushSubscription, savePushSubscription } from "./actions";
 
 type State = "loading" | "unsupported" | "install" | "blocked" | "off" | "on";
 
-/** VAPID keys travel as base64url; the Push API wants raw bytes. */
 function keyBytes(base64url: string) {
   const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
   const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
   return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
 }
 
-/**
- * Phone notifications for new, moved and cancelled appointments (Web Push). Android works in the
- * browser; an iPhone needs the app added to the home screen first (iOS 16.4+), so we say so.
- */
 export function PushToggle({
   publicKey,
   t,
@@ -58,7 +53,6 @@ export function PushToggle({
     setBusy(true);
     setFailed(false);
     try {
-      // Must run inside the tap: browsers only show the permission prompt for a user gesture.
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         setState(permission === "denied" ? "blocked" : "off");

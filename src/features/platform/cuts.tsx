@@ -24,9 +24,15 @@ const statusTone = {
   no_show: "bad",
 } as const;
 
-const paymentTone = { paid: "ok", refunded: "warn", failed: "bad" } as const;
+const paymentTone = {
+  paid: "ok",
+  pending: "warn",
+  refunded: "warn",
+  rejected: "bad",
+  expired: "bad",
+  failed: "bad",
+} as const;
 
-/** The cuts of the period, newest first, paginated; a row opens its detail. */
 export function CutsTable({
   state,
   locale,

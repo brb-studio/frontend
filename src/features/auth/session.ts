@@ -15,7 +15,6 @@ const me = z.object({
 
 export type SessionUser = z.output<typeof me>["user"];
 
-/** Who is signed in on this request, or null. An expired or revoked token is just signed out. */
 export const getSession = cache(async (): Promise<SessionUser | null> => {
   if (!(await sessionToken())) return null;
   try {

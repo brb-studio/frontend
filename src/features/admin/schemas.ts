@@ -137,3 +137,32 @@ export const tenantSchema = z.object({
     limits: z.object({ branches: z.number(), barbers: z.number() }),
   }),
 });
+
+export const bankSettingsSchema = z.object({
+  bankTransferEnabled: z.boolean(),
+  bankAccountKey: z.string().nullable(),
+  bankAccountHolder: z.string().nullable(),
+});
+
+export const PAYMENT_STATUSES = [
+  "pending",
+  "paid",
+  "rejected",
+  "expired",
+] as const;
+
+export const paymentSchema = z.object({
+  id: z.string(),
+  appointmentId: z.string(),
+  status: z.enum(PAYMENT_STATUSES),
+  amountMinor: z.number().int(),
+  currency: z.string(),
+  createdAt: z.string(),
+  expiresAt: z.string(),
+  reference: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  startAt: z.string().nullable(),
+  customerName: z.string().nullable(),
+  customerPhone: z.string().nullable(),
+});
+export type AdminPayment = z.output<typeof paymentSchema>;

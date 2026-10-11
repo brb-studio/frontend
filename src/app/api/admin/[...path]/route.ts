@@ -3,7 +3,6 @@ import * as z from "zod";
 import { isAdminPath } from "@/features/admin/paths";
 import { backend, errorResponse } from "@/shared/api/backend";
 
-/** Read-only door for the admin panel's queries: GET on allow-listed staff paths, with the session cookie. */
 export async function GET(
   request: NextRequest,
   { params }: RouteContext<"/api/admin/[...path]">,

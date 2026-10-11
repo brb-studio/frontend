@@ -23,9 +23,15 @@ function Item({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-const paymentTone = { paid: "ok", refunded: "warn", failed: "bad" } as const;
+const paymentTone = {
+  paid: "ok",
+  pending: "warn",
+  refunded: "warn",
+  rejected: "bad",
+  expired: "bad",
+  failed: "bad",
+} as const;
 
-/** One cut, auditable: what happened, what was charged and collected, and exactly how the commission was worked out. */
 export function CutDetail({
   id,
   locale,
@@ -98,7 +104,6 @@ export function CutDetail({
                   )}
                 </dl>
               </section>
-
               <section aria-labelledby="fin" className="grid gap-3">
                 <h3 id="fin" className="font-medium">
                   {d.finance}
@@ -140,7 +145,6 @@ export function CutDetail({
                     )}
                   </Item>
                 </dl>
-
                 <div className={`${card} grid gap-3 p-4`}>
                   <p className="flex items-center gap-2 font-medium">
                     {d.commission}
@@ -170,7 +174,6 @@ export function CutDetail({
                     <p className="text-sm text-fg-muted">{d.notApplicable}</p>
                   )}
                 </div>
-
                 <div className={`${card} grid gap-1 p-4 text-sm`}>
                   <p className="font-medium">{d.payout}</p>
                   {cut.payout ? (

@@ -3,7 +3,6 @@ import * as z from "zod";
 import { formatDate } from "@/shared/i18n/format";
 import type { Locale } from "@/shared/i18n/locales";
 
-/** What to book: one service or one package, at one branch. */
 export type BookingTarget = {
   branch: string;
   kind: "service" | "package";
@@ -41,11 +40,6 @@ export const availabilityKey = (target: BookingTarget) =>
 export const availabilityPath = (target: BookingTarget) =>
   `branch=${encodeURIComponent(target.branch)}&${target.kind}=${encodeURIComponent(target.slug)}`;
 
-/**
- * Free times for one branch and one service or package. In the browser this goes through the
- * frontend's own /api route (the API itself is never exposed to the browser); the server prefetches
- * the same key with its own query function.
- */
 export const availabilityQuery = (target: BookingTarget) =>
   queryOptions({
     queryKey: availabilityKey(target),
@@ -57,7 +51,7 @@ export const availabilityQuery = (target: BookingTarget) =>
       if (!response.ok) throw new Error(`availability ${response.status}`);
       return availabilitySchema.parse(await response.json());
     },
-    // Times change as people book: refresh in the background every 30 s while the page is open.
+
     staleTime: 30_000,
     refetchInterval: 30_000,
   });
@@ -68,7 +62,6 @@ const utc = (date: string) => new Date(`${date}T00:00:00Z`);
 const capitalize = (text: string) =>
   text.charAt(0).toUpperCase() + text.slice(1);
 
-/** Availability → what the picker renders: a month grid of the booking window, and each barber's times. */
 export function toBookingOptions(availability: Availability, locale: Locale) {
   const { dates, durationMin, branch } = availability;
   const date = (value: string, options: Intl.DateTimeFormatOptions) =>
@@ -97,7 +90,7 @@ export function toBookingOptions(availability: Availability, locale: Locale) {
       };
     },
   );
-  // 2024-01-07 was a Sunday: weekday names for the header, starting on the locale's first day.
+
   const weekdayAt = (offset: number) =>
     date(
       new Date(Date.UTC(2024, 0, 7 + ((firstDay + offset) % 7)))
