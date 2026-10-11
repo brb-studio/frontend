@@ -24,7 +24,7 @@ export function ServiceCard({
 }: Props) {
   return (
     <li
-      className={`group relative flex flex-col gap-3 rounded-[1.75rem] border border-line bg-card p-2 pb-4 shadow-soft has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-accent-text ${className}`}
+      className={`group relative flex flex-col gap-3 rounded-[1.75rem] border border-line bg-card p-2 pb-4 shadow-soft has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-accent ${className}`}
     >
       <div className="relative isolate aspect-square overflow-hidden rounded-[1.375rem] bg-canvas">
         <Image

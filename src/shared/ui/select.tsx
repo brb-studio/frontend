@@ -26,7 +26,7 @@ export function Select({
         <select
           {...select}
           id={selectId}
-          className={`h-13 w-full appearance-none rounded-2xl border border-line-strong bg-surface pr-12 text-fg transition-colors focus:border-accent-text ${icon ? "pl-12" : "pl-4"}`}
+          className={`h-13 w-full appearance-none rounded-2xl border border-line-strong bg-surface pr-12 text-fg transition-colors focus:border-accent ${icon ? "pl-12" : "pl-4"}`}
         >
           {children}
         </select>

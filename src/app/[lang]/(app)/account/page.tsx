@@ -38,10 +38,10 @@ export default async function AccountPage() {
       href={tenant.instagramUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex border border-line bg-card animate-rise items-center justify-between rounded-3xl px-5 py-4 transition-colors hover:border-accent-text [animation-delay:160ms]"
+      className="flex border border-line bg-card animate-rise items-center justify-between rounded-3xl px-5 py-4 transition-colors hover:border-accent [animation-delay:160ms]"
     >
       {t.instagram}
-      <ExternalLink size={18} aria-hidden="true" className="text-accent-text" />
+      <ExternalLink size={18} aria-hidden="true" className="text-accent" />
     </a>
   );
 

@@ -8,7 +8,7 @@ import type { AdminText } from "./ui";
 // Monday first; weekday numbers are 0 = Sunday … 6 = Saturday.
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 const timeInput =
-  "h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg focus:border-accent-text";
+  "h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg focus:border-accent";
 
 const dayName = (weekday: number, locale: Locale) =>
   new Intl.DateTimeFormat(locale, { weekday: "long", timeZone: "UTC" }).format(
@@ -118,7 +118,7 @@ export function HoursEditor({
                         rows.filter((_, i) => i !== index),
                       )
                     }
-                    className="grid size-10 place-items-center rounded-full border border-line hover:border-accent-text"
+                    className="grid size-10 place-items-center rounded-full border border-line hover:border-accent"
                   >
                     <X size={16} aria-hidden="true" />
                     <span className="sr-only">{t.removeShift}</span>

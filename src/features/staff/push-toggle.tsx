@@ -117,11 +117,7 @@ export function PushToggle({
       {state === "on" && (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="flex items-center gap-2 text-sm">
-            <BellRing
-              size={18}
-              aria-hidden="true"
-              className="text-accent-text"
-            />
+            <BellRing size={18} aria-hidden="true" className="text-accent" />
             {t.on}
           </p>
           <Button

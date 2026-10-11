@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
 import { tenantSchema } from "./schemas";
+import { DEFAULT_DARK, DEFAULT_LIGHT, ThemeFields } from "./theme-fields";
 import { type AdminText, Panel, Result, value } from "./ui";
 
 const tenantQuery = adminQuery("tenant", tenantSchema);
@@ -15,17 +16,29 @@ export function SettingsForm({ t }: { t: AdminText }) {
   const tenant = useQuery(tenantQuery);
   const action = useAdminAction();
   const accent = tenant.data?.theme.accent;
+  const canvas = tenant.data?.theme.canvas;
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const instagram = value(form, "instagram");
+    const light = value(form, "canvasLight");
+    const dark = value(form, "canvasDark");
+    // Defaults aren't stored: leaving them unset keeps following the app's own palette.
+    const { canvas: _old, ...rest } = tenant.data?.theme ?? {};
+    const isDefault =
+      light.toLowerCase() === DEFAULT_LIGHT &&
+      dark.toLowerCase() === DEFAULT_DARK;
     action.mutate({
       method: "PATCH",
       path: "tenant",
       body: {
         name: value(form, "name"),
-        theme: { ...tenant.data?.theme, accent: value(form, "accent") },
+        theme: {
+          ...rest,
+          accent: value(form, "accent"),
+          ...(isDefault ? {} : { canvas: { light, dark } }),
+        },
         brand: {
           ...tenant.data?.brand,
           ...(instagram ? { instagramUrl: instagram } : {}),
@@ -47,19 +60,7 @@ export function SettingsForm({ t }: { t: AdminText }) {
             required
             defaultValue={tenant.data.name}
           />
-          <label className="grid gap-2 text-sm font-medium">
-            {t.settings.accent}
-            <input
-              type="color"
-              name="accent"
-              defaultValue={
-                typeof accent === "string" && /^#[0-9a-f]{6}$/i.test(accent)
-                  ? accent
-                  : "#ff6a1a"
-              }
-              className="h-12 w-24 cursor-pointer rounded-xl border border-line-strong bg-surface"
-            />
-          </label>
+          <ThemeFields t={t.settings} accent={accent} canvas={canvas} />
           <Field
             name="instagram"
             type="url"

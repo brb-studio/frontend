@@ -137,7 +137,7 @@ export function PayOnline({
                     <CreditCard
                       size={18}
                       aria-hidden="true"
-                      className="shrink-0 text-accent-text"
+                      className="shrink-0 text-accent"
                     />
                     <span id="pay-sheet-title" className="truncate">
                       {t.payOnline}
@@ -151,7 +151,7 @@ export function PayOnline({
                       type="button"
                       onClick={() => setOpen(false)}
                       aria-label={t.close}
-                      className="grid size-10 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent-text"
+                      className="grid size-10 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent"
                     >
                       <X size={18} aria-hidden="true" />
                     </button>

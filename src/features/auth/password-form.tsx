@@ -27,7 +27,7 @@ export function PasswordForm({
   return (
     <details className="group rounded-[2rem] border border-line bg-card p-6">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 font-medium [&::-webkit-details-marker]:hidden">
-        <KeyRound size={18} aria-hidden="true" className="text-accent-text" />
+        <KeyRound size={18} aria-hidden="true" className="text-accent" />
         {text.title}
       </summary>
       <form

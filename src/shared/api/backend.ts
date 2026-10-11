@@ -4,6 +4,9 @@ import * as z from "zod";
 /** httpOnly cookie holding the API session token. The browser never reads it; only this server does. */
 export const SESSION_COOKIE = "ms_session";
 
+/** Same idea for global platform staff, who sign in apart from any barbershop. */
+export const PLATFORM_COOKIE = "ms_platform";
+
 /** A failed API call: `code` is the API's stable error code (SLOT_TAKEN, EMAIL_TAKEN…). */
 export type Issue = { path: string; message: string };
 
@@ -32,6 +35,8 @@ type Options = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   /** JSON, or a Blob sent as-is with its own type (image uploads). */
   body?: unknown;
+  /** Use the platform staff session (/platform API) instead of the barbershop session. */
+  platform?: boolean;
 };
 
 /**
@@ -85,7 +90,9 @@ export async function backend<S extends z.ZodType>(
     headers(),
     cookies(),
   ]);
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const token = cookieStore.get(
+    options.platform ? PLATFORM_COOKIE : SESSION_COOKIE,
+  )?.value;
   const ip = visitorIp(requestHeaders.get("x-forwarded-for"));
   const secret = process.env.PROXY_SECRET;
   const host = tenantHostOf(requestHeaders);

@@ -146,11 +146,11 @@ export const slugify = (name: string) =>
     .slice(0, 60);
 
 export const smallButton =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent-text disabled:opacity-50";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent disabled:opacity-50";
 
 /** A radio styled as a pill: hide the input with sr-only inside the label; checked fills with the accent. */
 export const pill =
-  "relative cursor-pointer rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors hover:border-accent-text has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent-text";
+  "relative cursor-pointer rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors hover:border-accent has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";
 
 /** A form's string value, trimmed. */
 export const value = (form: FormData, key: string) =>

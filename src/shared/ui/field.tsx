@@ -37,7 +37,7 @@ export function Field({
           id={inputId}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className={`h-13 w-full rounded-2xl border border-line-strong bg-surface text-fg transition-[border-color,box-shadow] duration-200 placeholder:text-fg-muted focus:border-accent-text aria-invalid:border-danger disabled:opacity-50 ${icon ? "pl-12" : "pl-4"} ${action ? "pr-12" : "pr-4"}`}
+          className={`h-13 w-full rounded-2xl border border-line-strong bg-surface text-fg transition-[border-color,box-shadow] duration-200 placeholder:text-fg-muted focus:border-accent aria-invalid:border-danger disabled:opacity-50 ${icon ? "pl-12" : "pl-4"} ${action ? "pr-12" : "pr-4"}`}
         />
         {icon && (
           <span

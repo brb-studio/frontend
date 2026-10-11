@@ -16,7 +16,7 @@ const swatches = [
   ["fg-muted", "bg-fg-muted"],
   ["line-strong", "bg-line-strong"],
   ["accent", "bg-accent"],
-  ["accent-text", "bg-accent-text"],
+  ["accent-text", "bg-accent"],
   ["danger", "bg-danger"],
 ] as const;
 

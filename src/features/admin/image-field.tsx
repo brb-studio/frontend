@@ -137,7 +137,7 @@ export function ImagesField({
             <label
               htmlFor={id}
               aria-disabled={pending}
-              className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-line-strong px-2 text-center text-xs text-fg-muted transition-colors hover:border-accent-text hover:text-fg has-focus-visible:outline-2 has-focus-visible:outline-accent-text aria-disabled:pointer-events-none aria-disabled:opacity-60"
+              className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-line-strong px-2 text-center text-xs text-fg-muted transition-colors hover:border-accent hover:text-fg has-focus-visible:outline-2 has-focus-visible:outline-accent aria-disabled:pointer-events-none aria-disabled:opacity-60"
             >
               <Camera size={22} aria-hidden="true" />
               {pending ? t.uploading : t.add}

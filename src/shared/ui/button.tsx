@@ -6,7 +6,7 @@ const base =
 
 const variants = {
   primary: "bg-accent text-accent-fg hover:shadow-glow",
-  secondary: "glass text-fg hover:border-accent-text",
+  secondary: "glass text-fg hover:border-accent",
   onImage:
     "border border-white/20 bg-white/15 text-white backdrop-blur-xl hover:bg-white/25",
 };

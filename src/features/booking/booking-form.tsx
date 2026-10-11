@@ -26,10 +26,10 @@ import {
 import { PayOnline } from "./pay-online";
 
 const focusRing =
-  "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent-text";
+  "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";
 const selected =
   "has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg";
-const pill = `relative shrink-0 cursor-pointer snap-start rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors duration-300 hover:border-accent-text ${selected} ${focusRing}`;
+const pill = `relative shrink-0 cursor-pointer snap-start rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors duration-300 hover:border-accent ${selected} ${focusRing}`;
 
 type Summary = { barber: string; day: string; time: string };
 
@@ -250,7 +250,7 @@ export function BookingForm({
                     />
                     <span
                       aria-hidden="true"
-                      className="relative grid size-13 place-items-center overflow-hidden rounded-full border border-line bg-card text-lg transition-colors duration-300 group-has-checked:border-accent group-has-checked:bg-accent group-has-checked:text-accent-fg group-has-checked:ring-2 group-has-checked:ring-accent group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-2 group-has-focus-visible:outline-accent-text"
+                      className="relative grid size-13 place-items-center overflow-hidden rounded-full border border-line bg-card text-lg transition-colors duration-300 group-has-checked:border-accent group-has-checked:bg-accent group-has-checked:text-accent-fg group-has-checked:ring-2 group-has-checked:ring-accent group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-2 group-has-focus-visible:outline-accent"
                     >
                       {b.image ? (
                         <Image
@@ -302,7 +302,7 @@ export function BookingForm({
                             key={cell.date}
                             className={`relative mx-auto grid aspect-square w-full max-w-11 place-items-center rounded-full border transition-colors duration-300 ${
                               free
-                                ? `cursor-pointer border-line bg-card font-medium hover:border-accent-text ${selected} ${focusRing}`
+                                ? `cursor-pointer border-line bg-card font-medium hover:border-accent ${selected} ${focusRing}`
                                 : "border-transparent text-fg-muted line-through decoration-fg-muted/40"
                             }`}
                           >
@@ -356,7 +356,7 @@ export function BookingForm({
                     <CalendarDays
                       size={18}
                       aria-hidden="true"
-                      className="shrink-0 text-accent-text"
+                      className="shrink-0 text-accent"
                     />
                     {day.long}
                   </span>

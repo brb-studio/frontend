@@ -122,7 +122,7 @@ export default async function ServicePage({
       <dl className="grid animate-rise grid-cols-2 gap-3 [animation-delay:100ms]">
         <div className="grid gap-1 rounded-3xl border border-line bg-card p-5">
           <dt className="flex items-center gap-2 text-sm text-fg-muted">
-            <Clock size={16} aria-hidden="true" className="text-accent-text" />
+            <Clock size={16} aria-hidden="true" className="text-accent" />
             {dict.services.duration}
           </dt>
           <dd className="text-2xl font-semibold">
@@ -131,7 +131,7 @@ export default async function ServicePage({
         </div>
         <div className="grid gap-1 rounded-3xl border border-line bg-card p-5">
           <dt className="flex items-center gap-2 text-sm text-fg-muted">
-            <Tag size={16} aria-hidden="true" className="text-accent-text" />
+            <Tag size={16} aria-hidden="true" className="text-accent" />
             {dict.services.price}
           </dt>
           <dd className="text-2xl font-semibold">{price(service.price)}</dd>

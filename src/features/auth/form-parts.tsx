@@ -20,7 +20,7 @@ export function AuthSheet({
       <header className="grid justify-items-start gap-2">
         <Link
           href={backHref}
-          className="mb-2 grid size-11 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent-text"
+          className="mb-2 grid size-11 place-items-center rounded-full border border-line bg-surface transition-colors hover:border-accent"
         >
           <ChevronLeft size={20} aria-hidden="true" />
           <span className="sr-only">{backLabel}</span>

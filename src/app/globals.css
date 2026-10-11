@@ -11,7 +11,7 @@
   --color-sheet: light-dark(rgb(255 255 255 / 0.96), rgb(20 20 20 / 0.8));
   --color-accent: #ff6a1a;
   --color-accent-fg: #111111;
-  --color-accent-text: light-dark(#b83d00, #ff8a4c);
+  --color-accent-text: light-dark(#111111, #ffffff);
   --color-danger: light-dark(#b42318, #f97066);
 
   --shadow-glow: 0 12px 32px -12px
@@ -100,6 +100,7 @@
 @layer base {
   :root {
     color-scheme: light dark;
+    accent-color: var(--color-accent);
   }
 
   body {
@@ -115,7 +116,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent-text);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
 

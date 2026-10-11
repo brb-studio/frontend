@@ -14,6 +14,7 @@ import {
   Store,
   UserCog,
   Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,6 +30,7 @@ const ICONS: Record<Section, LucideIcon> = {
   branches: Store,
   timeOff: CalendarOff,
   promotions: BadgePercent,
+  earnings: Wallet,
   team: UserCog,
   settings: Settings,
   billing: CreditCard,
@@ -166,7 +168,7 @@ export function AdminTabBar({ locale, sections, labels, groups }: Props) {
                         href={href(section)}
                         aria-current={current(section)}
                         onClick={close}
-                        className="flex h-20 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-canvas px-1 text-center text-xs font-medium transition-colors hover:border-accent-text aria-[current=page]:border-accent aria-[current=page]:bg-accent aria-[current=page]:text-accent-fg"
+                        className="flex h-20 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-canvas px-1 text-center text-xs font-medium transition-colors hover:border-accent aria-[current=page]:border-accent aria-[current=page]:bg-accent aria-[current=page]:text-accent-fg"
                       >
                         <Icon size={22} aria-hidden="true" />
                         {labels[section]}

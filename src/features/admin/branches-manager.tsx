@@ -98,7 +98,7 @@ function BranchForm({
           rows={2}
           required
           defaultValue={branch?.address.join("\n")}
-          className="rounded-2xl border border-line-strong bg-surface p-3 font-normal text-fg focus:border-accent-text"
+          className="rounded-2xl border border-line-strong bg-surface p-3 font-normal text-fg focus:border-accent"
         />
       </label>
       <Field
