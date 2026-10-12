@@ -20,6 +20,7 @@ const LIMIT = 25;
 const statusTone = {
   completed: "ok",
   confirmed: "warn",
+  pending_payment: "warn",
   cancelled: "muted",
   no_show: "bad",
 } as const;
@@ -27,7 +28,9 @@ const statusTone = {
 const paymentTone = {
   paid: "ok",
   pending: "warn",
+  awaiting_transfer: "warn",
   refunded: "warn",
+  disputed: "bad",
   rejected: "bad",
   expired: "bad",
   failed: "bad",

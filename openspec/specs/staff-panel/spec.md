@@ -70,6 +70,41 @@ Al confirmar, la agenda MUST mostrar el día de la cita nueva.
 - **WHEN** otro cliente toma el horario antes de confirmar
 - **THEN** se muestra el error del API y la cita no se crea
 
+### Requirement: Pagos con tarjeta en el panel
+En `/admin/payments`, owner y admin SHALL ver el estado de la cuenta de Stripe de la barbería y lo que Stripe aún pide, con un botón para activar o continuar el registro en el formulario de Stripe y otro para ver sus depósitos en el panel Express. Al regresar de Stripe, el panel MUST releer el estado desde el API; si el enlace venció, pide uno nuevo solo.
+
+#### Scenario: Enlace de registro vencido
+- **WHEN** Stripe regresa al owner a `/admin/payments?stripe=refresh`
+- **THEN** el panel pide un enlace nuevo y lo lleva otra vez al formulario
+
+### Requirement: Comisiones pendientes
+Si la barbería debe comisiones por reembolsos que hizo, `/admin/payments` SHALL mostrar el monto (`feeDebtMinor` del API) y explicar que se descuenta de sus siguientes cobros en línea. Sin deuda, MUST NOT mostrarse nada.
+
+#### Scenario: Reembolso hecho por la barbería
+- **WHEN** el owner reembolsa completa una cita pagada con tarjeta
+- **THEN** el panel de pagos muestra la comisión pendiente
+
+### Requirement: Aviso para barberías en dólares
+Si la barbería cobra en una moneda distinta de MXN, `/admin/payments` SHALL avisar que Stripe le deposita en pesos a su CLABE, al tipo de cambio del día y con 2% de comisión de conversión, así que lo recibido no coincide exactamente con lo cobrado. Las comisiones pendientes MUST mostrarse en su propia moneda.
+
+#### Scenario: Owner de una barbería en USD
+- **WHEN** el owner abre `/admin/payments`
+- **THEN** ve el aviso de depósito en pesos y conversión
+
+### Requirement: Anticipo en el panel
+Con la cuenta de Stripe activa, owner y admin SHALL configurar el anticipo como porcentaje del precio. La cola de confirmación manual MUST mostrar solo transferencias manuales, nunca pagos en línea.
+
+#### Scenario: Regreso del formulario de Stripe
+- **WHEN** el owner vuelve a `/admin/payments?stripe=return`
+- **THEN** el panel consulta el estado actual en el API en lugar de suponer que la cuenta ya está lista
+
+### Requirement: Pago visible en la agenda
+Cada cita de la agenda SHALL mostrar su pago en una línea: "Anticipo pagado con tarjeta · Resta $187", "Pagado completo por transferencia", "Esperando transferencia", "Pago manual pendiente" o "En disputa". Owner y admin MUST poder reembolsar una cita pagada en línea, con confirmación.
+
+#### Scenario: Barbero en la agenda
+- **WHEN** un barbero abre la agenda
+- **THEN** ve el estado del pago de sus citas pero no el botón de reembolsar
+
 ### Requirement: Mi cuenta en el panel
 Cada miembro del equipo SHALL tener una sección Mi cuenta con su nombre, correo y rol, el cambio de contraseña y el botón de cerrar sesión.
 

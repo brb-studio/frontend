@@ -9,6 +9,7 @@ export const notificationSchema = z.object({
     "appointment.booked",
     "appointment.cancelled",
     "appointment.rescheduled",
+    "payment.disputed",
   ]),
   appointmentId: z.string(),
   summary: z.object({

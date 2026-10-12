@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import * as z from "zod";
+import { type TicketText, ticketLine } from "@/features/payments/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
@@ -32,11 +33,17 @@ export function AgendaManager({
   locale,
   t,
   status,
+  ticket,
+  canRefund,
 }: {
   locale: Locale;
   t: AdminText;
   status: Dictionary["account"]["status"];
+  ticket: TicketText;
+  /** Owner and admin give money back; the API refuses everyone else anyway. */
+  canRefund: boolean;
 }) {
+  const [refunding, setRefunding] = useState<string | null>(null);
   const [day, setDay] = useState(today);
   const [adding, setAdding] = useState(false);
   const appointments = useQuery(dayQuery(day));
@@ -109,12 +116,57 @@ export function AgendaManager({
                   a.barber?.name,
                   formatMoney(a.totalMinor, a.currency, locale),
                   status[a.status],
+                  a.payment &&
+                    ticketLine(a.payment, ticket, (minor) =>
+                      formatMoney(minor, a.currency, locale),
+                    ),
                   a.customer?.phone,
                   a.notes,
                 ]
                   .filter(Boolean)
                   .join(" · ")}
               >
+                {canRefund &&
+                  a.payment?.provider === "stripe" &&
+                  a.payment.status === "paid" &&
+                  a.payment.method !== undefined &&
+                  (refunding === a.id ? (
+                    <>
+                      <span className="text-sm">{t.agenda.refundConfirm}</span>
+                      <button
+                        type="button"
+                        className={smallButton}
+                        disabled={action.isPending}
+                        onClick={() =>
+                          action.mutate(
+                            {
+                              method: "POST",
+                              path: `payments/appointments/${a.id}/refund`,
+                              body: {},
+                            },
+                            { onSettled: () => setRefunding(null) },
+                          )
+                        }
+                      >
+                        {t.agenda.refund}
+                      </button>
+                      <button
+                        type="button"
+                        className={smallButton}
+                        onClick={() => setRefunding(null)}
+                      >
+                        {t.common.close}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      className={smallButton}
+                      onClick={() => setRefunding(a.id)}
+                    >
+                      {t.agenda.refund}
+                    </button>
+                  ))}
                 {a.status === "confirmed" && (
                   <>
                     {started && (

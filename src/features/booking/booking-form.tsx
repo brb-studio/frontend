@@ -5,12 +5,16 @@ import {
   CalendarCheck,
   CalendarDays,
   Check,
+  CreditCard,
   Phone,
   Tag,
   User,
 } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { PaymentChoice, type PaymentPick } from "@/features/payments/choice";
+import type { OnlinePayments, OnlineQuote } from "@/features/payments/model";
+import { Sheet } from "@/features/payments/sheet";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -23,6 +27,7 @@ import {
   type BookingTarget,
   toBookingOptions,
 } from "./model";
+import { PaidBooking } from "./paid-booking";
 import { PayByTransfer } from "./pay-transfer";
 
 const focusRing =
@@ -32,6 +37,7 @@ const selected =
 const pill = `relative shrink-0 cursor-pointer snap-start rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors duration-300 hover:border-accent ${selected} ${focusRing}`;
 
 type Summary = { barber: string; day: string; time: string };
+type BookInput = Omit<Parameters<typeof book>[0], "payment">;
 
 export function BookingForm({
   lang,
@@ -41,7 +47,10 @@ export function BookingForm({
   signedInCustomer,
   currency,
   transfersOn,
+  online,
+  publishableKey,
   t,
+  tp,
 }: {
   lang: Locale;
   item: {
@@ -55,7 +64,11 @@ export function BookingForm({
   signedInCustomer: boolean;
   currency: string;
   transfersOn: boolean;
+  /** The shop takes card and transfer payments through Stripe (with its deposit rule). */
+  online?: OnlinePayments;
+  publishableKey?: string;
   t: Dictionary["booking"];
+  tp: Dictionary["payment"];
 }) {
   const queryClient = useQueryClient();
   const [branch, setBranch] = useState(initialBranch);
@@ -79,8 +92,15 @@ export function BookingForm({
   const slot = day?.times.find((x) => x.value === startAt);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [missing, setMissing] = useState(false);
+  const [choosing, setChoosing] = useState<{
+    input: BookInput;
+    quote: OnlineQuote;
+  } | null>(null);
 
   const quoting = useMutation({ mutationFn: quote });
+  // Before paying online: the API prices the visit for this customer (first-visit promotion
+  // included) and says what each option charges and refunds.
+  const pricing = useMutation({ mutationFn: quote });
   const booking = useMutation({
     mutationFn: book,
     onSuccess: (result) => {
@@ -102,6 +122,26 @@ export function BookingForm({
   }, [failed]);
 
   const price = (minor: number) => formatMoney(minor, currency, lang);
+
+  if (booking.data?.ok && summary && booking.data.appointment.checkout) {
+    return (
+      <PaidBooking
+        lang={lang}
+        checkout={booking.data.appointment.checkout}
+        paymentToken={booking.data.appointment.paymentToken}
+        publishableKey={publishableKey}
+        methods={online?.methods ?? ["card"]}
+        summary={{
+          item: item.name,
+          barber: summary.barber,
+          when: `${summary.day} · ${summary.time}`,
+        }}
+        signedInCustomer={signedInCustomer}
+        t={t}
+        tp={tp}
+      />
+    );
+  }
 
   if (booking.data?.ok && summary) {
     return (
@@ -154,7 +194,7 @@ export function BookingForm({
       day: day.long,
       time: `${slot.label} – ${slot.end}`,
     });
-    booking.mutate({
+    const input: BookInput = {
       ...target,
       barber: barber.slug,
       startAt: slot.value,
@@ -165,8 +205,35 @@ export function BookingForm({
             phone: String(form.get("phone") ?? ""),
           },
       code,
-    });
+    };
+    // Paying online: first how much and how, then the booking holds the slot while the customer pays.
+    if (online) {
+      booking.reset();
+      pricing.mutate(
+        { ...target, code, phone: input.customer?.phone },
+        {
+          onSuccess: (priced) => {
+            if (priced.ok && priced.online) {
+              setChoosing({ input, quote: priced.online });
+            } else {
+              // Under Stripe's minimum (or the quote failed): book as before; the API decides.
+              booking.mutate(input);
+            }
+          },
+        },
+      );
+      return;
+    }
+    booking.mutate(input);
   }
+
+  const pay = (pick: PaymentPick) =>
+    choosing && booking.mutate({ ...choosing.input, payment: pick });
+  const skip = () => {
+    if (!choosing) return;
+    booking.mutate(choosing.input);
+    setChoosing(null);
+  };
 
   const fieldError = (field: "name" | "phone") =>
     booking.data && !booking.data.ok && booking.data.fields?.includes(field)
@@ -427,16 +494,54 @@ export function BookingForm({
                   )}
                 </dl>
 
-                {booking.data && !booking.data.ok && (
+                {booking.data && !booking.data.ok && !choosing && (
                   <FormAlert>{t.errors[booking.data.error]}</FormAlert>
                 )}
                 {missing && !slot && <FormAlert>{t.errors.required}</FormAlert>}
                 <SubmitButton
-                  pending={booking.isPending}
+                  pending={booking.isPending || pricing.isPending}
                   icon={<CalendarCheck size={18} aria-hidden="true" />}
                 >
                   {t.submit}
                 </SubmitButton>
+                {online && slot && summary && choosing && (
+                  <Sheet
+                    open={choosing !== null}
+                    onClose={() => setChoosing(null)}
+                    title={tp.title}
+                    icon={
+                      <CreditCard
+                        size={18}
+                        aria-hidden="true"
+                        className="shrink-0 text-accent"
+                      />
+                    }
+                    closeLabel={t.close}
+                  >
+                    <div className="grid gap-4">
+                      {booking.data && !booking.data.ok && (
+                        <FormAlert>{t.errors[booking.data.error]}</FormAlert>
+                      )}
+                      <PaymentChoice
+                        quote={choosing.quote}
+                        currency={currency}
+                        startAt={slot.value}
+                        online={online}
+                        cards={publishableKey !== undefined}
+                        pending={booking.isPending}
+                        lang={lang}
+                        summary={{
+                          item: item.name,
+                          barber: summary.barber,
+                          when: `${summary.day} · ${summary.time}`,
+                        }}
+                        t={tp}
+                        onPay={pay}
+                        onSkip={skip}
+                      />
+                    </div>
+                  </Sheet>
+                )}
               </>
             ) : (
               <p className="rounded-3xl border border-line bg-card p-5 text-fg-muted">

@@ -118,7 +118,7 @@ export default async function AccountPage() {
       </section>
       {session.role === "customer" && (
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <MyAppointments locale={locale} t={t} />
+          <MyAppointments locale={locale} t={t} tp={dict.payment} />
         </HydrationBoundary>
       )}
       <PasswordForm t={dict.auth} text={t.password} />

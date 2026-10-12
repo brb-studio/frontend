@@ -138,6 +138,96 @@ const en = {
       rateLimited: "Too many attempts. Please wait a few minutes.",
       unavailable:
         "Online booking isn't available right now. Call the branch to book.",
+      paymentRequired:
+        "This barbershop asks for a payment to book online. Choose how to pay.",
+      paymentUnavailable:
+        "Online payment isn't available right now. Try again or call the branch.",
+      transferTooLate:
+        "There isn't time for a transfer before this appointment. Pay by card.",
+      paymentProvider:
+        "The payment service didn't answer. Your time wasn't held; please try again.",
+    },
+  },
+  payment: {
+    title: "Pay for your visit",
+    howMuch: "How much",
+    how: "How",
+    deposit: "Deposit",
+    full: "Pay in full",
+    depositNote:
+      "This barbershop asks for a deposit to hold your time. The rest ({amount}) is paid at the branch.",
+    later: "Book without paying now",
+    card: "Card",
+    cardHint: "Your card details go straight to Stripe, never to us.",
+    transfer: "Bank transfer (SPEI)",
+    transferHint: "No card needed: transfer from your banking app.",
+    transferNotOffered:
+      "There isn't time for a transfer before this appointment. Pay by card.",
+    toPay: "To pay now",
+    left: "Left to pay at the branch",
+    refundNote:
+      "If you cancel in time we refund {amount}; the bank fee isn't refundable.",
+    continue: "Continue",
+    pay: "Pay {amount}",
+    processing: "Processing your payment…",
+    held: "We're holding your time until {time}.",
+    transferLead:
+      "Transfer exactly {amount} before {time}. Your appointment is confirmed automatically when the money arrives.",
+    clabe: "CLABE",
+    bank: "Bank",
+    reference: "Reference",
+    amount: "Exact amount",
+    copy: "Copy",
+    copied: "Copied",
+    waitingTransfer: "Waiting for your transfer…",
+    waitingTransferLead:
+      "You can close this: your visit stays in My visits with these details until the deadline.",
+    hostedInstructions: "Open Stripe's instructions",
+    switchToCard: "Pay by card instead",
+    switchToTransfer: "Pay by transfer instead",
+    paidTitle: "Payment received",
+    paidLead: "Your appointment is confirmed. See you there!",
+    expiredTitle: "The time to pay ran out",
+    expiredLead:
+      "Your time was released and nothing was charged. You can book again.",
+    loading: "Loading the payment…",
+    stripeLoading: "Loading the secure card form…",
+    completePayment: "Complete payment",
+    bookAgain: "Book again",
+    payBefore: "Pay before {time}",
+    receipt: "Receipt",
+    paid: "Paid",
+    method: "Method",
+    total: "Total",
+    errors: {
+      transferTooLate:
+        "There isn't time for a transfer before this appointment. Pay by card.",
+      alreadyPaid: "This visit is already paid.",
+      notPending: "This booking is no longer waiting for a payment.",
+      unavailable: "Couldn't reach the payment service. Please try again.",
+      rateLimited: "Too many attempts. Please wait a few minutes.",
+      stripe:
+        "Couldn't load the card form. Check your connection and try again.",
+      declined:
+        "The payment didn't go through. Check your details or try another card.",
+    },
+    ticket: {
+      kinds: { deposit: "Deposit", full: "Full payment" },
+      methods: {
+        card: "by card",
+        bank_transfer: "by transfer",
+        spei: "by SPEI transfer",
+      },
+      paid: "paid",
+      paidFull: "Paid in full",
+      balance: "{amount} left to pay",
+      awaitingTransfer: "Waiting for the transfer",
+      awaitingPayment: "Waiting for payment",
+      manualPending: "Manual payment pending",
+      refunded: "Refunded",
+      partlyRefunded: "{amount} refunded",
+      disputed: "Payment disputed",
+      expired: "Not paid",
     },
   },
   branches: {
@@ -165,6 +255,8 @@ const en = {
     book: "Book an appointment",
     cancel: "Cancel",
     cancelConfirm: "Are you sure you want to cancel this appointment?",
+    cancelRefund:
+      "We'll refund {amount} to your card or account; the bank fee isn't refundable.",
     cancelYes: "Yes, cancel",
     cancelKeep: "No, keep it",
     loading: "Loading…",
@@ -173,6 +265,7 @@ const en = {
       completed: "Completed",
       cancelled: "Cancelled",
       no_show: "Missed",
+      pending_payment: "Awaiting payment",
     },
     cancelErrors: {
       tooLate: "It's too late to cancel online. Please call the branch.",
@@ -203,6 +296,7 @@ const en = {
       "appointment.booked": "New appointment",
       "appointment.cancelled": "Appointment cancelled",
       "appointment.rescheduled": "Appointment rescheduled",
+      "payment.disputed": "Payment disputed",
     },
     push: {
       enable: "Turn on phone notifications",
@@ -261,6 +355,37 @@ const en = {
       confirm: "Confirm received",
       reject: "Reject",
       empty: "Nothing here.",
+      online: {
+        title: "Card and transfer payments",
+        lead: "Customers pay by card or SPEI transfer when they book, and the appointment confirms itself. Stripe collects the payment and deposits it straight into your bank account, minus its fee.",
+        status: {
+          none: "Not active",
+          onboarding: "Registration incomplete",
+          pending: "Under review by Stripe",
+          active: "Active",
+          restricted: "Stripe needs more information",
+        },
+        activate: "Activate card payments",
+        continue: "Continue registration",
+        refresh: "Check status",
+        dashboard: "See my deposits in Stripe",
+        foreignCurrency:
+          "You charge in {currency}, but Stripe deposits to your CLABE in Mexican pesos, at the day's exchange rate and with a 2% conversion fee, so what you receive won't match the dollars charged exactly. Customers pay by card or Link; bank transfers (SPEI) are pesos only.",
+        requirements: "Stripe still needs",
+        feeDebt:
+          "Pending fees: {amount}. These are the payment fees of refunds you made; they're taken from your next online payments.",
+        unavailable: "Online payments aren't set up on this server yet.",
+        payouts:
+          "Deposits reach your account on Stripe's payout schedule. Stripe's fee is taken from each payment.",
+        returned:
+          "Welcome back. Stripe takes a moment to review; the status updates on its own.",
+        deposit: {
+          title: "Deposit",
+          enabled: "Ask for a deposit to book online",
+          percent: "Deposit (% of the price)",
+          hint: "Rounded up to the whole peso, at least 10.00. The customer can also pay in full.",
+        },
+      },
     },
     navGroups: {
       daily: "Day to day",
@@ -326,6 +451,9 @@ const en = {
       noShow: "No-show",
       cancel: "Cancel",
       empty: "No appointments this day.",
+      refund: "Refund",
+      refundConfirm: "Refund the whole payment to the customer?",
+      refunded: "Refund requested.",
     },
     services: {
       services: "Services",
@@ -538,6 +666,7 @@ const en = {
       completed: "Completed",
       cancelled: "Cancelled",
       no_show: "No-show",
+      pending_payment: "Awaiting payment",
     },
     kpi: {
       sales: "Sales",

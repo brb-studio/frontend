@@ -144,6 +144,27 @@ export const bankSettingsSchema = z.object({
   bankAccountHolder: z.string().nullable(),
 });
 
+export const CONNECT_STATUSES = [
+  "none",
+  "onboarding",
+  "pending",
+  "active",
+  "restricted",
+] as const;
+
+/** The shop's Stripe connected account as the owner sees it: no Stripe ids, only what to do next. */
+export const connectSchema = z.object({
+  available: z.boolean(),
+  status: z.enum(CONNECT_STATUSES),
+  requirementsDue: z.array(z.string()),
+  updatedAt: z.string().nullable(),
+  feeDebtMinor: z.number().int(),
+  feeDebtCurrency: z.string(),
+  currency: z.string(),
+  deposit: z.object({ enabled: z.boolean(), percentBps: z.number().int() }),
+});
+export type Connect = z.output<typeof connectSchema>;
+
 export const PAYMENT_STATUSES = [
   "pending",
   "paid",

@@ -1,8 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarClock, CalendarX } from "lucide-react";
+import { CalendarClock, CalendarX, CreditCard } from "lucide-react";
 import { useState } from "react";
+import { ticketLine } from "@/features/payments/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
@@ -30,9 +31,11 @@ const when = (a: Appointment, locale: Locale) =>
 export function MyAppointments({
   locale,
   t,
+  tp,
 }: {
   locale: Locale;
   t: Dictionary["account"];
+  tp: Dictionary["payment"];
 }) {
   const queryClient = useQueryClient();
   const appointments = useQuery(myAppointmentsQuery());
@@ -56,8 +59,18 @@ export function MyAppointments({
   const list = appointments.data ?? [];
   const now = Date.now();
   const upcoming = list
-    .filter((a) => a.status === "confirmed" && Date.parse(a.endAt) > now)
+    .filter(
+      (a) =>
+        (a.status === "confirmed" || a.status === "pending_payment") &&
+        Date.parse(a.endAt) > now,
+    )
     .reverse();
+  const deadline = (a: Appointment) =>
+    a.paymentDeadline &&
+    new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(a.paymentDeadline));
   const history = list.filter((a) => !upcoming.includes(a));
 
   const row = (a: Appointment) => (
@@ -76,8 +89,15 @@ export function MyAppointments({
       <p className="flex items-center justify-between gap-3 text-fg-muted">
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
-          {a.payment?.status === "paid" && <> · {t.paidBadge}</>}
-          {a.payment?.status === "pending" && <> · {t.pendingBadge}</>}
+          {a.payment && (
+            <>
+              {" "}
+              ·{" "}
+              {ticketLine(a.payment, tp.ticket, (minor) =>
+                formatMoney(minor, a.currency, locale),
+              )}
+            </>
+          )}
         </span>
         {a.cancellable && confirming !== a.id && (
           <span className="flex shrink-0 gap-2">
@@ -101,6 +121,25 @@ export function MyAppointments({
           </span>
         )}
       </p>
+      {a.status === "pending_payment" && (
+        <p className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2 text-fg-muted">
+          <span>{tp.payBefore.replace("{time}", deadline(a) || "")}</span>
+          <span className="flex shrink-0 gap-2">
+            <ButtonLink href={`/${locale}/pay/${a.id}`}>
+              <CreditCard size={16} aria-hidden="true" />
+              {tp.completePayment}
+            </ButtonLink>
+            <Button
+              variant="secondary"
+              onClick={() => cancelling.mutate(a.id)}
+              disabled={cancelling.isPending}
+            >
+              <CalendarX size={16} aria-hidden="true" />
+              {t.cancel}
+            </Button>
+          </span>
+        </p>
+      )}
       {rescheduling === a.id && (
         <ReschedulePanel
           appointment={a}
@@ -118,6 +157,15 @@ export function MyAppointments({
           className="mt-2 grid gap-3 border-t border-line pt-3 text-fg"
         >
           <p className="font-medium">{t.cancelConfirm}</p>
+          {a.payment?.status === "paid" &&
+            a.payment.refundableMinor !== undefined && (
+              <p className="text-sm text-fg-muted">
+                {t.cancelRefund.replace(
+                  "{amount}",
+                  formatMoney(a.payment.refundableMinor, a.currency, locale),
+                )}
+              </p>
+            )}
           <div className="flex flex-wrap justify-end gap-2">
             <Button
               variant="secondary"

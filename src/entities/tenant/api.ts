@@ -27,6 +27,12 @@ export type Tenant = {
   coverImage: string;
   theme?: TenantTheme;
   paymentsTransfer: boolean;
+  /** Card and bank-transfer payments through Stripe, with the shop's deposit rule; absent when off. */
+  paymentsOnline?: {
+    deposit: { enabled: boolean; percentBps: number };
+    holdMinutes: { card: number; bank_transfer: number };
+    methods: ("card" | "bank_transfer")[];
+  };
   branches: Branch[];
 };
 
@@ -47,7 +53,22 @@ const apiTenant = z.object({
     authImage: z.string().optional(),
     coverImage: z.string().optional(),
   }),
-  payments: z.object({ transfer: z.boolean() }).optional(),
+  payments: z
+    .object({
+      transfer: z.boolean(),
+      online: z.boolean().optional(),
+      deposit: z
+        .object({ enabled: z.boolean(), percentBps: z.number().int() })
+        .optional(),
+      holdMinutes: z
+        .object({
+          card: z.number().int(),
+          bank_transfer: z.number().int(),
+        })
+        .optional(),
+      methods: z.array(z.enum(["card", "bank_transfer"])).optional(),
+    })
+    .optional(),
   branches: z.array(
     z.object({
       slug: z.string(),
@@ -105,6 +126,15 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
     coverImage: api.brand.coverImage ?? FALLBACK_IMAGE,
     theme: api.theme,
     paymentsTransfer: api.payments?.transfer ?? false,
+    ...(api.payments?.online &&
+      api.payments.deposit &&
+      api.payments.holdMinutes && {
+        paymentsOnline: {
+          deposit: api.payments.deposit,
+          holdMinutes: api.payments.holdMinutes,
+          methods: api.payments.methods ?? ["card"],
+        },
+      }),
     branches: api.branches.map((b) => ({
       slug: b.slug,
       name: b.name,

@@ -1,11 +1,20 @@
 import { queryOptions } from "@tanstack/react-query";
 import * as z from "zod";
 import { availabilitySchema } from "@/features/booking/model";
+import { ticketSchema } from "@/features/payments/model";
 import { localized } from "@/shared/i18n/localized";
 
 export const appointmentSchema = z.object({
   id: z.string(),
-  status: z.enum(["confirmed", "completed", "cancelled", "no_show"]),
+  status: z.enum([
+    "confirmed",
+    "pending_payment",
+    "completed",
+    "cancelled",
+    "no_show",
+  ]),
+  /** While `pending_payment`: the slot is held until then. */
+  paymentDeadline: z.string().optional(),
   startAt: z.string(),
   endAt: z.string(),
   timeZone: z.string(),
@@ -14,21 +23,7 @@ export const appointmentSchema = z.object({
   items: z.array(z.object({ name: localized, durationMin: z.number().int() })),
   currency: z.string(),
   totalMinor: z.number().int(),
-  payment: z
-    .object({
-      status: z.enum([
-        "requires_payment",
-        "paid",
-        "refunded",
-        "failed",
-        "pending",
-        "rejected",
-        "expired",
-      ]),
-      amountMinor: z.number().int(),
-    })
-    .nullable()
-    .optional(),
+  payment: ticketSchema.nullable().optional(),
   cancellable: z.boolean().optional(),
   customer: z
     .object({ name: z.string(), phone: z.string().optional() })

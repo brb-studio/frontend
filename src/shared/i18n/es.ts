@@ -141,6 +141,98 @@ const es: Dictionary = {
       rateLimited: "Demasiados intentos. Espera unos minutos.",
       unavailable:
         "Las reservas en línea no están disponibles en este momento. Llama a la sucursal para agendar.",
+      paymentRequired:
+        "Esta barbería pide un pago para reservar en línea. Elige cómo pagar.",
+      paymentUnavailable:
+        "El pago en línea no está disponible ahora. Intenta de nuevo o llama a la sucursal.",
+      transferTooLate:
+        "No alcanza el tiempo para una transferencia antes de esta cita. Paga con tarjeta.",
+      paymentProvider:
+        "El servicio de pagos no respondió. Tu horario no se apartó; intenta de nuevo.",
+    },
+  },
+  payment: {
+    title: "Paga tu visita",
+    howMuch: "Cuánto",
+    how: "Cómo",
+    deposit: "Anticipo",
+    full: "Pagar completo",
+    depositNote:
+      "Esta barbería pide un anticipo para apartar tu horario. El resto ({amount}) se paga en la sucursal.",
+    later: "Reservar sin pagar ahora",
+    card: "Tarjeta",
+    cardHint: "Los datos de tu tarjeta van directo a Stripe, nunca a nosotros.",
+    transfer: "Transferencia (SPEI)",
+    transferHint:
+      "Sin capturar tu tarjeta: transfiere desde la app de tu banco.",
+    transferNotOffered:
+      "No alcanza el tiempo para una transferencia antes de esta cita. Paga con tarjeta.",
+    toPay: "A pagar ahora",
+    left: "Resta pagar en la sucursal",
+    refundNote:
+      "Si cancelas a tiempo te devolvemos {amount}; la comisión bancaria no es reembolsable.",
+    continue: "Continuar",
+    pay: "Pagar {amount}",
+    processing: "Procesando tu pago…",
+    held: "Apartamos tu horario hasta las {time}.",
+    transferLead:
+      "Transfiere exactamente {amount} antes de las {time}. Tu cita se confirma sola al recibirla.",
+    clabe: "CLABE",
+    bank: "Banco",
+    reference: "Referencia",
+    amount: "Monto exacto",
+    copy: "Copiar",
+    copied: "Copiado",
+    waitingTransfer: "Esperando tu transferencia…",
+    waitingTransferLead:
+      "Puedes cerrar esto: tu cita queda en Mis visitas con estos datos hasta la fecha límite.",
+    hostedInstructions: "Abrir las instrucciones de Stripe",
+    switchToCard: "Mejor pagar con tarjeta",
+    switchToTransfer: "Mejor pagar con transferencia",
+    paidTitle: "Pago recibido",
+    paidLead: "Tu cita está confirmada. ¡Te esperamos!",
+    expiredTitle: "Se acabó el tiempo para pagar",
+    expiredLead:
+      "Tu horario se liberó y no se cobró nada. Puedes reservar de nuevo.",
+    loading: "Cargando el pago…",
+    stripeLoading: "Cargando el formulario seguro de tarjeta…",
+    completePayment: "Completar pago",
+    bookAgain: "Reservar de nuevo",
+    payBefore: "Paga antes de las {time}",
+    receipt: "Comprobante",
+    paid: "Pagado",
+    method: "Método",
+    total: "Total",
+    errors: {
+      transferTooLate:
+        "No alcanza el tiempo para una transferencia antes de esta cita. Paga con tarjeta.",
+      alreadyPaid: "Esta visita ya está pagada.",
+      notPending: "Esta reserva ya no está esperando un pago.",
+      unavailable:
+        "No se pudo contactar al servicio de pagos. Intenta de nuevo.",
+      rateLimited: "Demasiados intentos. Espera unos minutos.",
+      stripe:
+        "No se pudo cargar el formulario de tarjeta. Revisa tu conexión e intenta de nuevo.",
+      declined:
+        "El pago no se completó. Revisa tus datos o prueba con otra tarjeta.",
+    },
+    ticket: {
+      kinds: { deposit: "Anticipo", full: "Pago completo" },
+      methods: {
+        card: "con tarjeta",
+        bank_transfer: "por transferencia",
+        spei: "por transferencia SPEI",
+      },
+      paid: "pagado",
+      paidFull: "Pagado completo",
+      balance: "Resta {amount}",
+      awaitingTransfer: "Esperando transferencia",
+      awaitingPayment: "Esperando pago",
+      manualPending: "Pago manual pendiente",
+      refunded: "Reembolsado",
+      partlyRefunded: "Reembolsado {amount}",
+      disputed: "En disputa",
+      expired: "Sin pagar",
     },
   },
   branches: {
@@ -169,6 +261,8 @@ const es: Dictionary = {
     book: "Reservar una cita",
     cancel: "Cancelar",
     cancelConfirm: "¿Seguro que quieres cancelar esta cita?",
+    cancelRefund:
+      "Te devolveremos {amount} a tu tarjeta o cuenta; la comisión bancaria no es reembolsable.",
     cancelYes: "Sí, cancelar",
     cancelKeep: "No, conservarla",
     loading: "Cargando…",
@@ -177,6 +271,7 @@ const es: Dictionary = {
       completed: "Completada",
       cancelled: "Cancelada",
       no_show: "No asistió",
+      pending_payment: "Pendiente de pago",
     },
     cancelErrors: {
       tooLate: "Ya es tarde para cancelar en línea. Llama a la sucursal.",
@@ -207,6 +302,7 @@ const es: Dictionary = {
       "appointment.booked": "Nueva cita",
       "appointment.cancelled": "Cita cancelada",
       "appointment.rescheduled": "Cita reprogramada",
+      "payment.disputed": "Pago en disputa",
     },
     push: {
       enable: "Activar notificaciones en el teléfono",
@@ -266,6 +362,38 @@ const es: Dictionary = {
       confirm: "Confirmar recibido",
       reject: "Rechazar",
       empty: "Nada por aquí.",
+      online: {
+        title: "Pagos con tarjeta y transferencia",
+        lead: "Tus clientes pagan con tarjeta o transferencia SPEI al reservar y la cita se confirma sola. Stripe cobra y deposita directo en tu cuenta bancaria, menos su comisión.",
+        status: {
+          none: "Sin activar",
+          onboarding: "Registro incompleto",
+          pending: "En revisión por Stripe",
+          active: "Activo",
+          restricted: "Stripe necesita más información",
+        },
+        activate: "Activar pagos con tarjeta",
+        continue: "Continuar registro",
+        refresh: "Revisar estado",
+        dashboard: "Ver mis depósitos en Stripe",
+        foreignCurrency:
+          "Cobras en {currency}, pero Stripe te deposita en pesos a tu CLABE, al tipo de cambio del día y con una comisión de conversión del 2%, así que lo que recibes no coincide exactamente con los dólares cobrados. Tus clientes pagan con tarjeta o Link; la transferencia (SPEI) solo acepta pesos.",
+        requirements: "Stripe todavía necesita",
+        feeDebt:
+          "Comisiones pendientes: {amount}. Son las comisiones de pago de reembolsos que hiciste; se descuentan de tus siguientes cobros en línea.",
+        unavailable:
+          "Los pagos en línea aún no están configurados en este servidor.",
+        payouts:
+          "Los depósitos llegan a tu cuenta según el calendario de Stripe. La comisión de Stripe se descuenta de cada pago.",
+        returned:
+          "Bienvenido de vuelta. Stripe tarda un momento en revisar; el estado se actualiza solo.",
+        deposit: {
+          title: "Anticipo",
+          enabled: "Pedir anticipo para reservar en línea",
+          percent: "Anticipo (% del precio)",
+          hint: "Se redondea hacia arriba al peso completo, mínimo 10.00. El cliente también puede pagar completo.",
+        },
+      },
     },
     navGroups: {
       daily: "Día a día",
@@ -332,6 +460,9 @@ const es: Dictionary = {
       noShow: "No vino",
       cancel: "Cancelar",
       empty: "No hay citas este día.",
+      refund: "Reembolsar",
+      refundConfirm: "¿Reembolsar todo el pago al cliente?",
+      refunded: "Reembolso solicitado.",
     },
     services: {
       services: "Servicios",
@@ -546,6 +677,7 @@ const es: Dictionary = {
       completed: "Completado",
       cancelled: "Cancelado",
       no_show: "No se presentó",
+      pending_payment: "Pendiente de pago",
     },
     kpi: {
       sales: "Ventas",

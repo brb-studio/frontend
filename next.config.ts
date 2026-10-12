@@ -2,13 +2,18 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// Stripe.js (card payments) must load from js.stripe.com and runs its fields and 3-D Secure in frames:
+// the directives Stripe documents for Stripe.js (docs.stripe.com/security/guide#content-security-policy).
+const stripeJs = "https://js.stripe.com https://*.js.stripe.com";
+
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} ${stripeJs}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' blob: data:",
+  "img-src 'self' blob: data: https://*.stripe.com",
   "font-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' https://api.stripe.com",
+  `frame-src ${stripeJs} https://hooks.stripe.com`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

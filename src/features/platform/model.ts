@@ -4,6 +4,7 @@ import { localized } from "@/shared/i18n/localized";
 
 export const STATUSES = [
   "confirmed",
+  "pending_payment",
   "completed",
   "cancelled",
   "no_show",

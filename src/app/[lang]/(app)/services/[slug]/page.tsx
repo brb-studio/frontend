@@ -18,6 +18,7 @@ import {
   availabilityQuery,
   type BookingTarget,
 } from "@/features/booking/model";
+import { publishableKey } from "@/features/payments/data";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -160,7 +161,10 @@ export default async function ServicePage({
               signedInCustomer={session?.role === "customer"}
               currency={tenant.currency}
               transfersOn={tenant.paymentsTransfer}
+              online={tenant.paymentsOnline}
+              publishableKey={publishableKey()}
               t={dict.booking}
+              tp={dict.payment}
             />
           </HydrationBoundary>
         </div>

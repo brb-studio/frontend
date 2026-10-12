@@ -7,6 +7,7 @@ import { formatMoney } from "@/shared/i18n/money";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
+import { OnlinePayments } from "./online-payments";
 import {
   type AdminPayment,
   bankSettingsSchema,
@@ -216,16 +217,19 @@ function Queue({ locale, t }: { locale: Locale; t: AdminText }) {
   );
 }
 
-/** Bank account for transfers and the payments waiting for the barbershop to check its bank. Owner and admin only. */
+/** Card and transfer payments through Stripe, plus the manual fallback: bank account and the transfers to check by hand. Owner and admin only. */
 export function PaymentsManager({
   locale,
+  stripeReturn,
   t,
 }: {
   locale: Locale;
+  stripeReturn?: "return" | "refresh";
   t: AdminText;
 }) {
   return (
     <div className="grid gap-6">
+      <OnlinePayments locale={locale} stripeReturn={stripeReturn} t={t} />
       <BankSettings t={t} />
       <Queue locale={locale} t={t} />
     </div>

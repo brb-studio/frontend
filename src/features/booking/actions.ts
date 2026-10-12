@@ -1,6 +1,12 @@
 "use server";
 
 import * as z from "zod";
+import {
+  checkoutSchema,
+  ONLINE_METHODS,
+  onlineQuoteSchema,
+  PAYMENT_KINDS,
+} from "@/features/payments/model";
 import { ApiError, backend } from "@/shared/api/backend";
 
 const slug = z
@@ -33,6 +39,9 @@ const bookingInput = z.object({
     })
     .optional(),
   code,
+  payment: z
+    .object({ kind: z.enum(PAYMENT_KINDS), method: z.enum(ONLINE_METHODS) })
+    .optional(),
 });
 
 export type BookingError =
@@ -41,28 +50,21 @@ export type BookingError =
   | "barberUnavailable"
   | "promotion"
   | "rateLimited"
+  | "paymentRequired"
+  | "paymentUnavailable"
+  | "transferTooLate"
+  | "paymentProvider"
   | "unavailable";
 
 export type BookingResult =
   | {
       ok: true;
-      appointment: {
-        id: string;
-        totalMinor: number;
-        currency: string;
-        paymentToken?: string;
-      };
+      appointment: z.output<typeof booked>;
     }
   | { ok: false; error: BookingError; fields?: ("name" | "phone")[] };
 
 export type QuoteResult =
-  | {
-      ok: true;
-      subtotalMinor: number;
-      discountMinor: number;
-      totalMinor: number;
-      rejected?: string;
-    }
+  | ({ ok: true } & z.output<typeof quoted>)
   | { ok: false; error: BookingError };
 
 function errorOf(error: unknown): BookingError {
@@ -78,6 +80,14 @@ function errorOf(error: unknown): BookingError {
       return "invalid";
     case "RATE_LIMITED":
       return "rateLimited";
+    case "PAYMENT_REQUIRED":
+      return "paymentRequired";
+    case "ONLINE_PAYMENT_UNAVAILABLE":
+      return "paymentUnavailable";
+    case "TRANSFER_TOO_LATE":
+      return "transferTooLate";
+    case "PAYMENT_PROVIDER_ERROR":
+      return "paymentProvider";
     default:
       return "unavailable";
   }
@@ -85,10 +95,12 @@ function errorOf(error: unknown): BookingError {
 
 const booked = z.object({
   id: z.string(),
+  status: z.string(),
   totalMinor: z.number().int(),
   currency: z.string(),
-
   paymentToken: z.string().optional(),
+  /** Present when the visit is being paid online: how to pay and until when the slot is held. */
+  checkout: checkoutSchema.optional(),
 });
 
 export async function book(
@@ -116,12 +128,24 @@ export async function book(
   }
 }
 
-const quoteInput = z.object({ ...target, code });
+const quoteInput = z.object({
+  ...target,
+  code,
+  /** Guests: their phone, so a first-visit promotion is quoted as the booking will apply it. */
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[0-9 ()-]{7,20}$/)
+    .optional()
+    .catch(undefined),
+});
 const quoted = z.object({
   subtotalMinor: z.number().int(),
   discountMinor: z.number().int(),
   totalMinor: z.number().int(),
   rejected: z.string().optional(),
+  /** Shops with online payments: each option's charge and refund, computed by the API. */
+  online: onlineQuoteSchema.optional(),
 });
 
 export async function quote(
