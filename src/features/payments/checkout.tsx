@@ -9,7 +9,7 @@ import {
   Landmark,
   LoaderCircle,
 } from "lucide-react";
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -25,6 +25,7 @@ import {
   type OnlineMethod,
   stillWaiting,
 } from "./model";
+import { SheetActions } from "./sheet";
 import { type StripeElements, stripeClient } from "./stripe-js";
 
 type PaymentText = Dictionary["payment"];
@@ -106,6 +107,7 @@ function CardForm({
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [paying, setPaying] = useState(false);
+  const formId = useId();
 
   useEffect(() => {
     let destroyed = false;
@@ -170,7 +172,7 @@ function CardForm({
   }
 
   return (
-    <form onSubmit={submit} className="grid gap-4">
+    <form id={formId} onSubmit={submit} className="grid gap-4">
       {!ready && !error && (
         <p
           role="status"
@@ -183,17 +185,23 @@ function CardForm({
       <div ref={mountRef} />
       <p className="text-xs text-fg-muted">{t.cardHint}</p>
       {error && <FormAlert>{error}</FormAlert>}
-      <Button type="submit" disabled={!ready || paying}>
-        {paying ? (
-          <LoaderCircle size={18} aria-hidden="true" className="animate-spin" />
-        ) : (
-          <CreditCard size={18} aria-hidden="true" />
-        )}
-        {t.pay.replace(
-          "{amount}",
-          formatMoney(checkout.amountMinor, checkout.currency, lang),
-        )}
-      </Button>
+      <SheetActions>
+        <Button type="submit" form={formId} disabled={!ready || paying}>
+          {paying ? (
+            <LoaderCircle
+              size={18}
+              aria-hidden="true"
+              className="animate-spin"
+            />
+          ) : (
+            <CreditCard size={18} aria-hidden="true" />
+          )}
+          {t.pay.replace(
+            "{amount}",
+            formatMoney(checkout.amountMinor, checkout.currency, lang),
+          )}
+        </Button>
+      </SheetActions>
     </form>
   );
 }
@@ -422,7 +430,9 @@ export function PaymentCheckout({
           {t.expiredTitle}
         </p>
         <p className="text-sm text-fg-muted">{t.expiredLead}</p>
-        <ButtonLink href={bookAgainHref}>{t.bookAgain}</ButtonLink>
+        <SheetActions>
+          <ButtonLink href={bookAgainHref}>{t.bookAgain}</ButtonLink>
+        </SheetActions>
       </div>
     );
   }
@@ -484,21 +494,23 @@ export function PaymentCheckout({
         <FormAlert>{t.errors[switching.data.error]}</FormAlert>
       )}
       {!waiting && methods.includes(other) && (
-        <button
-          type="button"
-          disabled={switching.isPending}
-          onClick={() =>
-            switchTo(checkout.method === "card" ? "bank_transfer" : "card")
-          }
-          className="inline-flex items-center justify-center gap-2 text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg disabled:opacity-60"
-        >
-          {checkout.method === "card" ? (
-            <Landmark size={16} aria-hidden="true" />
-          ) : (
-            <CreditCard size={16} aria-hidden="true" />
-          )}
-          {checkout.method === "card" ? t.switchToTransfer : t.switchToCard}
-        </button>
+        <SheetActions>
+          <button
+            type="button"
+            disabled={switching.isPending}
+            onClick={() =>
+              switchTo(checkout.method === "card" ? "bank_transfer" : "card")
+            }
+            className="order-last inline-flex items-center justify-center gap-2 py-1 text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg disabled:opacity-60"
+          >
+            {checkout.method === "card" ? (
+              <Landmark size={16} aria-hidden="true" />
+            ) : (
+              <CreditCard size={16} aria-hidden="true" />
+            )}
+            {checkout.method === "card" ? t.switchToTransfer : t.switchToCard}
+          </button>
+        </SheetActions>
       )}
     </div>
   );

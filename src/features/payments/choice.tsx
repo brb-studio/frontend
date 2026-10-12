@@ -1,7 +1,7 @@
 "use client";
 
 import { CreditCard, Landmark } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -13,6 +13,7 @@ import {
   type PaymentKind,
   transferFits,
 } from "./model";
+import { SheetActions } from "./sheet";
 
 const option =
   "relative flex cursor-pointer items-start gap-3 rounded-2xl border border-line bg-surface px-4 py-3 text-sm transition-colors hover:border-accent has-checked:border-accent has-checked:ring-2 has-checked:ring-accent has-disabled:cursor-not-allowed has-disabled:opacity-50 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";
@@ -61,6 +62,7 @@ export function PaymentChoice({
     cards ? "card" : "bank_transfer",
   );
   const money = (minor: number) => formatMoney(minor, currency, lang);
+  const formId = useId();
   const chosen: OnlineMethod =
     method === "bank_transfer" && !canTransfer ? "card" : method;
   const picked =
@@ -70,6 +72,7 @@ export function PaymentChoice({
 
   return (
     <form
+      id={formId}
       onSubmit={(event) => {
         event.preventDefault();
         // The sheet is portaled but still inside the booking form in React's tree: keep this
@@ -193,19 +196,25 @@ export function PaymentChoice({
         )}
       </dl>
 
-      <Button type="submit" disabled={pending || (!cards && !canTransfer)}>
-        {t.continue}
-      </Button>
-      {!quote.required && onSkip && (
-        <button
-          type="button"
-          onClick={onSkip}
-          disabled={pending}
-          className="text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg"
+      <SheetActions>
+        <Button
+          type="submit"
+          form={formId}
+          disabled={pending || (!cards && !canTransfer)}
         >
-          {t.later}
-        </button>
-      )}
+          {t.continue}
+        </Button>
+        {!quote.required && onSkip && (
+          <button
+            type="button"
+            onClick={onSkip}
+            disabled={pending}
+            className="py-1 text-sm font-medium text-fg-muted underline underline-offset-2 hover:text-fg"
+          >
+            {t.later}
+          </button>
+        )}
+      </SheetActions>
     </form>
   );
 }
