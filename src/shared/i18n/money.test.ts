@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { formatMoney, toMajor, toMinor } from "./money";
 
 const intl = (amount: number, currency: string, locale: string) =>
-  new Intl.NumberFormat(locale, { style: "currency", currency }).format(amount);
+  new Intl.NumberFormat(locale === "es" ? "es-MX" : locale, { style: "currency", currency }).format(amount);
 
 test.each([
   [3500, "USD", "en", 35],
@@ -18,6 +18,11 @@ test.each([
     );
   },
 );
+
+test("Spanish amounts use a dot as the decimal separator", () => {
+  expect(formatMoney(2500, "MXN", "es")).toBe("$25.00");
+  expect(formatMoney(123450, "MXN", "es")).toBe("$1,234.50");
+});
 
 test("toMinor and toMajor convert what admins type to integer minor units and back", () => {
   expect(toMinor("300", "MXN")).toBe(30000);

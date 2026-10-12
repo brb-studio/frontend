@@ -88,3 +88,10 @@ Un cliente con sesión SHALL ver sus citas en Cuenta, y puede cancelar o reprogr
 #### Scenario: Reprogramar una cita
 - **WHEN** el cliente elige un horario nuevo para su cita
 - **THEN** la cita aparece con la hora nueva sin recargar la página
+
+### Requirement: Formato de montos
+Todos los montos de la app (también los del panel) SHALL formatearse con `formatMoney` (`src/shared/i18n/money.ts`). En español MUST usar punto decimal y coma de miles (formato es-MX), nunca coma decimal; en inglés se usa el formato de `en`.
+
+#### Scenario: Precio en español
+- **WHEN** un servicio cuesta 1234.50 MXN y la app está en español
+- **THEN** se muestra "$1,234.50", no "$1.234,50"

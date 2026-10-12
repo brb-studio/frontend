@@ -1,7 +1,14 @@
 import type { Locale } from "./locales";
 
+// Spanish amounts use the Mexican convention (25.00, 1,234.50) instead of the
+// generic "es" one (25,00).
+const moneyLocale = (locale: Locale) => (locale === "es" ? "es-MX" : locale);
+
 export function formatMoney(minor: number, currency: string, locale: Locale) {
-  const format = new Intl.NumberFormat(locale, { style: "currency", currency });
+  const format = new Intl.NumberFormat(moneyLocale(locale), {
+    style: "currency",
+    currency,
+  });
   const digits = format.resolvedOptions().maximumFractionDigits ?? 2;
   return format.format(minor / 10 ** digits);
 }
