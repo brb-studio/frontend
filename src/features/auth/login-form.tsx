@@ -1,6 +1,7 @@
 "use client";
 
 import { LogIn, Mail } from "lucide-react";
+import Link from "next/link";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { Field } from "@/shared/ui/field";
@@ -43,6 +44,12 @@ export function LoginForm({
         error={error("password")}
         className="animate-rise [animation-delay:300ms]"
       />
+      <Link
+        href={`/${locale}/forgot-password`}
+        className="-mt-2 animate-rise self-start text-sm font-medium text-accent-text underline-offset-4 [animation-delay:330ms] hover:underline"
+      >
+        {t.recovery.forgotLink}
+      </Link>
       {state?.formError && <FormAlert>{t.errors[state.formError]}</FormAlert>}
       <SubmitButton
         pending={pending}

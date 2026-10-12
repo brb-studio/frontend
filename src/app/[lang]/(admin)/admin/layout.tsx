@@ -7,6 +7,7 @@ import { AdminSidebarNav, AdminTabBar } from "@/features/admin/admin-nav";
 import { sectionsFor } from "@/features/admin/sections";
 import { logout } from "@/features/auth/actions";
 import { getSession } from "@/features/auth/session";
+import { VerifyNotice } from "@/features/auth/verify-notice";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { BrandMark } from "@/shared/ui/brand-mark";
 import { Providers } from "../../providers";
@@ -84,6 +85,9 @@ export default async function AdminLayout({
           </span>
           {signOut}
         </header>
+        {!session.emailVerified && (
+          <VerifyNotice t={dict.auth} locale={locale} />
+        )}
         <main
           id="main"
           tabIndex={-1}

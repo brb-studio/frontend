@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { getSession, isStaff } from "@/features/auth/session";
+import { VerifyNotice } from "@/features/auth/verify-notice";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { AppNav } from "@/widgets/app-nav";
 import { AppTopBar } from "@/widgets/app-top-bar";
@@ -17,6 +18,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <AppTopBar />
+      {session && !session.emailVerified && (
+        <VerifyNotice t={dict.auth} locale={locale} />
+      )}
       <main
         id="main"
         tabIndex={-1}

@@ -2,6 +2,7 @@ import type { SessionUser } from "@/features/auth/session";
 
 export const SECTIONS = {
   home: "",
+  myDay: "/my-day",
   agenda: "/agenda",
   services: "/services",
   barbers: "/barbers",
@@ -18,7 +19,7 @@ export const SECTIONS = {
 export type Section = keyof typeof SECTIONS;
 
 export const GROUPS = {
-  daily: ["home", "agenda", "timeOff"],
+  daily: ["home", "myDay", "agenda", "timeOff"],
   catalog: ["services", "barbers", "branches", "promotions"],
   business: ["payments", "earnings", "team", "settings", "billing"],
   personal: ["account"],
@@ -28,6 +29,7 @@ export type Group = keyof typeof GROUPS;
 const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
   owner: [
     "home",
+    "myDay",
     "agenda",
     "services",
     "barbers",
@@ -43,6 +45,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
   ],
   admin: [
     "home",
+    "myDay",
     "agenda",
     "services",
     "barbers",
@@ -55,8 +58,16 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "settings",
     "account",
   ],
-  manager: ["home", "agenda", "barbers", "branches", "timeOff", "account"],
-  barber: ["home", "agenda", "timeOff", "account"],
+  manager: [
+    "home",
+    "myDay",
+    "agenda",
+    "barbers",
+    "branches",
+    "timeOff",
+    "account",
+  ],
+  barber: ["myDay", "agenda", "timeOff", "account"],
 };
 
 export const sectionsFor = (role: SessionUser["role"]) =>

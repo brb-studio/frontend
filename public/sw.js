@@ -1,4 +1,4 @@
-// Service worker: shows push notifications (new, moved or cancelled appointments) and opens the app
+// Service worker: shows push notifications (new, moved or cancelled appointments, for staff and customers) and opens the app
 // when one is tapped. No caching: the app always loads fresh from the network.
 
 self.addEventListener("install", () => self.skipWaiting());
@@ -7,7 +7,12 @@ self.addEventListener("activate", (event) =>
 );
 
 self.addEventListener("push", (event) => {
-  let message = { title: "MagicStudio", body: "", url: "/", tag: undefined };
+  let message = {
+    title: self.location.hostname,
+    body: "",
+    url: "/",
+    tag: undefined,
+  };
   try {
     message = { ...message, ...event.data.json() };
   } catch {

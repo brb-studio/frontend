@@ -141,7 +141,7 @@ export const slugify = (name: string) =>
     .slice(0, 60);
 
 export const smallButton =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent disabled:opacity-50";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm transition-colors hover:border-accent disabled:opacity-50";
 
 export const pill =
   "relative cursor-pointer rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors hover:border-accent has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent";

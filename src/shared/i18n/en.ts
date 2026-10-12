@@ -57,6 +57,32 @@ const en = {
         "There's already an account with this email. Sign in instead.",
       rateLimited: "Too many attempts. Please wait a few minutes.",
       wrongPassword: "Your current password is wrong.",
+      invalidToken:
+        "This link has expired or was already used. Ask for a new one.",
+    },
+    recovery: {
+      forgotLink: "Forgot your password?",
+      forgotTitle: "Recover your password",
+      forgotLead: "We'll email you a link to choose a new one.",
+      forgotSubmit: "Send link",
+      forgotSent:
+        "If an account exists for that email, we sent you a link. Check your inbox and spam.",
+      backToLogin: "Back to sign in",
+      resetTitle: "Choose a new password",
+      resetLead: "It will be the password of your account at this barbershop.",
+      resetSubmit: "Save password",
+      resetDone: "Your password changed. Sign in with the new one.",
+      resetMissing: "This link isn't valid. Ask for a new one.",
+      askAgain: "Ask for another link",
+      verifyTitle: "Confirm your email",
+      verifyLead: "Tap the button to confirm this email is yours.",
+      verifySubmit: "Confirm email",
+      verifyDone: "Done! Your email is confirmed.",
+      verifyContinue: "Continue",
+      noticeText:
+        "Confirm your email so you can recover your account if you forget the password.",
+      resend: "Resend link",
+      resent: "We sent you a new link.",
     },
   },
   home: {
@@ -291,12 +317,18 @@ const en = {
     notificationsTitle: "Notifications",
     noNotifications: "No notifications yet.",
     markRead: "Mark all as read",
+    perPage: "Per page",
+    pageRange: "{from}–{to} of {total}",
+    previousPage: "Previous page",
+    nextPage: "Next page",
+    goToPage: "Go to page {n}",
     live: "Live",
     notificationTypes: {
       "appointment.booked": "New appointment",
       "appointment.cancelled": "Appointment cancelled",
       "appointment.rescheduled": "Appointment rescheduled",
       "payment.disputed": "Payment disputed",
+      "payment.transfer_requested": "Transfer to confirm",
     },
     push: {
       enable: "Turn on phone notifications",
@@ -305,7 +337,7 @@ const en = {
       blocked: "Notifications are blocked in this browser's settings.",
       unsupported: "This browser can't show notifications.",
       installIos:
-        "On iPhone: tap Share, then “Add to Home Screen”. Open MagicStudio from your home screen and turn notifications on there.",
+        "On iPhone: tap Share, then “Add to Home Screen”. Open the app from your home screen and turn notifications on there.",
       failed: "Couldn't turn on notifications. Please try again.",
     },
   },
@@ -315,6 +347,7 @@ const en = {
     nav: {
       label: "Admin",
       home: "Today",
+      myDay: "My day",
       agenda: "Agenda",
       services: "Services",
       barbers: "Barbers",
@@ -471,6 +504,21 @@ const en = {
       specialtyEs: "Specialty (Spanish)",
       services: "Services they do",
       hours: "Working hours",
+      account: "Linked account",
+      noAccount: "No account",
+      accountHint:
+        "The account gets this profile's appointments in “My day” and its alerts on their phone.",
+    },
+    myDay: {
+      finished: "Finished ({n})",
+      one: "1 cut today",
+      other: "{n} cuts today",
+      empty: "No cuts left for today.",
+      next: "Next",
+      noProfile: "Your account isn't linked to a barber profile yet.",
+      noProfileHint:
+        "Link it in Barbers by choosing your account on the profile that is yours.",
+      goBarbers: "Go to Barbers",
     },
     branches: {
       newBranch: "New branch",

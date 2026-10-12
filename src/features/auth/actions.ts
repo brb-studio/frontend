@@ -9,9 +9,12 @@ import {
   type AuthState,
   type ErrorKey,
   fieldErrors,
+  forgotSchema,
   loginSchema,
   passwordChangeSchema,
   registerSchema,
+  resetSchema,
+  tokenSchema,
 } from "./schema";
 
 const text = (formData: FormData, key: string) =>
@@ -42,6 +45,7 @@ function errorKey(error: unknown): ErrorKey {
   if (!(error instanceof ApiError)) return "unavailable";
   if (error.status === 401) return "invalidCredentials";
   if (error.status === 429) return "rateLimited";
+  if (error.code === "INVALID_TOKEN") return "invalidToken";
   if (error.code === "EMAIL_TAKEN") return "emailTaken";
   return "unavailable";
 }
@@ -84,7 +88,13 @@ export async function register(
     await startSession(
       await backend("/v1/auth/register", session, {
         method: "POST",
-        body: { name, email, ...(phone ? { phone } : {}), password },
+        body: {
+          name,
+          email,
+          ...(phone ? { phone } : {}),
+          password,
+          locale: localeOf(formData),
+        },
       }),
     );
   } catch (error) {
@@ -111,6 +121,74 @@ export async function changePassword(
     if (error instanceof ApiError && error.code === "WRONG_PASSWORD") {
       return { errors: { currentPassword: ["wrongPassword"] } };
     }
+    return { formError: errorKey(error) };
+  }
+  return { done: true };
+}
+
+/** Always reports success for a well-formed email: whether the account exists is never shown. */
+export async function forgotPassword(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const values = { email: text(formData, "email") };
+  const parsed = forgotSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { errors: fieldErrors(parsed.error), values };
+  try {
+    await backend("/v1/auth/password/forgot", z.undefined(), {
+      method: "POST",
+      body: { email: parsed.data.email, locale: localeOf(formData) },
+    });
+  } catch (error) {
+    return { formError: errorKey(error), values };
+  }
+  return { done: true, values };
+}
+
+export async function resetPassword(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const parsed = resetSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+  try {
+    await backend("/v1/auth/password/reset", z.undefined(), {
+      method: "POST",
+      body: parsed.data,
+    });
+  } catch (error) {
+    return { formError: errorKey(error) };
+  }
+  return { done: true };
+}
+
+export async function verifyEmail(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const parsed = tokenSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { formError: "invalidToken" };
+  try {
+    await backend("/v1/auth/verify-email", z.undefined(), {
+      method: "POST",
+      body: parsed.data,
+    });
+  } catch (error) {
+    return { formError: errorKey(error) };
+  }
+  return { done: true };
+}
+
+export async function resendVerification(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  try {
+    await backend("/v1/auth/verify-email/request", z.undefined(), {
+      method: "POST",
+      body: { locale: localeOf(formData) },
+    });
+  } catch (error) {
     return { formError: errorKey(error) };
   }
   return { done: true };

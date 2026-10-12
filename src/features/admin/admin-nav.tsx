@@ -3,6 +3,7 @@
 import {
   BadgePercent,
   Banknote,
+  CalendarCheck,
   CalendarDays,
   CalendarOff,
   CircleUserRound,
@@ -25,6 +26,7 @@ import type { AdminText } from "./ui";
 
 const ICONS: Record<Section, LucideIcon> = {
   home: LayoutDashboard,
+  myDay: CalendarCheck,
   agenda: CalendarDays,
   services: Scissors,
   barbers: Users,

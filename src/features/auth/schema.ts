@@ -11,6 +11,7 @@ export type ErrorKey =
   | "invalidCredentials"
   | "emailTaken"
   | "rateLimited"
+  | "invalidToken"
   | "wrongPassword";
 
 const email = z
@@ -24,6 +25,17 @@ const password = z
   .max(128, { error: "passwordMax" });
 
 export const loginSchema = z.object({ email, password });
+
+export const forgotSchema = z.object({ email });
+
+export const resetSchema = z.object({
+  token: z.string({ error: "invalidToken" }).min(1, { error: "invalidToken" }),
+  password,
+});
+
+export const tokenSchema = z.object({
+  token: z.string({ error: "invalidToken" }).min(1, { error: "invalidToken" }),
+});
 
 export const passwordChangeSchema = z.object({
   currentPassword: z

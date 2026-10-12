@@ -10,6 +10,7 @@ const me = z.object({
     phone: z.string().optional(),
     role: z.enum(["owner", "admin", "manager", "barber", "customer"]),
     branchId: z.string().optional(),
+    emailVerified: z.boolean().default(true),
   }),
 });
 

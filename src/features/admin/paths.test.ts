@@ -14,6 +14,7 @@ test("the admin proxy reaches the payment routes owners use, and nothing else", 
     "payments/stripe/dashboard",
     `payments/appointments/${id}/refund`,
     `payments/${id}/confirm`,
+    "appointments/my-day",
   ]) {
     expect(isAdminPath(path)).toBe(true);
   }
@@ -23,6 +24,7 @@ test("the admin proxy reaches the payment routes owners use, and nothing else", 
     "payments/appointments/x/refund",
     "billing/payment",
     "../platform",
+    "appointments/my-day/x",
   ]) {
     expect(isAdminPath(path)).toBe(false);
   }

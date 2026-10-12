@@ -14,8 +14,11 @@ export function getAgenda() {
   );
 }
 
-export const getNotifications = () =>
-  backend("/v1/notifications", notificationsSchema);
+export const getNotifications = (page: string, pageSize: string) =>
+  backend(
+    `/v1/notifications?page=${encodeURIComponent(page)}&pageSize=${encodeURIComponent(pageSize)}`,
+    notificationsSchema,
+  );
 
 export async function getPushKey() {
   try {

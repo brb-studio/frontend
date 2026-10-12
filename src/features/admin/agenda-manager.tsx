@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useState } from "react";
 import * as z from "zod";
 import { type TicketText, ticketLine } from "@/features/payments/model";
@@ -11,7 +12,7 @@ import { formatMoney } from "@/shared/i18n/money";
 import { adminQuery, useAdminAction } from "./api";
 import { NewAppointmentForm } from "./new-appointment-form";
 import { type AdminAppointment, staffAppointmentSchema } from "./schemas";
-import { type AdminText, Panel, Result, Row, smallButton } from "./ui";
+import { type AdminText, Result, Row, smallButton } from "./ui";
 
 export const today = () => {
   const now = new Date();
@@ -65,29 +66,25 @@ export function AgendaManager({
     }).format(new Date(a.startAt));
 
   return (
-    <Panel
-      title={t.nav.agenda}
-      action={
-        <div className="flex flex-wrap items-center gap-2">
-          <label className="flex items-center gap-2 text-sm">
-            <span className="text-fg-muted">{t.agenda.day}</span>
-            <input
-              type="date"
-              value={day}
-              onChange={(event) => setDay(event.target.value || today())}
-              className="h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg"
-            />
-          </label>
-          <button
-            type="button"
-            className={smallButton}
-            onClick={() => setAdding(!adding)}
-          >
-            {adding ? t.common.close : t.agenda.newAppointment}
-          </button>
-        </div>
-      }
-    >
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <label className="flex items-center gap-2 text-sm">
+          <span className="text-fg-muted">{t.agenda.day}</span>
+          <input
+            type="date"
+            value={day}
+            onChange={(event) => setDay(event.target.value || today())}
+            className="h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg"
+          />
+        </label>
+        <button
+          type="button"
+          className={smallButton}
+          onClick={() => setAdding(!adding)}
+        >
+          {adding ? t.common.close : t.agenda.newAppointment}
+        </button>
+      </div>
       {adding && (
         <NewAppointmentForm
           locale={locale}
@@ -111,20 +108,39 @@ export function AgendaManager({
                 key={a.id}
                 muted={a.status === "cancelled"}
                 title={`${time(a)} · ${a.customer?.name ?? ""}`}
-                meta={[
-                  a.items.map((item) => pick(item.name, locale)).join(" + "),
-                  a.barber?.name,
-                  formatMoney(a.totalMinor, a.currency, locale),
-                  status[a.status],
-                  a.payment &&
-                    ticketLine(a.payment, ticket, (minor) =>
-                      formatMoney(minor, a.currency, locale),
-                    ),
-                  a.customer?.phone,
-                  a.notes,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
+                meta={
+                  <>
+                    <span className="block">
+                      {[
+                        a.items
+                          .map((item) => pick(item.name, locale))
+                          .join(" + "),
+                        formatMoney(a.totalMinor, a.currency, locale),
+                      ].join(" · ")}
+                    </span>
+                    <span className="block">
+                      {[a.barber?.name, status[a.status]]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                    {a.payment && (
+                      <span className="block">
+                        {ticketLine(a.payment, ticket, (minor) =>
+                          formatMoney(minor, a.currency, locale),
+                        )}
+                      </span>
+                    )}
+                    {a.notes && <span className="block">{a.notes}</span>}
+                    {a.customer?.phone && (
+                      <Link
+                        href={`tel:${a.customer.phone}`}
+                        className="inline-flex min-h-11 items-center underline-offset-2 hover:underline"
+                      >
+                        {a.customer.phone}
+                      </Link>
+                    )}
+                  </>
+                }
               >
                 {canRefund &&
                   a.payment?.provider === "stripe" &&
@@ -206,6 +222,6 @@ export function AgendaManager({
       ) : (
         <p className="text-fg-muted">{t.agenda.empty}</p>
       )}
-    </Panel>
+    </div>
   );
 }

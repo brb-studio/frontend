@@ -36,8 +36,13 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
+const tunnels = isDev ? ["*.devtunnels.ms"] : [];
+const tunnelOrigins = isDev ? [...tunnels, "localhost:3000"] : [];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  allowedDevOrigins: tunnels,
+  experimental: { serverActions: { allowedOrigins: tunnelOrigins } },
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },

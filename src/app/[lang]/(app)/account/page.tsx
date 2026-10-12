@@ -12,6 +12,8 @@ import { MyAppointments } from "@/features/account/my-appointments";
 import { logout } from "@/features/auth/actions";
 import { PasswordForm } from "@/features/auth/password-form";
 import { getSession } from "@/features/auth/session";
+import { getPushKey } from "@/features/staff/data";
+import { PushToggle } from "@/features/staff/push-toggle";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { Button, ButtonLink } from "@/shared/ui/button";
@@ -82,6 +84,7 @@ export default async function AccountPage() {
   }
 
   const queryClient = new QueryClient();
+  const pushKey = await getPushKey();
   if (session.role === "customer") {
     await queryClient.prefetchQuery({
       ...myAppointmentsQuery(),
@@ -116,6 +119,7 @@ export default async function AccountPage() {
           </form>
         </div>
       </section>
+      {pushKey && <PushToggle publicKey={pushKey} t={dict.account.push} />}
       {session.role === "customer" && (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <MyAppointments locale={locale} t={t} tp={dict.payment} />

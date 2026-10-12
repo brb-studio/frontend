@@ -13,7 +13,15 @@ mock.module("next/headers", () => ({
   }),
   headers: async () => new Headers({ host: "magicstudio.localhost:3000" }),
 }));
-const { changePassword, login, register } = await import("./actions");
+const {
+  changePassword,
+  forgotPassword,
+  login,
+  register,
+  resendVerification,
+  resetPassword,
+  verifyEmail,
+} = await import("./actions");
 
 const form = (entries: Record<string, string>) => {
   const data = new FormData();
@@ -179,4 +187,75 @@ test("changing the password keeps this session and maps a wrong current password
     newPassword: "new-secret-123",
   });
   expect(jar.get("ms_session")?.value).toBe("t".repeat(43));
+});
+
+const noContent = () =>
+  spyOn(globalThis, "fetch").mockImplementation(
+    Object.assign(async () => new Response(null, { status: 204 }), {
+      preconnect: fetch.preconnect,
+    }),
+  );
+
+test("asking for a reset link sends the email and language, and validates before calling the API", async () => {
+  const spy = noContent();
+  restore = () => spy.mockRestore();
+  expect(
+    await forgotPassword(undefined, form({ lang: "en", email: "bad" })),
+  ).toMatchObject({ errors: { email: ["email"] } });
+  expect(spy).not.toHaveBeenCalled();
+
+  expect(
+    await forgotPassword(
+      undefined,
+      form({ lang: "en", email: "ana@example.com" }),
+    ),
+  ).toMatchObject({ done: true });
+  const [url, init] = spy.mock.calls[0] ?? [];
+  expect(String(url)).toBe("http://api.test/v1/auth/password/forgot");
+  expect(JSON.parse(String(init?.body))).toEqual({
+    email: "ana@example.com",
+    locale: "en",
+  });
+});
+
+test("resetting, verifying and resending map an expired link and rate limits to form errors", async () => {
+  const token = "t".repeat(43);
+  let spy = noContent();
+  expect(
+    await resetPassword(
+      undefined,
+      form({ token, password: "a brand new password" }),
+    ),
+  ).toEqual({ done: true });
+  expect(JSON.parse(String(spy.mock.calls[0]?.[1]?.body))).toEqual({
+    token,
+    password: "a brand new password",
+  });
+  expect(
+    await resetPassword(undefined, form({ token, password: "x" })),
+  ).toEqual({ errors: { password: ["passwordMin"] } });
+  expect(await verifyEmail(undefined, form({}))).toEqual({
+    formError: "invalidToken",
+  });
+  spy.mockRestore();
+
+  spy = api(400, {
+    error: { code: "INVALID_TOKEN", message: "This link is invalid" },
+  });
+  expect(await verifyEmail(undefined, form({ token }))).toEqual({
+    formError: "invalidToken",
+  });
+  expect(
+    await resetPassword(
+      undefined,
+      form({ token, password: "a brand new password" }),
+    ),
+  ).toEqual({ formError: "invalidToken" });
+  spy.mockRestore();
+
+  spy = api(429, { error: { code: "RATE_LIMITED", message: "Too many" } });
+  restore = () => spy.mockRestore();
+  expect(await resendVerification(undefined, form({ lang: "es" }))).toEqual({
+    formError: "rateLimited",
+  });
 });

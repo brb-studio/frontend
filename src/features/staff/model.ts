@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import * as z from "zod";
 import { appointmentSchema } from "@/features/account/model";
 import { localized } from "@/shared/i18n/localized";
@@ -10,6 +10,7 @@ export const notificationSchema = z.object({
     "appointment.cancelled",
     "appointment.rescheduled",
     "payment.disputed",
+    "payment.transfer_requested",
   ]),
   appointmentId: z.string(),
   summary: z.object({
@@ -26,6 +27,9 @@ export type StaffNotification = z.output<typeof notificationSchema>;
 
 export const notificationsSchema = z.object({
   unread: z.number().int(),
+  total: z.number().int(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
   items: z.array(notificationSchema),
 });
 
@@ -43,11 +47,20 @@ export const agendaQuery = () =>
     staleTime: 30_000,
   });
 
-export const notificationsQuery = () =>
+export const PAGE_SIZES = [5, 10, 20] as const;
+
+export const notificationsQuery = (
+  page = 1,
+  pageSize: number = PAGE_SIZES[0],
+) =>
   queryOptions({
-    queryKey: notificationsKey,
+    queryKey: [...notificationsKey, page, pageSize],
+    placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
-      const response = await fetch("/api/staff/notifications", { signal });
+      const response = await fetch(
+        `/api/staff/notifications?page=${page}&pageSize=${pageSize}`,
+        { signal },
+      );
       if (!response.ok) throw new Error(`notifications ${response.status}`);
       return notificationsSchema.parse(await response.json());
     },

@@ -18,6 +18,7 @@ import {
   branchSchema,
   type HoursRow,
   serviceSchema,
+  staffSchema,
 } from "./schemas";
 import {
   type AdminText,
@@ -35,6 +36,7 @@ type Props = { locale: Locale; t: AdminText; canCreate: boolean };
 const barbersQuery = adminQuery("barbers", z.array(barberSchema));
 const branchesQuery = adminQuery("branches", z.array(branchSchema));
 const servicesQuery = adminQuery("services", z.array(serviceSchema));
+const usersQuery = adminQuery("users", z.array(staffSchema));
 
 function BarberEditor({
   barber,
@@ -52,6 +54,16 @@ function BarberEditor({
   const action = useAdminAction();
   const [hours, setHours] = useState<HoursRow[]>(barber.hours);
   const [serviceIds, setServiceIds] = useState(barber.serviceIds);
+  const users = useQuery(usersQuery);
+  // Owners and admins can cut too (anywhere); barber accounts only in their own branch.
+  const accounts = users.data?.filter(
+    (u) =>
+      u.id === barber.userId ||
+      (u.active &&
+        (u.role === "owner" ||
+          u.role === "admin" ||
+          (u.role === "barber" && u.branchId === barber.branchId))),
+  );
 
   const available = services.filter(
     (s) => s.active && (!s.branchId || s.branchId === barber.branchId),
@@ -69,6 +81,7 @@ function BarberEditor({
           name: value(form, "name"),
           ...(specialty ? { specialty: { es: specialty } } : {}),
           images: form.getAll("images").map(String),
+          ...(accounts && { userId: value(form, "userId") || null }),
           hours,
           serviceIds,
         },
@@ -95,6 +108,23 @@ function BarberEditor({
         label={t.barbers.specialtyEs}
         defaultValue={barber.specialty?.es}
       />
+      {accounts && (
+        <div className="grid gap-1">
+          <Select
+            name="userId"
+            label={t.barbers.account}
+            defaultValue={barber.userId ?? ""}
+          >
+            <option value="">{t.barbers.noAccount}</option>
+            {accounts.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name} · {u.email}
+              </option>
+            ))}
+          </Select>
+          <p className="text-xs text-fg-muted">{t.barbers.accountHint}</p>
+        </div>
+      )}
       <fieldset className="grid gap-1">
         <legend className="mb-1 text-sm font-medium">
           {t.barbers.services}
