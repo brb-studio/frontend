@@ -2,6 +2,7 @@ import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import * as z from "zod";
 import { appointmentSchema } from "@/features/account/model";
 import { localized } from "@/shared/i18n/localized";
+import { PAGE_SIZES } from "@/shared/ui/pager";
 
 export const notificationSchema = z.object({
   id: z.string(),
@@ -46,8 +47,6 @@ export const agendaQuery = () =>
     },
     staleTime: 30_000,
   });
-
-export const PAGE_SIZES = [5, 10, 20] as const;
 
 export const notificationsQuery = (
   page = 1,

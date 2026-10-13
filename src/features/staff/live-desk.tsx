@@ -1,14 +1,14 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, Radio } from "lucide-react";
+import { Radio } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Appointment } from "@/features/account/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
 import { Button } from "@/shared/ui/button";
-import { Select } from "@/shared/ui/select";
+import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
 import { markAllRead } from "./actions";
 import {
   agendaKey,
@@ -16,7 +16,6 @@ import {
   notificationSchema,
   notificationsKey,
   notificationsQuery,
-  PAGE_SIZES,
   type StaffNotification,
 } from "./model";
 
@@ -40,9 +39,6 @@ const localStart = (start: string, locale: Locale) =>
     minute: "2-digit",
     timeZone: "UTC",
   }).format(new Date(`${start}:00Z`));
-
-const pageButton =
-  "grid size-10 place-items-center rounded-full border text-sm font-medium tabular-nums transition-colors disabled:pointer-events-none disabled:opacity-40";
 
 export function LiveDesk({
   locale,
@@ -185,70 +181,16 @@ export function LiveDesk({
                 </li>
               ))}
             </ul>
-            <div className="grid gap-3 sm:grid-cols-[12rem_1fr] sm:items-end">
-              <Select
-                label={t.perPage}
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setPage(1);
-                }}
-              >
-                {PAGE_SIZES.map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </Select>
-              <nav
-                aria-label={t.notificationsTitle}
-                className="grid justify-items-center gap-2 sm:justify-items-end"
-              >
-                <p className="text-xs text-fg-muted">
-                  {t.pageRange
-                    .replace("{from}", String((page - 1) * pageSize + 1))
-                    .replace(
-                      "{to}",
-                      String((page - 1) * pageSize + feed.data.items.length),
-                    )
-                    .replace("{total}", String(total))}
-                </p>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    className={`${pageButton} border-line`}
-                    aria-label={t.previousPage}
-                    disabled={page <= 1}
-                    onClick={() => setPage(page - 1)}
-                  >
-                    <ChevronLeft size={18} aria-hidden="true" />
-                  </button>
-                  {Array.from({ length: pages }, (_, i) => i + 1)
-                    .filter((n) => Math.abs(n - page) <= 2)
-                    .map((n) => (
-                      <button
-                        key={n}
-                        type="button"
-                        aria-label={t.goToPage.replace("{n}", String(n))}
-                        aria-current={n === page ? "page" : undefined}
-                        className={`${pageButton} ${n === page ? "border-accent bg-accent text-accent-fg" : "border-line"} ${Math.abs(n - page) > 1 ? "hidden sm:grid" : ""}`}
-                        onClick={() => setPage(n)}
-                      >
-                        {n}
-                      </button>
-                    ))}
-                  <button
-                    type="button"
-                    className={`${pageButton} border-line`}
-                    aria-label={t.nextPage}
-                    disabled={page >= pages}
-                    onClick={() => setPage(page + 1)}
-                  >
-                    <ChevronRight size={18} aria-hidden="true" />
-                  </button>
-                </div>
-              </nav>
-            </div>
+            <Pager
+              label={t.notificationsTitle}
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              shown={feed.data.items.length}
+              onPage={setPage}
+              onPageSize={setPageSize}
+              t={t}
+            />
           </>
         ) : (
           <p className="text-fg-muted">

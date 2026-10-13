@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarClock, CalendarX, CreditCard } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ticketLine } from "@/features/payments/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
@@ -10,11 +10,13 @@ import { pick } from "@/shared/i18n/localized";
 import { formatMoney } from "@/shared/i18n/money";
 import { Button, ButtonLink } from "@/shared/ui/button";
 import { FormAlert } from "@/shared/ui/form";
+import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
 import { cancelAppointment } from "./actions";
 import {
   type Appointment,
   myAppointmentsKey,
   myAppointmentsQuery,
+  myHistoryQuery,
 } from "./model";
 import { ReschedulePanel } from "./reschedule-panel";
 
@@ -42,6 +44,15 @@ export function MyAppointments({
   const [error, setError] = useState<"tooLate" | "unavailable" | null>(null);
   const [rescheduling, setRescheduling] = useState<string | null>(null);
   const [moved, setMoved] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZES[0]);
+  const history = useQuery(myHistoryQuery(page, pageSize));
+  const total = history.data?.total ?? 0;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+
+  useEffect(() => {
+    if (history.data && page > pages) setPage(pages);
+  }, [history.data, page, pages]);
 
   const [confirming, setConfirming] = useState<string | null>(null);
   const cancelling = useMutation({
@@ -71,7 +82,6 @@ export function MyAppointments({
       hour: "numeric",
       minute: "2-digit",
     }).format(new Date(a.paymentDeadline));
-  const history = list.filter((a) => !upcoming.includes(a));
 
   const row = (a: Appointment) => (
     <li
@@ -86,7 +96,7 @@ export function MyAppointments({
         {a.items.map((item) => pick(item.name, locale)).join(" + ")} ·{" "}
         {a.barber?.name}
       </p>
-      <p className="flex items-center justify-between gap-3 text-fg-muted">
+      <p className="flex flex-wrap items-center justify-between gap-3 text-fg-muted">
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
           {a.payment && (
@@ -211,12 +221,22 @@ export function MyAppointments({
           </div>
         )}
       </section>
-      {history.length > 0 && (
+      {history.data && total > 0 && (
         <section aria-labelledby="history-title" className="grid gap-3">
           <h2 id="history-title" className="text-xl font-medium">
             {t.history}
           </h2>
-          <ul className="grid gap-2">{history.map(row)}</ul>
+          <ul className="grid gap-2">{history.data.items.map(row)}</ul>
+          <Pager
+            label={t.history}
+            page={page}
+            pageSize={pageSize}
+            total={total}
+            shown={history.data.items.length}
+            onPage={setPage}
+            onPageSize={setPageSize}
+            t={t}
+          />
         </section>
       )}
     </div>

@@ -52,7 +52,7 @@ Cada respuesta del API SHALL validarse con Zod antes de usarse. Un error del API
 - **THEN** las pantallas muestran su mensaje de "no disponible" en lugar de romperse
 
 ### Requirement: Accesos del panel restringidos
-El proxy de lectura del panel (`GET /api/admin/*`) y la acción de escritura (`adminRequest`, solo `POST`, `PATCH` y `DELETE`) SHALL aceptar únicamente rutas de una lista permitida de recursos del staff, como mucho con un id. Cualquier otra ruta MUST responder 404 o ser rechazada sin llegar al API.
+El proxy de lectura del panel (`GET /api/admin/*`) y la acción de escritura (`adminRequest`, solo `POST`, `PATCH` y `DELETE`) SHALL aceptar únicamente rutas de una lista permitida de recursos del staff, como mucho con un id. Entre ellos están los productos y las entregas (`products`, `product-orders`, `product-orders/scan`, `product-orders/:id/deliver` y `product-orders/:id/cancel`). Cualquier otra ruta MUST responder 404 o ser rechazada sin llegar al API.
 
 #### Scenario: Ruta fuera de la lista
 - **WHEN** el navegador pide `/api/admin/billing`

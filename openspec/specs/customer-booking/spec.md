@@ -95,3 +95,29 @@ Todos los montos de la app (también los del panel) SHALL formatearse con `forma
 #### Scenario: Precio en español
 - **WHEN** un servicio cuesta 1234.50 MXN y la app está en español
 - **THEN** se muestra "$1,234.50", no "$1.234,50"
+
+### Requirement: Lista de espera
+En la página de un servicio o paquete, el cliente con sesión SHALL poder anotarse con "Avísame si se libera": sucursal (si hay varias), día y parte del día (cualquiera, mañana o tarde). Sin sesión se le invita a iniciar sesión. Cuando el API responde que ese día ya tiene horarios, que ya tiene 5 avisos activos o que ya está anotado, el formulario MUST explicarlo. En Cuenta, "Mi lista de espera" muestra cada entrada (día, servicio, sucursal, "Esperando" o "Te avisamos"), con "Reservar" cuando ya se avisó y "Quitar" siempre.
+
+#### Scenario: Día lleno
+- **WHEN** el cliente elige un día sin horarios y envía el formulario
+- **THEN** ve la confirmación y la entrada aparece en Cuenta
+
+#### Scenario: Día con horarios
+- **WHEN** el cliente elige un día que sí tiene horarios libres
+- **THEN** ve que debe reservar arriba, y no se crea la entrada
+
+### Requirement: Productos y apartados
+Si la barbería activó el módulo de productos, el cliente SHALL ver la pestaña Productos con el catálogo de la sucursal elegida (foto, nombre, precio, categoría; "Agotado" cuando no hay) y poder elegir cantidades y apartar con una sola acción; sin sesión se le invita a iniciar sesión. Nada se paga en línea: el aviso indica que paga en efectivo o por transferencia al recoger y que el apartado vence a los 7 días. Con el módulo apagado la pestaña no existe y `/products` responde 404.
+
+#### Scenario: Apartar productos
+- **WHEN** un cliente con sesión elige dos productos y toca "Apartar"
+- **THEN** ve la confirmación con un enlace a su QR en Cuenta
+
+### Requirement: Mis apartados con QR
+En Cuenta, el cliente SHALL ver sus apartados abiertos con el QR de cada uno (negro sobre blanco en cualquier tema, para que se lea), los productos, el total, la sucursal, el vencimiento y, si la barbería acepta transferencias, la CLABE y el titular. Puede cancelar un apartado abierto; los cerrados se muestran sin QR.
+
+#### Scenario: Apartado entregado
+- **WHEN** el equipo entrega el apartado
+- **THEN** el cliente lo ve como "Entregado" y sin QR
+

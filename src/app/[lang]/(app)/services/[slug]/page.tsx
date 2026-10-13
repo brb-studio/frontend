@@ -19,6 +19,7 @@ import {
   type BookingTarget,
 } from "@/features/booking/model";
 import { publishableKey } from "@/features/payments/data";
+import { WaitlistForm } from "@/features/waitlist/waitlist-form";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
@@ -167,6 +168,20 @@ export default async function ServicePage({
               tp={dict.payment}
             />
           </HydrationBoundary>
+          <div className="mt-8">
+            <WaitlistForm
+              item={{ kind: service.kind, slug: service.slug }}
+              branches={tenant.branches.map((b) => ({
+                slug: b.slug,
+                name: b.name,
+              }))}
+              initialBranch={branch.slug}
+              signedIn={session?.role === "customer"}
+              lang={locale}
+              today={new Date().toISOString().slice(0, 10)}
+              t={dict.waitlist}
+            />
+          </div>
         </div>
       )}
 

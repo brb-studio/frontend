@@ -2,7 +2,10 @@ import { expect, test } from "bun:test";
 import { formatMoney, toMajor, toMinor } from "./money";
 
 const intl = (amount: number, currency: string, locale: string) =>
-  new Intl.NumberFormat(locale === "es" ? "es-MX" : locale, { style: "currency", currency }).format(amount);
+  new Intl.NumberFormat(locale === "es" ? "es-MX" : locale, {
+    style: "currency",
+    currency,
+  }).format(amount);
 
 test.each([
   [3500, "USD", "en", 35],

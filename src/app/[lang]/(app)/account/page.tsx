@@ -6,14 +6,18 @@ import {
 import { ExternalLink, LogIn, LogOut, UserPlus, UserRound } from "lucide-react";
 import type { Metadata } from "next";
 import { getTenant } from "@/entities/tenant/api";
-import { getMyAppointments } from "@/features/account/data";
-import { myAppointmentsQuery } from "@/features/account/model";
+import { getMyAppointments, getMyHistory } from "@/features/account/data";
+import { myAppointmentsQuery, myHistoryQuery } from "@/features/account/model";
 import { MyAppointments } from "@/features/account/my-appointments";
 import { logout } from "@/features/auth/actions";
 import { PasswordForm } from "@/features/auth/password-form";
 import { getSession } from "@/features/auth/session";
+import { MyProductOrders } from "@/features/products/my-orders";
 import { getPushKey } from "@/features/staff/data";
 import { PushToggle } from "@/features/staff/push-toggle";
+import { getMyWaitlist } from "@/features/waitlist/data";
+import { myWaitlistQuery } from "@/features/waitlist/model";
+import { MyWaitlist } from "@/features/waitlist/my-waitlist";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { Button, ButtonLink } from "@/shared/ui/button";
@@ -86,10 +90,20 @@ export default async function AccountPage() {
   const queryClient = new QueryClient();
   const pushKey = await getPushKey();
   if (session.role === "customer") {
-    await queryClient.prefetchQuery({
-      ...myAppointmentsQuery(),
-      queryFn: getMyAppointments,
-    });
+    await Promise.all([
+      queryClient.prefetchQuery({
+        ...myAppointmentsQuery(),
+        queryFn: getMyAppointments,
+      }),
+      queryClient.prefetchQuery({
+        ...myHistoryQuery(),
+        queryFn: () => getMyHistory("1", "5"),
+      }),
+      queryClient.prefetchQuery({
+        ...myWaitlistQuery(),
+        queryFn: getMyWaitlist,
+      }),
+    ]);
   }
 
   return (
@@ -123,6 +137,10 @@ export default async function AccountPage() {
       {session.role === "customer" && (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <MyAppointments locale={locale} t={t} tp={dict.payment} />
+          {tenant.productsEnabled && (
+            <MyProductOrders locale={locale} t={dict.products} />
+          )}
+          <MyWaitlist locale={locale} t={dict.waitlist} />
         </HydrationBoundary>
       )}
       <PasswordForm t={dict.auth} text={t.password} />

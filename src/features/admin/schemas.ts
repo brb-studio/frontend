@@ -131,6 +131,8 @@ export const tenantSchema = z.object({
   currency: z.string(),
   theme: z.record(z.string(), z.unknown()),
   brand: z.object({ instagramUrl: z.string().optional() }),
+  reminders: z.object({ enabled: z.boolean() }),
+  products: z.object({ enabled: z.boolean() }),
   subscription: z.object({
     plan: z.string(),
     status: z.string(),
@@ -187,3 +189,43 @@ export const paymentSchema = z.object({
   customerPhone: z.string().nullable(),
 });
 export type AdminPayment = z.output<typeof paymentSchema>;
+
+export const productSchema = z.object({
+  id: z.string(),
+  branchId: z.string().optional(),
+  slug: z.string(),
+  name: localized,
+  description: localized.optional(),
+  image: z.string().optional(),
+  images: z.array(z.string()).default([]),
+  priceMinor: z.number().int(),
+  category: z.string().optional(),
+  stock: z.number().int().optional(),
+  position: z.number().int(),
+  active: z.boolean(),
+});
+export type AdminProduct = z.output<typeof productSchema>;
+
+export const pickupSchema = z.object({
+  id: z.string(),
+  status: z.enum(["reserved", "delivered", "cancelled", "expired"]),
+  code: z.string().optional(),
+  branch: z.object({ slug: z.string(), name: z.string() }).optional(),
+  customer: z
+    .object({ name: z.string(), phone: z.string().optional() })
+    .optional(),
+  items: z.array(
+    z.object({
+      name: localized,
+      priceMinor: z.number().int(),
+      quantity: z.number().int(),
+    }),
+  ),
+  currency: z.string(),
+  totalMinor: z.number().int(),
+  expiresAt: z.string(),
+  payment: z
+    .object({ method: z.enum(["cash", "spei"]), at: z.string() })
+    .optional(),
+});
+export type Pickup = z.output<typeof pickupSchema>;

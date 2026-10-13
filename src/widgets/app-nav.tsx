@@ -46,7 +46,7 @@ export function AppNav({
               aria-current={`/${section}` === path ? "page" : undefined}
               className={
                 tabs
-                  ? "group flex h-13 items-center gap-2 rounded-full p-1 text-sm font-medium text-white transition-[background-color,padding] duration-500 ease-out-expo aria-[current=page]:bg-white aria-[current=page]:pr-5 aria-[current=page]:text-neutral-950"
+                  ? "group flex h-13 items-center gap-2 rounded-full p-1 text-sm font-medium text-white transition-[background-color,padding] duration-500 ease-out-expo aria-[current=page]:bg-white aria-[current=page]:pr-5 aria-[current=page]:text-neutral-950 max-[22.5rem]:pr-1!"
                   : "flex items-center gap-2 rounded-full px-4 py-2 text-sm text-fg-muted transition-colors hover:text-fg aria-[current=page]:bg-accent aria-[current=page]:text-accent-fg"
               }
             >
@@ -55,7 +55,8 @@ export function AppNav({
                   <span className="grid size-11 place-items-center rounded-full bg-white/10 transition-colors duration-500 group-aria-[current=page]:bg-accent group-aria-[current=page]:text-accent-fg">
                     <Icon size={20} aria-hidden="true" />
                   </span>
-                  <span className="sr-only group-aria-[current=page]:not-sr-only">
+                  {/* ponytail: under 360px the labelled pill can't fit; the icon carries it */}
+                  <span className="sr-only group-aria-[current=page]:not-sr-only max-[22.5rem]:sr-only!">
                     {labels[key]}
                   </span>
                 </>

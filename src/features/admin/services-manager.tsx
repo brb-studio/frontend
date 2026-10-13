@@ -32,7 +32,7 @@ type Props = { locale: Locale; currency: string; t: AdminText };
 const servicesQuery = adminQuery("services", z.array(serviceSchema));
 const packagesQuery = adminQuery("packages", z.array(packageSchema));
 
-function both(form: FormData, es: string, en: string) {
+export function both(form: FormData, es: string, en: string) {
   const textEs = value(form, es);
   const textEn = value(form, en);
   if (!textEs && !textEn) return undefined;
@@ -42,7 +42,7 @@ function both(form: FormData, es: string, en: string) {
   };
 }
 
-function commonFields(form: FormData, isNew: boolean) {
+export function commonFields(form: FormData, isNew: boolean) {
   const name = both(form, "nameEs", "nameEn");
   const description = both(form, "descriptionEs", "descriptionEn");
   return {
@@ -55,11 +55,11 @@ function commonFields(form: FormData, isNew: boolean) {
   };
 }
 
-function CommonInputs({
+export function CommonInputs({
   item,
   t,
 }: {
-  item?: AdminService | AdminPackage;
+  item?: Pick<AdminService, "name" | "description" | "images">;
   t: AdminText;
 }) {
   return (

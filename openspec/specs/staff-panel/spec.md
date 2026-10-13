@@ -30,6 +30,8 @@ Cada rol SHALL ver solo sus secciones:
 - `manager`: Hoy, Agenda, Barberos, Sucursales, Tiempo libre y Mi cuenta.
 - `barber`: Hoy, Agenda, Tiempo libre y Mi cuenta.
 
+Con el módulo de productos activo se suman Productos (owner y admin) y Entregas (todos los roles del equipo); con el módulo apagado esas secciones no aparecen en el menú y sus rutas responden 404.
+
 #### Scenario: Menú de un encargado
 - **WHEN** un manager abre el panel
 - **THEN** el menú no muestra Servicios, Promociones, Equipo, Ajustes ni Suscripción
@@ -111,3 +113,36 @@ Cada miembro del equipo SHALL tener una sección Mi cuenta con su nombre, correo
 #### Scenario: Cambio de contraseña
 - **WHEN** un barbero cambia su contraseña desde Mi cuenta
 - **THEN** ve la confirmación y sigue con sesión en ese dispositivo
+
+### Requirement: Recordatorios de cita en Ajustes
+Owner y admin SHALL poder encender o apagar los recordatorios de cita de la barbería desde Ajustes (encendidos por defecto); el cambio se guarda con `PATCH tenant` y muestra el resultado.
+
+#### Scenario: Apagar recordatorios
+- **WHEN** el owner apaga el interruptor y guarda
+- **THEN** la barbería deja de enviar recordatorios y Ajustes lo muestra apagado al recargar
+
+### Requirement: Módulo de productos en Ajustes
+Owner y admin SHALL poder activar el módulo de productos desde Ajustes (apagado por defecto). El menú del panel y la barra de navegación del cliente leen el estado de la barbería al cargar, así que las secciones aparecen o desaparecen al recargar o navegar.
+
+#### Scenario: Activar productos
+- **WHEN** el owner activa el módulo y guarda
+- **THEN** tras recargar el panel muestra Productos y Entregas, y el cliente ve la pestaña Productos
+
+### Requirement: Administrar productos
+Owner y admin SHALL crear y editar productos con nombre en es y en, descripción, fotos, precio, categoría opcional y existencias opcionales (vacío = sin contar), y activarlos o desactivarlos. La lista muestra precio, categoría, unidades que quedan o "sin control de existencias" y si está activo.
+
+#### Scenario: Dejar de contar existencias
+- **WHEN** el owner vacía el campo de existencias de un producto y guarda
+- **THEN** el producto muestra "sin control de existencias"
+
+### Requirement: Entregas con QR
+La sección Entregas SHALL permitir al equipo abrir la cámara trasera del teléfono, leer el QR de un apartado y mostrar el apartado (cliente, productos, total, estado) sin cambiar nada. El QR se decodifica en la página (`jsqr`), porque Safari de iPhone no tiene `BarcodeDetector`; la cámara se libera al leer un código o al cerrarla. Si no hay permiso de cámara o el navegador no puede usarla, la sección MUST decirlo y seguir funcionando con la lista de pendientes. Desde un apartado abierto el equipo SHALL poder marcarlo entregado indicando si cobró en efectivo o por transferencia, o cancelarlo; un código inválido o de otra sucursal muestra un aviso.
+
+#### Scenario: Escanear y entregar
+- **WHEN** un barbero escanea el QR de un cliente y toca "Cobré en efectivo"
+- **THEN** el apartado queda entregado con pago en efectivo y sale de la lista de pendientes
+
+#### Scenario: Sin permiso de cámara
+- **WHEN** el barbero niega el permiso de la cámara
+- **THEN** ve un aviso y puede elegir el apartado en la lista de pendientes
+

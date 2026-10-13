@@ -9,6 +9,8 @@ export const SECTIONS = {
   branches: "/branches",
   timeOff: "/time-off",
   promotions: "/promotions",
+  products: "/products",
+  pickups: "/pickups",
   earnings: "/earnings",
   payments: "/payments",
   team: "/team",
@@ -19,8 +21,8 @@ export const SECTIONS = {
 export type Section = keyof typeof SECTIONS;
 
 export const GROUPS = {
-  daily: ["home", "myDay", "agenda", "timeOff"],
-  catalog: ["services", "barbers", "branches", "promotions"],
+  daily: ["home", "myDay", "agenda", "pickups", "timeOff"],
+  catalog: ["services", "products", "barbers", "branches", "promotions"],
   business: ["payments", "earnings", "team", "settings", "billing"],
   personal: ["account"],
 } as const satisfies Record<string, readonly Section[]>;
@@ -36,6 +38,8 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "branches",
     "timeOff",
     "promotions",
+    "products",
+    "pickups",
     "payments",
     "earnings",
     "team",
@@ -52,6 +56,8 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "branches",
     "timeOff",
     "promotions",
+    "products",
+    "pickups",
     "payments",
     "earnings",
     "team",
@@ -62,13 +68,24 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "home",
     "myDay",
     "agenda",
+    "pickups",
     "barbers",
     "branches",
     "timeOff",
     "account",
   ],
-  barber: ["myDay", "agenda", "timeOff", "account"],
+  barber: ["myDay", "agenda", "pickups", "timeOff", "account"],
 };
 
-export const sectionsFor = (role: SessionUser["role"]) =>
-  role === "customer" ? [] : BY_ROLE[role];
+/** Sections that only exist while the barbershop has the products module on. */
+const PRODUCT_SECTIONS: Section[] = ["products", "pickups"];
+
+export const sectionsFor = (
+  role: SessionUser["role"],
+  productsEnabled: boolean,
+) =>
+  role === "customer"
+    ? []
+    : BY_ROLE[role].filter(
+        (section) => productsEnabled || !PRODUCT_SECTIONS.includes(section),
+      );

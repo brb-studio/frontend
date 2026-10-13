@@ -31,7 +31,7 @@ export default async function AdminLayout({
   if (!session) redirect(`/${locale}/login`);
   if (session.role === "customer") redirect(`/${locale}/home`);
   const t = dict.admin;
-  const sections = sectionsFor(session.role);
+  const sections = sectionsFor(session.role, tenant.productsEnabled);
   const signOut = (
     <form action={logout}>
       <input type="hidden" name="lang" value={locale} />
