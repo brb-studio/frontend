@@ -59,11 +59,15 @@ const es: Dictionary = {
         "El inicio de sesión no está disponible en este momento. Intenta más tarde.",
       invalidCredentials: "Correo o contraseña incorrectos.",
       emailTaken: "Ya existe una cuenta con este correo. Inicia sesión.",
+      emailNotVerified:
+        "Confirma tu correo para entrar. Te enviamos un enlace nuevo; revisa tu bandeja y el spam.",
       rateLimited: "Demasiados intentos. Espera unos minutos.",
       wrongPassword: "La contraseña actual no es correcta.",
       invalidToken: "Este enlace venció o ya se usó. Pide uno nuevo.",
     },
     recovery: {
+      registerSent:
+        "Te enviamos un enlace a tu correo. Ábrelo para confirmar que es tuyo y después inicia sesión. Revisa también el spam.",
       forgotLink: "¿Olvidaste tu contraseña?",
       forgotTitle: "Recupera tu contraseña",
       forgotLead: "Te enviaremos un enlace para elegir una nueva.",

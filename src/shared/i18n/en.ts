@@ -56,12 +56,16 @@ const en = {
       invalidCredentials: "Wrong email or password.",
       emailTaken:
         "There's already an account with this email. Sign in instead.",
+      emailNotVerified:
+        "Confirm your email to sign in. We sent you a new link; check your inbox and spam.",
       rateLimited: "Too many attempts. Please wait a few minutes.",
       wrongPassword: "Your current password is wrong.",
       invalidToken:
         "This link has expired or was already used. Ask for a new one.",
     },
     recovery: {
+      registerSent:
+        "We emailed you a link. Open it to confirm the address is yours, then sign in. Check your spam too.",
       forgotLink: "Forgot your password?",
       forgotTitle: "Recover your password",
       forgotLead: "We'll email you a link to choose a new one.",

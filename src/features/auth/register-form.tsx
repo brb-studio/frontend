@@ -1,6 +1,7 @@
 "use client";
 
-import { Mail, Phone, User, UserPlus } from "lucide-react";
+import { Mail, MailCheck, Phone, User, UserPlus } from "lucide-react";
+import Link from "next/link";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { Field } from "@/shared/ui/field";
@@ -20,6 +21,23 @@ export function RegisterForm({
     register,
     t,
   );
+
+  if (state?.done) {
+    return (
+      <div className="grid gap-5">
+        <p role="status" className="flex gap-3 text-accent-text">
+          <MailCheck size={20} aria-hidden="true" className="mt-0.5 shrink-0" />
+          {t.recovery.registerSent}
+        </p>
+        <Link
+          href={`/${locale}/login`}
+          className="font-medium text-accent-text underline-offset-4 hover:underline"
+        >
+          {t.recovery.backToLogin}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form ref={formRef} action={formAction} noValidate className="grid gap-5">

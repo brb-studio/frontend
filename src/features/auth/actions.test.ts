@@ -259,3 +259,29 @@ test("resetting, verifying and resending map an expired link and rate limits to 
     formError: "rateLimited",
   });
 });
+
+test("registering opens no session, and signing in before confirming the email says so", async () => {
+  let spy = api(201, { user: { id: "u1" } });
+  const state = await register(
+    undefined,
+    form({
+      lang: "es",
+      name: "Ana López",
+      email: "ana@example.com",
+      phone: "",
+      password: "supersecret",
+    }),
+  );
+  expect(state).toMatchObject({ done: true });
+  expect(jar.size).toBe(0);
+  spy.mockRestore();
+
+  spy = api(403, {
+    error: { code: "EMAIL_NOT_VERIFIED", message: "Confirm your email first" },
+  });
+  restore = () => spy.mockRestore();
+  expect(await login(undefined, form(validLogin))).toMatchObject({
+    formError: "emailNotVerified",
+  });
+  expect(jar.size).toBe(0);
+});

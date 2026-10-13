@@ -10,6 +10,7 @@ export type ErrorKey =
   | "unavailable"
   | "invalidCredentials"
   | "emailTaken"
+  | "emailNotVerified"
   | "rateLimited"
   | "invalidToken"
   | "wrongPassword";

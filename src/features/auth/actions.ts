@@ -44,6 +44,7 @@ async function startSession({ token, expiresAt }: z.output<typeof session>) {
 function errorKey(error: unknown): ErrorKey {
   if (!(error instanceof ApiError)) return "unavailable";
   if (error.status === 401) return "invalidCredentials";
+  if (error.code === "EMAIL_NOT_VERIFIED") return "emailNotVerified";
   if (error.status === 429) return "rateLimited";
   if (error.code === "INVALID_TOKEN") return "invalidToken";
   if (error.code === "EMAIL_TAKEN") return "emailTaken";
@@ -85,25 +86,24 @@ export async function register(
   if (!parsed.success) return { errors: fieldErrors(parsed.error), values };
   const { name, email, phone, password } = parsed.data;
   try {
-    await startSession(
-      await backend("/v1/auth/register", session, {
-        method: "POST",
-        body: {
-          name,
-          email,
-          ...(phone ? { phone } : {}),
-          password,
-          locale: localeOf(formData),
-        },
-      }),
-    );
+    // No session yet: the account opens once the emailed link is followed, so a made-up address gets nowhere.
+    await backend("/v1/auth/register", z.object({ user: z.object({}) }), {
+      method: "POST",
+      body: {
+        name,
+        email,
+        ...(phone ? { phone } : {}),
+        password,
+        locale: localeOf(formData),
+      },
+    });
   } catch (error) {
     const key = errorKey(error);
     return key === "emailTaken"
       ? { errors: { email: [key] }, values }
       : { formError: key, values };
   }
-  redirect(`/${localeOf(formData)}/home`);
+  return { done: true, values };
 }
 
 export async function changePassword(
