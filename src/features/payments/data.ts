@@ -15,22 +15,11 @@ export function publishableKey() {
 }
 
 const ID = /^[a-f\d]{24}$/;
-const TOKEN = /^[\w-]{1,64}$/;
 
-export function getCheckout(
-  appointmentId: string,
-  paymentToken: string | undefined,
-  secret: boolean,
-) {
+export function getCheckout(appointmentId: string, secret: boolean) {
   if (!ID.test(appointmentId)) throw new Error("bad appointment id");
-  const query = new URLSearchParams();
-  if (paymentToken && TOKEN.test(paymentToken)) {
-    query.set("paymentToken", paymentToken);
-  }
-  if (secret) query.set("secret", "1");
-  const search = query.toString();
   return backend(
-    `/v1/public/appointments/${appointmentId}/payment${search ? `?${search}` : ""}`,
+    `/v1/public/appointments/${appointmentId}/payment${secret ? "?secret=1" : ""}`,
     checkoutSchema,
   );
 }

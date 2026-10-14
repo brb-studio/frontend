@@ -24,10 +24,6 @@ const input = z.object({
   appointmentId: z.string().regex(/^[a-f\d]{24}$/),
   kind: z.enum(PAYMENT_KINDS),
   method: z.enum(ONLINE_METHODS),
-  paymentToken: z
-    .string()
-    .regex(/^[\w-]{1,64}$/)
-    .optional(),
 });
 
 function paymentErrorOf(error: unknown): PaymentError {

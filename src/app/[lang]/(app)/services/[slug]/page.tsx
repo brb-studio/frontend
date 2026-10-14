@@ -13,6 +13,7 @@ import { ServiceCard } from "@/entities/service/service-card";
 import { getTenant } from "@/entities/tenant/api";
 import { getSession } from "@/features/auth/session";
 import { BookingForm } from "@/features/booking/booking-form";
+import { BookingGate } from "@/features/booking/booking-gate";
 import { getAvailability } from "@/features/booking/data";
 import {
   availabilityQuery,
@@ -56,6 +57,8 @@ export default async function ServicePage({
   if (!service) notFound();
   const branch =
     tenant.branches.find((b) => b.slug === query.branch) ?? tenant.branches[0];
+  // Booking needs an account; without one the page only shows the service.
+  const customer = session?.role === "customer";
 
   const queryClient = new QueryClient();
   const target: BookingTarget | undefined = branch && {
@@ -63,7 +66,7 @@ export default async function ServicePage({
     kind: service.kind,
     slug: service.slug,
   };
-  if (target) {
+  if (target && customer) {
     await queryClient.prefetchQuery({
       ...availabilityQuery(target),
       queryFn: () => getAvailability(target),
@@ -143,7 +146,13 @@ export default async function ServicePage({
         </div>
       </dl>
 
-      {branch && (
+      {!customer && (
+        <div className="animate-rise [animation-delay:160ms]">
+          <BookingGate lang={locale} t={dict.booking} auth={dict.auth} />
+        </div>
+      )}
+
+      {branch && customer && (
         <div className="animate-rise [animation-delay:160ms]">
           <HydrationBoundary state={dehydrate(queryClient)}>
             <BookingForm
@@ -159,7 +168,6 @@ export default async function ServicePage({
                 name: b.name,
               }))}
               initialBranch={branch.slug}
-              signedInCustomer={session?.role === "customer"}
               currency={tenant.currency}
               transfersOn={tenant.paymentsTransfer}
               online={tenant.paymentsOnline}
@@ -176,7 +184,7 @@ export default async function ServicePage({
                 name: b.name,
               }))}
               initialBranch={branch.slug}
-              signedIn={session?.role === "customer"}
+              signedIn
               lang={locale}
               today={new Date().toISOString().slice(0, 10)}
               t={dict.waitlist}

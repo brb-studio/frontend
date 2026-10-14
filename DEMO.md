@@ -67,12 +67,13 @@ El equipo (owner, admin, encargado, barberos) entra directo al panel `/es/admin`
 
 ## Qué probar
 
-1. **Reservar como invitado**: Servicios → Corte → sucursal → barbero → fecha → hora → nombre y teléfono → Confirmar. Prueba el código `VERANO` o deja que se aplique el 15% de primera visita.
-2. **Aviso al barbero en vivo**: en una ventana entra como `mateo@magicstudio.test` y abre el panel. En otra ventana (incógnito) reserva con Mateo. El aviso aparece al instante en el panel de Mateo y su agenda se actualiza sola.
-3. **Doble reserva imposible**: dos ventanas intentando la misma hora con el mismo barbero. Una confirma y la otra recibe "Esa hora se acaba de ocupar. Elige otra.".
-4. **Cliente con cuenta**: entra como `cliente@magicstudio.test`, reserva, ve la cita en Cuenta y cancélala.
-5. **Panel admin** (`http://localhost:3000/es/admin`): como owner sube fotos a servicios, paquetes, barberos y sucursales (se comprimen en el navegador), crea un corte o un paquete nuevo, cambia horarios de una sucursal, da de alta una ausencia (no deja si choca con citas), crea una promoción, invita a alguien del equipo (te da una contraseña temporal) y cambia el color del tema en Ajustes.
-6. **Multi-tenant**: abre `elite.localhost:3000`. Otro nombre, otro color, precios en MXN y otros barberos, con el mismo código.
+1. **Explorar sin cuenta**: en el login toca "Explorar sin cuenta", abre Servicios → Corte: ves precio y fotos, pero en lugar de reservar aparece "Crea tu cuenta para reservar".
+2. **Reservar**: crea una cuenta (o entra como `cliente@magicstudio.test`), Servicios → Corte → sucursal → barbero → fecha → hora → Confirmar. Prueba el código `VERANO` o deja que se aplique el 15% de primera visita.
+3. **Aviso al barbero en vivo**: en una ventana entra como `mateo@magicstudio.test` y abre el panel. En otra ventana (incógnito) entra como cliente y reserva con Mateo. El aviso aparece al instante en el panel de Mateo y su agenda se actualiza sola.
+4. **Doble reserva imposible**: dos ventanas intentando la misma hora con el mismo barbero. Una confirma y la otra recibe "Esa hora se acaba de ocupar. Elige otra.".
+5. **Cliente con cuenta**: entra como `cliente@magicstudio.test`, reserva, ve la cita en Cuenta y cancélala.
+6. **Panel admin** (`http://localhost:3000/es/admin`): como owner sube fotos a servicios, paquetes, barberos y sucursales (se comprimen en el navegador), crea un corte o un paquete nuevo, cambia horarios de una sucursal, da de alta una ausencia (no deja si choca con citas), crea una promoción, invita a alguien del equipo (te da una contraseña temporal) y cambia el color del tema en Ajustes.
+7. **Multi-tenant**: abre `elite.localhost:3000`. Otro nombre, otro color, precios en MXN y otros barberos, con el mismo código.
 
 ## Notificaciones en el celular (push)
 

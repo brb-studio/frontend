@@ -52,10 +52,31 @@ for (const { lang, dict } of [
   });
 }
 
+test("a guest sees the service but must sign up to book", async ({ page }) => {
+  await page.goto("/es/services/haircut");
+  await expect(
+    page.getByRole("heading", { name: es.booking.signInTitle }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: es.booking.submit }),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: es.auth.register }).click();
+  await expect(page).toHaveURL("/es/register");
+});
+
 test("booking: pick a barber, a date and a free time, then confirm (demo)", async ({
   page,
 }) => {
   const t = es.booking;
+  const auth = es.auth;
+  await page.goto("/es/register");
+  await page.getByLabel(auth.name).fill("Ana");
+  await page.getByLabel(auth.email).fill("ana@example.com");
+  await page.getByLabel(auth.phone).fill("+56 9 1234 5678");
+  await page.getByLabel(auth.password, { exact: true }).fill("supersecret");
+  await page.getByRole("button", { name: auth.register }).click();
+  await expect(page).toHaveURL("/es/home");
+
   await page.goto("/es/services/haircut");
 
   await page.locator("label", { hasText: "Lucas" }).click();

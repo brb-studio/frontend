@@ -123,6 +123,9 @@ const es: Dictionary = {
   },
   booking: {
     title: "Reserva tu hora",
+    signInTitle: "Crea tu cuenta para reservar",
+    signInLead:
+      "Sin cuenta puedes ver servicios, sucursales, precios y productos. Para agendar una cita, inicia sesión o regístrate.",
     branch: "Sucursal",
     barber: "Barbero",
     date: "Fecha",
@@ -132,10 +135,6 @@ const es: Dictionary = {
       "Sin horas libres en las próximas dos semanas. Prueba con otro barbero o sucursal.",
     loading: "Cargando horas libres…",
     retry: "Reintentar",
-    guestTitle: "Tus datos",
-    name: "Nombre completo",
-    phone: "Teléfono",
-    phoneHint: "Solo para esta cita.",
     promoCode: "Código de descuento",
     apply: "Aplicar",
     discount: "Descuento",
@@ -165,7 +164,8 @@ const es: Dictionary = {
     close: "Cerrar",
     errors: {
       required: "Elige barbero, fecha y hora.",
-      invalid: "Revisa tu nombre y tu teléfono.",
+      invalid: "Revisa los datos de tu reserva.",
+      signIn: "Tu sesión terminó. Inicia sesión para reservar.",
       slotTaken: "Esa hora se acaba de ocupar. Elige otra.",
       barberUnavailable:
         "Ese barbero ya no puede tomar esta reserva. Elige otro.",

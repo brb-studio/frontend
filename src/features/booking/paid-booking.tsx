@@ -22,27 +22,23 @@ import { Button, ButtonLink } from "@/shared/ui/button";
 export function PaidBooking({
   lang,
   checkout,
-  paymentToken,
   publishableKey,
   methods,
   summary,
-  signedInCustomer,
   t,
   tp,
 }: {
   lang: Locale;
   checkout: Checkout;
-  paymentToken?: string;
   publishableKey?: string;
   methods: OnlineMethod[];
   summary: { item: string; barber: string; when: string };
-  signedInCustomer: boolean;
   t: Dictionary["booking"];
   tp: Dictionary["payment"];
 }) {
   const [open, setOpen] = useState(true);
   const live = useQuery({
-    ...checkoutQuery(checkout.appointmentId, paymentToken),
+    ...checkoutQuery(checkout.appointmentId),
     initialData: checkout,
   }).data;
   const paid = live.status === "paid" && live.appointmentStatus === "confirmed";
@@ -96,11 +92,9 @@ export function PaidBooking({
         </>
       )}
       <div className="mt-2 flex flex-wrap justify-center gap-2">
-        {signedInCustomer && (
-          <ButtonLink variant="secondary" href={`/${lang}/account`}>
-            {t.seeVisits}
-          </ButtonLink>
-        )}
+        <ButtonLink variant="secondary" href={`/${lang}/account`}>
+          {t.seeVisits}
+        </ButtonLink>
         <ButtonLink href={`/${lang}/home`}>{t.home}</ButtonLink>
       </div>
 
@@ -120,7 +114,6 @@ export function PaidBooking({
       >
         <PaymentCheckout
           appointmentId={checkout.appointmentId}
-          paymentToken={paymentToken}
           initial={checkout}
           publishableKey={publishableKey}
           methods={methods}

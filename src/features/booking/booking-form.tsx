@@ -6,9 +6,7 @@ import {
   CalendarDays,
   Check,
   CreditCard,
-  Phone,
   Tag,
-  User,
 } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -44,7 +42,6 @@ export function BookingForm({
   item,
   branches,
   initialBranch,
-  signedInCustomer,
   currency,
   transfersOn,
   online,
@@ -61,7 +58,6 @@ export function BookingForm({
   };
   branches: { slug: string; name: string }[];
   initialBranch: string;
-  signedInCustomer: boolean;
   currency: string;
   transfersOn: boolean;
   /** The shop takes card and transfer payments through Stripe (with its deposit rule). */
@@ -128,7 +124,6 @@ export function BookingForm({
       <PaidBooking
         lang={lang}
         checkout={booking.data.appointment.checkout}
-        paymentToken={booking.data.appointment.paymentToken}
         publishableKey={publishableKey}
         methods={online?.methods ?? ["card"]}
         summary={{
@@ -136,7 +131,6 @@ export function BookingForm({
           barber: summary.barber,
           when: `${summary.day} · ${summary.time}`,
         }}
-        signedInCustomer={signedInCustomer}
         t={t}
         tp={tp}
       />
@@ -166,10 +160,8 @@ export function BookingForm({
           <PayByTransfer
             lang={lang}
             appointmentId={booking.data.appointment.id}
-            paymentToken={booking.data.appointment.paymentToken}
             amountMinor={booking.data.appointment.totalMinor}
             currency={booking.data.appointment.currency}
-            signedInCustomer={signedInCustomer}
             t={t}
           />
         ) : (
@@ -188,7 +180,6 @@ export function BookingForm({
       setMissing(true);
       return;
     }
-    const form = new FormData(event.currentTarget);
     setSummary({
       barber: barber.name,
       day: day.long,
@@ -198,19 +189,13 @@ export function BookingForm({
       ...target,
       barber: barber.slug,
       startAt: slot.value,
-      customer: signedInCustomer
-        ? undefined
-        : {
-            name: String(form.get("name") ?? ""),
-            phone: String(form.get("phone") ?? ""),
-          },
       code,
     };
     // Paying online: first how much and how, then the booking holds the slot while the customer pays.
     if (online) {
       booking.reset();
       pricing.mutate(
-        { ...target, code, phone: input.customer?.phone },
+        { ...target, code },
         {
           onSuccess: (priced) => {
             if (priced.ok && priced.online) {
@@ -234,11 +219,6 @@ export function BookingForm({
     booking.mutate(choosing.input);
     setChoosing(null);
   };
-
-  const fieldError = (field: "name" | "phone") =>
-    booking.data && !booking.data.ok && booking.data.fields?.includes(field)
-      ? t.errors.invalid
-      : undefined;
 
   return (
     <section aria-labelledby="booking-title" className="grid gap-5">
@@ -428,33 +408,6 @@ export function BookingForm({
                     {slot ? `${slot.label} – ${slot.end}` : t.pickTime}
                   </span>
                 </p>
-
-                {!signedInCustomer && (
-                  <fieldset className="grid gap-4">
-                    <legend className="mb-1 text-base font-medium">
-                      {t.guestTitle}
-                    </legend>
-                    <Field
-                      name="name"
-                      label={t.name}
-                      autoComplete="name"
-                      required
-                      icon={<User size={18} />}
-                      error={fieldError("name")}
-                    />
-                    <Field
-                      name="phone"
-                      type="tel"
-                      label={t.phone}
-                      autoComplete="tel"
-                      inputMode="tel"
-                      required
-                      hint={t.phoneHint}
-                      icon={<Phone size={18} />}
-                      error={fieldError("phone")}
-                    />
-                  </fieldset>
-                )}
 
                 <div className="grid grid-cols-[1fr_auto] items-end gap-3">
                   <Field

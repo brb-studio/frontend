@@ -11,25 +11,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Where a payment continues: back from 3-D Secure, or "Complete payment" in My visits. Guests carry
- * their booking token in `?token=`; customers are recognized by their session.
+ * Where a payment continues: back from 3-D Secure, or "Complete payment" in My visits. Only the
+ * signed-in customer who booked can see it.
  */
 export default async function PayPage({
   params,
-  searchParams,
 }: PageProps<"/[lang]/pay/[id]">) {
-  const [{ id }, query, locale, dict, tenant] = await Promise.all([
+  const [{ id }, locale, dict, tenant] = await Promise.all([
     params,
-    searchParams,
     getLocale(),
     getDictionary(),
     getTenant(),
   ]);
   if (!/^[a-f\d]{24}$/.test(id)) notFound();
-  const token =
-    typeof query.token === "string" && /^[\w-]{1,64}$/.test(query.token)
-      ? query.token
-      : undefined;
   return (
     <section
       aria-labelledby="pay-title"
@@ -40,7 +34,6 @@ export default async function PayPage({
       </h1>
       <PaymentCheckout
         appointmentId={id}
-        paymentToken={token}
         publishableKey={publishableKey()}
         methods={tenant.paymentsOnline?.methods ?? ["card"]}
         lang={locale}

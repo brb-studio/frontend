@@ -10,9 +10,9 @@ import { formatMoney } from "@/shared/i18n/money";
 import { Button, ButtonLink } from "@/shared/ui/button";
 import { createTransfer, type Transfer } from "./actions";
 
-const transferQuery = (appointmentId: string, paymentToken?: string) => ({
+const transferQuery = (appointmentId: string) => ({
   queryKey: ["payment-transfer", appointmentId],
-  queryFn: () => createTransfer(appointmentId, paymentToken),
+  queryFn: () => createTransfer(appointmentId),
   staleTime: Number.POSITIVE_INFINITY,
   retry: false,
 });
@@ -39,13 +39,11 @@ function CopyButton({ text, t }: { text: string; t: Dictionary["booking"] }) {
 function TransferDetails({
   lang,
   transfer,
-  signedInCustomer,
   onClose,
   t,
 }: {
   lang: Locale;
   transfer: Transfer;
-  signedInCustomer: boolean;
   onClose: () => void;
   t: Dictionary["booking"];
 }) {
@@ -91,11 +89,9 @@ function TransferDetails({
           <Button variant="secondary" onClick={onClose}>
             {t.close}
           </Button>
-          {signedInCustomer && (
-            <ButtonLink variant="secondary" href={`/${lang}/account`}>
-              {t.seeVisits}
-            </ButtonLink>
-          )}
+          <ButtonLink variant="secondary" href={`/${lang}/account`}>
+            {t.seeVisits}
+          </ButtonLink>
         </div>
       </SheetActions>
     </div>
@@ -105,23 +101,19 @@ function TransferDetails({
 export function PayByTransfer({
   lang,
   appointmentId,
-  paymentToken,
   amountMinor,
   currency,
-  signedInCustomer,
   t,
 }: {
   lang: Locale;
   appointmentId: string;
-  paymentToken?: string;
   amountMinor: number;
   currency: string;
-  signedInCustomer: boolean;
   t: Dictionary["booking"];
 }) {
   const [dismissed, setDismissed] = useState(false);
   const [open, setOpen] = useState(true);
-  const transfer = useQuery(transferQuery(appointmentId, paymentToken));
+  const transfer = useQuery(transferQuery(appointmentId));
 
   if (dismissed) return null;
 
@@ -179,7 +171,6 @@ export function PayByTransfer({
           <TransferDetails
             lang={lang}
             transfer={result.transfer}
-            signedInCustomer={signedInCustomer}
             onClose={() => setOpen(false)}
             t={t}
           />

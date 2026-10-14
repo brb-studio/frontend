@@ -121,6 +121,9 @@ const en = {
   },
   booking: {
     title: "Book your appointment",
+    signInTitle: "Create an account to book",
+    signInLead:
+      "Without an account you can browse services, branches, prices and products. To book an appointment, sign in or sign up.",
     branch: "Branch",
     barber: "Barber",
     date: "Date",
@@ -130,10 +133,6 @@ const en = {
       "No free times in the next two weeks. Try another barber or branch.",
     loading: "Loading free times…",
     retry: "Try again",
-    guestTitle: "Your details",
-    name: "Full name",
-    phone: "Phone",
-    phoneHint: "Only for this appointment.",
     promoCode: "Promo code",
     apply: "Apply",
     discount: "Discount",
@@ -163,7 +162,8 @@ const en = {
     close: "Close",
     errors: {
       required: "Choose a barber, a date and a time.",
-      invalid: "Check your name and phone number.",
+      invalid: "Check your booking details.",
+      signIn: "Your session ended. Sign in to book.",
       slotTaken: "That time was just taken. Please pick another one.",
       barberUnavailable:
         "That barber can't take this booking anymore. Pick another one.",

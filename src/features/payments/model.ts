@@ -141,25 +141,14 @@ export const stillWaiting = (checkout: Checkout | undefined) =>
 export const checkoutKey = (appointmentId: string) =>
   ["payment", appointmentId] as const;
 
-export const checkoutPath = (
-  appointmentId: string,
-  paymentToken?: string,
-  secret = false,
-) => {
-  const query = new URLSearchParams();
-  if (paymentToken) query.set("paymentToken", paymentToken);
-  if (secret) query.set("secret", "1");
-  const search = query.toString();
-  return `/api/payments/${appointmentId}${search ? `?${search}` : ""}`;
-};
+export const checkoutPath = (appointmentId: string, secret = false) =>
+  `/api/payments/${appointmentId}${secret ? "?secret=1" : ""}`;
 
-export const checkoutQuery = (appointmentId: string, paymentToken?: string) =>
+export const checkoutQuery = (appointmentId: string) =>
   queryOptions({
     queryKey: checkoutKey(appointmentId),
     queryFn: async ({ signal }): Promise<Checkout> => {
-      const response = await fetch(checkoutPath(appointmentId, paymentToken), {
-        signal,
-      });
+      const response = await fetch(checkoutPath(appointmentId), { signal });
       if (!response.ok) throw new Error(`payment ${response.status}`);
       return checkoutSchema.parse(await response.json());
     },

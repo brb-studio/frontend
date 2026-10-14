@@ -6,11 +6,16 @@ La experiencia del cliente: reservar, pagar en línea (tarjeta o transferencia c
 ## Requirements
 
 ### Requirement: Flujo de reserva
-La reserva SHALL seguir este orden:
+Reservar SHALL requerir una cuenta de cliente. Sin sesión ("Explorar sin cuenta"), la página del servicio MUST mostrar el servicio, sus fotos, duración y precio, y en lugar del formulario de reserva y de la lista de espera un aviso con "Iniciar sesión" y "Crear cuenta". Sin sesión tampoco se piden horarios al API.
+
+Con sesión, la reserva SHALL seguir este orden:
 1. Sucursal, barbero, fecha y hora.
-2. Si no hay sesión, nombre y teléfono.
-3. Código promocional opcional, con cotización en vivo.
-4. Confirmar.
+2. Código promocional opcional, con cotización en vivo.
+3. Confirmar.
+
+#### Scenario: Visitante sin cuenta
+- **WHEN** alguien sin sesión abre la página de un servicio
+- **THEN** ve el servicio y su precio, y el aviso para iniciar sesión o crear cuenta, sin botón de reservar
 
 Los horarios MUST refrescarse solos cada 30 segundos mientras la página está abierta, y también después de reservar.
 
@@ -62,7 +67,7 @@ Antes de pagar, la ventana de pago SHALL decir cuánto se devuelve si el cliente
 - **THEN** la confirmación dice que se le devuelven $283.99
 
 ### Requirement: Página de pago
-`/{lang}/pay/{id}` SHALL retomar un pago: es el regreso de 3-D Secure y el destino de "Completar pago". Un invitado MUST traer su `paymentToken` en `?token=`; un cliente con sesión no lo necesita.
+`/{lang}/pay/{id}` SHALL retomar un pago: es el regreso de 3-D Secure y el destino de "Completar pago". Solo el cliente con sesión que reservó la cita MUST poder verla y pagarla.
 
 #### Scenario: Regreso de 3-D Secure
 - **WHEN** el banco regresa al cliente a la página de pago
@@ -76,7 +81,7 @@ Una cita pagada SHALL mostrar en la confirmación, en Cuenta y en la página de 
 - **THEN** su cita dice "Anticipo pagado con tarjeta visa •••• 4242 · Resta $187.00"
 
 ### Requirement: Pago por transferencia manual
-Si la barbería acepta transferencias manuales (`payments.transfer`) y la cita se reservó sin pagar en línea, la confirmación SHALL ofrecer "Pagar por transferencia" con titular, CLABE, importe exacto y vigencia, que el navegador pide al API (un invitado, con su `paymentToken`). El importe y la cuenta MUST venir del API. Pagar es opcional y la cita sigue confirmada.
+Si la barbería acepta transferencias manuales (`payments.transfer`) y la cita se reservó sin pagar en línea, la confirmación SHALL ofrecer "Pagar por transferencia" con titular, CLABE, importe exacto y vigencia, que el navegador pide al API con la sesión del cliente. El importe y la cuenta MUST venir del API. Pagar es opcional y la cita sigue confirmada.
 
 #### Scenario: Barbería sin transferencias
 - **WHEN** `payments.transfer` es falso

@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { getCheckout } from "@/features/payments/data";
 import { errorResponse } from "@/shared/api/backend";
 
-/** The payment screen polls this; the API checks the booking token or the customer's session. */
+/** The payment screen polls this; the API checks it is the signed-in customer's own appointment. */
 export async function GET(
   request: NextRequest,
   { params }: RouteContext<"/api/payments/[id]">,
@@ -16,14 +16,9 @@ export async function GET(
   }
   const search = request.nextUrl.searchParams;
   try {
-    return Response.json(
-      await getCheckout(
-        id,
-        search.get("paymentToken") ?? undefined,
-        search.get("secret") === "1",
-      ),
-      { headers: { "Cache-Control": "no-store" } },
-    );
+    return Response.json(await getCheckout(id, search.get("secret") === "1"), {
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch (error) {
     return errorResponse(error);
   }

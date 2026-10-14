@@ -89,7 +89,6 @@ function CardForm({
   checkout,
   clientSecret,
   publishableKey,
-  paymentToken,
   lang,
   t,
   onPaid,
@@ -97,7 +96,6 @@ function CardForm({
   checkout: Checkout;
   clientSecret: string;
   publishableKey: string;
-  paymentToken?: string;
   lang: Locale;
   t: PaymentText;
   onPaid: () => void;
@@ -155,7 +153,6 @@ function CardForm({
         `/${lang}/pay/${checkout.appointmentId}`,
         window.location.origin,
       );
-      if (paymentToken) returnUrl.searchParams.set("token", paymentToken);
       // 3-D Secure may redirect; Stripe comes back to the payment page, which picks up the state.
       const result = await stripe.confirmPayment({
         elements,
@@ -345,7 +342,6 @@ function Receipt({
  */
 export function PaymentCheckout({
   appointmentId,
-  paymentToken,
   initial,
   publishableKey,
   methods,
@@ -354,7 +350,6 @@ export function PaymentCheckout({
   bookAgainHref,
 }: {
   appointmentId: string;
-  paymentToken?: string;
   initial?: Checkout;
   publishableKey?: string;
   /** The shop's online methods: switching is only offered when the other one exists. */
@@ -365,7 +360,7 @@ export function PaymentCheckout({
 }) {
   const queryClient = useQueryClient();
   const query = useQuery({
-    ...checkoutQuery(appointmentId, paymentToken),
+    ...checkoutQuery(appointmentId),
     ...(initial && { initialData: initial }),
   });
   const checkout = query.data;
@@ -381,7 +376,7 @@ export function PaymentCheckout({
   useEffect(() => {
     if (!needsSecret) return;
     let cancelled = false;
-    fetch(checkoutPath(appointmentId, paymentToken, true))
+    fetch(checkoutPath(appointmentId, true))
       .then((response) => (response.ok ? response.json() : undefined))
       .then((data: unknown) => {
         const parsed = checkoutSchema.safeParse(data);
@@ -393,7 +388,7 @@ export function PaymentCheckout({
     return () => {
       cancelled = true;
     };
-  }, [needsSecret, appointmentId, paymentToken]);
+  }, [needsSecret, appointmentId]);
 
   const switching = useMutation({
     mutationFn: switchPayment,
@@ -444,7 +439,6 @@ export function PaymentCheckout({
       appointmentId,
       kind: checkout.kind,
       method,
-      ...(paymentToken && { paymentToken }),
     });
 
   return (
@@ -464,7 +458,6 @@ export function PaymentCheckout({
             checkout={checkout}
             clientSecret={secret}
             publishableKey={publishableKey}
-            paymentToken={paymentToken}
             lang={lang}
             t={t}
             onPaid={() => {

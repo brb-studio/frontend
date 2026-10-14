@@ -29,15 +29,6 @@ const bookingInput = z.object({
   ...target,
   barber: slug,
   startAt: z.iso.datetime({ offset: true }),
-  customer: z
-    .object({
-      name: z.string().trim().min(2).max(80),
-      phone: z
-        .string()
-        .trim()
-        .regex(/^\+?[0-9 ()-]{7,20}$/),
-    })
-    .optional(),
   code,
   payment: z
     .object({ kind: z.enum(PAYMENT_KINDS), method: z.enum(ONLINE_METHODS) })
@@ -46,6 +37,7 @@ const bookingInput = z.object({
 
 export type BookingError =
   | "invalid"
+  | "signIn"
   | "slotTaken"
   | "barberUnavailable"
   | "promotion"
@@ -61,7 +53,7 @@ export type BookingResult =
       ok: true;
       appointment: z.output<typeof booked>;
     }
-  | { ok: false; error: BookingError; fields?: ("name" | "phone")[] };
+  | { ok: false; error: BookingError };
 
 export type QuoteResult =
   | ({ ok: true } & z.output<typeof quoted>)
@@ -78,6 +70,9 @@ function errorOf(error: unknown): BookingError {
       return "promotion";
     case "VALIDATION":
       return "invalid";
+    case "UNAUTHENTICATED":
+    case "FORBIDDEN":
+      return "signIn";
     case "RATE_LIMITED":
       return "rateLimited";
     case "PAYMENT_REQUIRED":
@@ -98,7 +93,6 @@ const booked = z.object({
   status: z.string(),
   totalMinor: z.number().int(),
   currency: z.string(),
-  paymentToken: z.string().optional(),
   /** Present when the visit is being paid online: how to pay and until when the slot is held. */
   checkout: checkoutSchema.optional(),
 });
@@ -107,15 +101,7 @@ export async function book(
   input: z.input<typeof bookingInput>,
 ): Promise<BookingResult> {
   const parsed = bookingInput.safeParse(input);
-  if (!parsed.success) {
-    const fields = parsed.error.issues
-      .map((issue) => issue.path[1])
-      .filter(
-        (field): field is "name" | "phone" =>
-          field === "name" || field === "phone",
-      );
-    return { ok: false, error: "invalid", fields };
-  }
+  if (!parsed.success) return { ok: false, error: "invalid" };
   const { kind, slug: item, ...rest } = parsed.data;
   try {
     const appointment = await backend("/v1/public/appointments", booked, {
@@ -131,13 +117,6 @@ export async function book(
 const quoteInput = z.object({
   ...target,
   code,
-  /** Guests: their phone, so a first-visit promotion is quoted as the booking will apply it. */
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[0-9 ()-]{7,20}$/)
-    .optional()
-    .catch(undefined),
 });
 const quoted = z.object({
   subtotalMinor: z.number().int(),
@@ -193,7 +172,6 @@ export type TransferResult =
 
 export async function createTransfer(
   appointmentId: string,
-  paymentToken?: string,
 ): Promise<TransferResult> {
   if (!/^[a-f\d]{24}$/.test(appointmentId))
     return { ok: false, error: "unavailable" };
@@ -203,7 +181,7 @@ export async function createTransfer(
       transferSchema,
       {
         method: "POST",
-        body: { appointmentId, ...(paymentToken && { paymentToken }) },
+        body: { appointmentId },
       },
     );
     return { ok: true, transfer };
