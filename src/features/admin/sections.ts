@@ -11,6 +11,7 @@ export const SECTIONS = {
   promotions: "/promotions",
   products: "/products",
   pickups: "/pickups",
+  revenue: "/revenue",
   earnings: "/earnings",
   payments: "/payments",
   team: "/team",
@@ -23,7 +24,7 @@ export type Section = keyof typeof SECTIONS;
 export const GROUPS = {
   daily: ["home", "myDay", "agenda", "pickups", "timeOff"],
   catalog: ["services", "products", "barbers", "branches", "promotions"],
-  business: ["payments", "earnings", "team", "settings", "billing"],
+  business: ["revenue", "payments", "earnings", "team", "settings", "billing"],
   personal: ["account"],
 } as const satisfies Record<string, readonly Section[]>;
 export type Group = keyof typeof GROUPS;
@@ -33,6 +34,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "home",
     "myDay",
     "agenda",
+    "revenue",
     "services",
     "barbers",
     "branches",
@@ -51,6 +53,7 @@ const BY_ROLE: Record<Exclude<SessionUser["role"], "customer">, Section[]> = {
     "home",
     "myDay",
     "agenda",
+    "revenue",
     "services",
     "barbers",
     "branches",

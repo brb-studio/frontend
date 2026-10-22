@@ -21,6 +21,7 @@ test("the admin proxy reaches the payment routes owners use, and nothing else", 
     "product-orders/scan",
     `product-orders/${id}/deliver`,
     `product-orders/${id}/cancel`,
+    "earnings/summary",
   ]) {
     expect(isAdminPath(path)).toBe(true);
   }
