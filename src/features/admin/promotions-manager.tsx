@@ -49,6 +49,7 @@ export function PromotionsManager({
     const form = new FormData(event.currentTarget);
     const code = value(form, "code");
     const max = value(form, "maxRedemptions");
+    const every = value(form, "everyVisits");
     const raw = value(form, "value");
     create.mutate(
       {
@@ -62,6 +63,7 @@ export function PromotionsManager({
           firstVisitOnly: firstVisit,
           ...(code ? { code } : {}),
           ...(max ? { maxRedemptions: Number(max) } : {}),
+          ...(every ? { everyVisits: Number(every) } : {}),
         },
       },
       { onSuccess: (result) => result.ok && setAdding(false) },
@@ -114,6 +116,13 @@ export function PromotionsManager({
             min={1}
             label={t.promotions.maxRedemptions}
           />
+          <Field
+            name="everyVisits"
+            type="number"
+            min={2}
+            max={100}
+            label={t.promotions.everyVisits}
+          />
           <Toggle
             label={t.promotions.firstVisitOnly}
             checked={firstVisit}
@@ -138,6 +147,12 @@ export function PromotionsManager({
               meta={[
                 p.code ?? t.promotions.automatic,
                 p.firstVisitOnly ? t.promotions.firstVisitOnly : "",
+                p.everyVisits
+                  ? t.promotions.everyVisitsShort.replace(
+                      "{n}",
+                      String(p.everyVisits),
+                    )
+                  : "",
                 `${p.redemptions}${p.maxRedemptions ? `/${p.maxRedemptions}` : ""} ${t.promotions.uses}`,
               ]
                 .filter(Boolean)

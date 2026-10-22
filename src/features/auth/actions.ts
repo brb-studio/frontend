@@ -7,6 +7,7 @@ import { ApiError, backend, SESSION_COOKIE } from "@/shared/api/backend";
 import { defaultLocale, hasLocale } from "@/shared/i18n/locales";
 import {
   type AuthState,
+  deleteAccountSchema,
   type ErrorKey,
   fieldErrors,
   forgotSchema,
@@ -94,6 +95,7 @@ export async function register(
         email,
         ...(phone ? { phone } : {}),
         password,
+        acceptTerms: true,
         locale: localeOf(formData),
       },
     });
@@ -126,7 +128,30 @@ export async function changePassword(
   return { done: true };
 }
 
-/** Always reports success for a well-formed email: whether the account exists is never shown. */
+export async function deleteAccount(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const parsed = deleteAccountSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+  try {
+    await backend("/v1/auth/delete-account", z.undefined(), {
+      method: "POST",
+      body: parsed.data,
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.code === "WRONG_PASSWORD") {
+      return { errors: { password: ["wrongPassword"] } };
+    }
+    if (error instanceof ApiError && error.code === "OPEN_BOOKINGS") {
+      return { formError: "openBookings" };
+    }
+    return { formError: errorKey(error) };
+  }
+  (await cookies()).delete(SESSION_COOKIE);
+  redirect(`/${localeOf(formData)}`);
+}
+
 export async function forgotPassword(
   _: AuthState,
   formData: FormData,

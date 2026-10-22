@@ -10,6 +10,7 @@ const pages = [
   "/es/services/haircut",
   "/es/branches",
   "/es/account",
+  "/es/privacy",
   "/en/home",
 ];
 

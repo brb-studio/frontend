@@ -81,6 +81,7 @@ export function MyAppointments({
     new Intl.DateTimeFormat(locale, {
       hour: "numeric",
       minute: "2-digit",
+      timeZone: a.timeZone,
     }).format(new Date(a.paymentDeadline));
 
   const row = (a: Appointment) => (

@@ -34,7 +34,12 @@ test("login reports error keys the dictionaries translate", () => {
 });
 
 test("register: phone is optional but must look like a phone when given", () => {
-  const base = { name: "Ana", email: "ana@b.co", password: "12345678" };
+  const base = {
+    name: "Ana",
+    email: "ana@b.co",
+    password: "12345678",
+    acceptTerms: "true",
+  };
   expect(registerSchema.safeParse({ ...base, phone: "" }).success).toBe(true);
   expect(registerSchema.safeParse(base).success).toBe(true);
   expect(
@@ -45,5 +50,13 @@ test("register: phone is optional but must look like a phone when given", () => 
   });
   expect(errorsOf(registerSchema, { ...base, name: " A " })).toEqual({
     name: ["name"],
+  });
+});
+
+test("register needs the terms accepted", () => {
+  const base = { name: "Ana", email: "ana@b.co", password: "12345678" };
+  expect(errorsOf(registerSchema, base)).toEqual({ acceptTerms: ["terms"] });
+  expect(errorsOf(registerSchema, { ...base, acceptTerms: "false" })).toEqual({
+    acceptTerms: ["terms"],
   });
 });

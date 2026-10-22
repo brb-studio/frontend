@@ -96,9 +96,13 @@ test("wrong credentials, a taken email and an unreachable API come back as form 
       email: "ana@example.com",
       phone: "",
       password: "supersecret",
+      acceptTerms: "true",
     }),
   );
   expect(taken?.errors).toEqual({ email: ["emailTaken"] });
+  expect(JSON.parse(String(spy.mock.calls[0]?.[1]?.body))).toMatchObject({
+    acceptTerms: true,
+  });
   spy.mockRestore();
 
   spy = spyOn(globalThis, "fetch").mockImplementation(
@@ -150,6 +154,7 @@ test("invalid input returns field errors, never calls the API and never echoes t
     name: ["name"],
     email: ["email"],
     password: ["passwordMin"],
+    acceptTerms: ["terms"],
   });
   expect(JSON.stringify(state)).not.toContain("short");
   expect(spy).not.toHaveBeenCalled();
@@ -270,6 +275,7 @@ test("registering opens no session, and signing in before confirming the email s
       email: "ana@example.com",
       phone: "",
       password: "supersecret",
+      acceptTerms: "true",
     }),
   );
   expect(state).toMatchObject({ done: true });

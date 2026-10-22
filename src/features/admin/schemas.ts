@@ -2,6 +2,9 @@ import * as z from "zod";
 import { appointmentSchema } from "@/features/account/model";
 import { localized } from "@/shared/i18n/localized";
 
+export const COUNTER_METHODS = ["cash", "card", "transfer"] as const;
+export type CounterMethod = (typeof COUNTER_METHODS)[number];
+
 export const hoursSchema = z.array(
   z.object({ weekday: z.number().int(), open: z.string(), close: z.string() }),
 );
@@ -89,6 +92,7 @@ export const promotionSchema = z.object({
   startsAt: z.string().optional(),
   endsAt: z.string().optional(),
   firstVisitOnly: z.boolean(),
+  everyVisits: z.number().int().optional(),
   maxRedemptions: z.number().int().optional(),
   redemptions: z.number().int(),
   active: z.boolean(),
@@ -122,6 +126,14 @@ export const staffAppointmentSchema = appointmentSchema.extend({
   branchId: z.string(),
   source: z.enum(["online", "staff"]),
   notes: z.string().optional(),
+  dueMinor: z.number().int().optional(),
+  counter: z
+    .object({
+      method: z.enum(COUNTER_METHODS),
+      amountMinor: z.number().int(),
+      at: z.string(),
+    })
+    .optional(),
 });
 export type AdminAppointment = z.output<typeof staffAppointmentSchema>;
 
@@ -229,3 +241,48 @@ export const pickupSchema = z.object({
     .optional(),
 });
 export type Pickup = z.output<typeof pickupSchema>;
+
+export const customerListSchema = z.object({
+  currency: z.string(),
+  customers: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      phone: z.string().optional(),
+      email: z.string().optional(),
+      guest: z.boolean(),
+      visits: z.number().int(),
+      noShows: z.number().int(),
+      spentMinor: z.number().int(),
+      lastVisit: z.string().optional(),
+      nextVisit: z.string().optional(),
+    }),
+  ),
+});
+export type CustomerList = z.output<typeof customerListSchema>;
+
+const byMethod = {
+  cashMinor: z.number().int(),
+  cardMinor: z.number().int(),
+  transferMinor: z.number().int(),
+};
+
+export const cashDaySchema = z.object({
+  currency: z.string(),
+  date: z.string(),
+  totals: z.object(byMethod),
+  people: z.array(z.object({ id: z.string(), name: z.string(), ...byMethod })),
+  movements: z.array(
+    z.object({
+      kind: z.enum(["cut", "product"]),
+      method: z.enum(COUNTER_METHODS),
+      amountMinor: z.number().int(),
+      at: z.string(),
+      timeZone: z.string(),
+      receivedBy: z.string(),
+      customer: z.string(),
+    }),
+  ),
+  unrecorded: z.number().int(),
+});
+export type CashDay = z.output<typeof cashDaySchema>;

@@ -94,6 +94,27 @@ Un cliente con sesión SHALL ver sus citas en Cuenta, y puede cancelar o reprogr
 - **WHEN** el cliente elige un horario nuevo para su cita
 - **THEN** la cita aparece con la hora nueva sin recargar la página
 
+### Requirement: Borrar mi cuenta
+Un cliente con sesión SHALL poder borrar su cuenta desde Cuenta escribiendo su contraseña. Antes de confirmar, la pantalla MUST explicar qué se borra y que no se puede deshacer. Con la contraseña incorrecta lo dice junto al campo; si aún tiene citas próximas o productos apartados, pide cancelarlos primero. Al borrarla, se cierra su sesión y vuelve a la bienvenida.
+
+#### Scenario: Borrado exitoso
+- **WHEN** un cliente sin pendientes escribe su contraseña y toca "Borrar mi cuenta"
+- **THEN** sale de su sesión, llega a la bienvenida y ya no puede entrar con esa cuenta
+
+### Requirement: Aviso de privacidad
+Cualquier visitante SHALL poder leer el aviso de privacidad de la barbería en `/{lang}/privacy`: responsable (la barbería y sus sucursales con dirección y teléfono), datos que se usan, finalidades, encargados, cómo limitar su uso, derechos ARCO con sus medios y plazos, y cómo se avisan los cambios, con la fecha de última actualización. El registro MUST mostrar el aviso simplificado (responsable y domicilio, datos, finalidades y opciones) con un enlace al aviso completo, y Cuenta MUST enlazarlo.
+
+#### Scenario: Antes de registrarse
+- **WHEN** un visitante abre "Crear cuenta"
+- **THEN** ve bajo el formulario quién usará sus datos y para qué, con un enlace al aviso completo
+
+### Requirement: Tarjeta de lealtad
+Un cliente con sesión SHALL ver en Cuenta una tarjeta por cada programa de lealtad activo: cuántas visitas lleva de N, los sellos (hasta 12) con el premiado marcado y el premio ("el servicio gratis", un porcentaje o un monto). Cuando la próxima visita es la premiada, MUST decirlo.
+
+#### Scenario: Le falta una
+- **WHEN** un cliente lleva 9 de 10 visitas
+- **THEN** ve "¡Tu próxima visita tiene el servicio gratis!"
+
 ### Requirement: Formato de montos
 Todos los montos de la app (también los del panel) SHALL formatearse con `formatMoney` (`src/shared/i18n/money.ts`). En español MUST usar punto decimal y coma de miles (formato es-MX), nunca coma decimal; en inglés se usa el formato de `en`.
 

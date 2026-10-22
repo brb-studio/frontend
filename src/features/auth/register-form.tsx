@@ -1,9 +1,20 @@
 "use client";
 
-import { Mail, MailCheck, Phone, User, UserPlus } from "lucide-react";
+import {
+  Mail,
+  MailCheck,
+  Phone,
+  ShieldCheck,
+  ShieldQuestion,
+  User,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { Sheet, SheetActions } from "@/features/payments/sheet";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
+import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { FormAlert, SubmitButton } from "@/shared/ui/form";
 import { PasswordField } from "@/shared/ui/password-field";
@@ -13,14 +24,21 @@ import { useAuthForm } from "./use-auth-form";
 export function RegisterForm({
   t,
   locale,
+  notice,
+  readPrivacy,
 }: {
   t: Dictionary["auth"];
   locale: Locale;
+  notice: string;
+  readPrivacy: string;
 }) {
   const { state, formAction, pending, formRef, error } = useAuthForm(
     register,
     t,
   );
+  const [accepted, setAccepted] = useState(false);
+  const [open, setOpen] = useState(true);
+  const termsError = error("acceptTerms");
 
   if (state?.done) {
     return (
@@ -40,8 +58,19 @@ export function RegisterForm({
   }
 
   return (
-    <form ref={formRef} action={formAction} noValidate className="grid gap-5">
+    <form
+      ref={formRef}
+      action={formAction}
+      onSubmit={(event) => {
+        if (accepted) return;
+        event.preventDefault();
+        setOpen(true);
+      }}
+      noValidate
+      className="grid gap-5"
+    >
       <input type="hidden" name="lang" value={locale} />
+      {accepted && <input type="hidden" name="acceptTerms" value="true" />}
       <Field
         name="name"
         label={t.name}
@@ -86,6 +115,27 @@ export function RegisterForm({
         error={error("password")}
         className="animate-rise [animation-delay:420ms]"
       />
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex animate-rise items-start gap-2 text-left text-sm text-fg-muted underline-offset-4 [animation-delay:450ms] hover:text-fg hover:underline"
+      >
+        {accepted ? (
+          <ShieldCheck
+            size={18}
+            aria-hidden="true"
+            className="mt-0.5 shrink-0 text-accent-text"
+          />
+        ) : (
+          <ShieldQuestion
+            size={18}
+            aria-hidden="true"
+            className="mt-0.5 shrink-0"
+          />
+        )}
+        {accepted ? t.consent.accepted : t.consent.review}
+      </button>
+      {termsError && !accepted && <FormAlert>{termsError}</FormAlert>}
       {state?.formError && <FormAlert>{t.errors[state.formError]}</FormAlert>}
       <SubmitButton
         pending={pending}
@@ -94,6 +144,49 @@ export function RegisterForm({
       >
         {t.register}
       </SubmitButton>
+      <Sheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title={t.consent.title}
+        icon={<ShieldCheck size={18} aria-hidden="true" />}
+        closeLabel={t.consent.close}
+      >
+        <div className="grid gap-5 text-sm text-fg-muted">
+          <p>{t.consent.lead}</p>
+          <section className="grid gap-2">
+            <h2 className="text-base font-medium text-fg">
+              {t.consent.privacy}
+            </h2>
+            <p>{notice}</p>
+            <Link
+              href={`/${locale}/privacy`}
+              className="font-medium text-accent-text underline-offset-4 hover:underline"
+            >
+              {readPrivacy}
+            </Link>
+          </section>
+          <section className="grid gap-2">
+            <h2 className="text-base font-medium text-fg">{t.consent.terms}</h2>
+            <ul className="grid list-outside list-disc gap-2 pl-5">
+              {t.consent.rules.map((rule) => (
+                <li key={rule}>{rule}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
+        <SheetActions>
+          <Button
+            className="w-full"
+            onClick={() => {
+              setAccepted(true);
+              setOpen(false);
+            }}
+          >
+            <ShieldCheck size={18} aria-hidden="true" />
+            {t.consent.accept}
+          </Button>
+        </SheetActions>
+      </Sheet>
     </form>
   );
 }

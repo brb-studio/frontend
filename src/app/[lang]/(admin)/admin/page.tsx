@@ -24,6 +24,7 @@ export default async function AdminHome() {
     weekday: "long",
     day: "numeric",
     month: "long",
+    timeZone: tenant.branches[0]?.timeZone,
   }).format(new Date());
   return (
     <div className="grid gap-6">

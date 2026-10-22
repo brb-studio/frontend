@@ -1,6 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import en from "../../src/shared/i18n/en";
 import es from "../../src/shared/i18n/es";
+import { CUSTOMER } from "./data";
 
 const t = es.auth;
 
@@ -22,20 +23,6 @@ for (const { lang, browserLocale, dict } of [
   });
 }
 
-test("welcome: get started opens the sheet, sign in goes to login and back", async ({
-  page,
-}) => {
-  await page.goto("/es");
-  const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
-  await expect(sheet).toBeHidden();
-  await page.getByRole("button", { name: es.welcome.start }).click();
-  await expect(sheet).toBeVisible();
-  await sheet.getByRole("link", { name: t.login }).click();
-  await expect(page).toHaveURL("/es/login");
-  await page.getByRole("link", { name: t.back }).click();
-  await expect(page).toHaveURL("/es");
-});
-
 async function swipeGetStarted(page: Page, ratio: number) {
   const knob = page.getByRole("button", { name: es.welcome.start });
   const box = await knob.boundingBox();
@@ -48,25 +35,53 @@ async function swipeGetStarted(page: Page, ratio: number) {
   await page.mouse.up();
 }
 
-test("welcome: swiping get started to the right opens the sheet", async ({
+test("welcome: on a computer get started goes straight to sign in", async ({
   page,
+  isMobile,
 }) => {
+  test.skip(isMobile, "phones open the sheet instead");
   await page.goto("/es");
-  const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
-  await expect(sheet).toBeHidden();
-  await swipeGetStarted(page, 0.95);
-  await expect(sheet).toBeVisible();
+  await page.getByRole("button", { name: es.welcome.start }).click();
+  await expect(page).toHaveURL("/es/login");
 });
 
-test("welcome: a half swipe snaps back and keeps the sheet closed", async ({
-  page,
-}) => {
-  await page.goto("/es");
-  const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
-  await swipeGetStarted(page, 0.4);
-  await expect(sheet).toBeHidden();
-  await page.getByRole("button", { name: es.welcome.start }).click();
-  await expect(sheet).toBeVisible();
+test.describe("welcome on a phone", () => {
+  test.skip(({ isMobile }) => !isMobile, "computers go straight to sign in");
+
+  test("welcome: get started opens the sheet, sign in goes to login and back", async ({
+    page,
+  }) => {
+    await page.goto("/es");
+    const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
+    await expect(sheet).toBeHidden();
+    await page.getByRole("button", { name: es.welcome.start }).click();
+    await expect(sheet).toBeVisible();
+    await sheet.getByRole("link", { name: t.login }).click();
+    await expect(page).toHaveURL("/es/login");
+    await page.getByRole("link", { name: t.back }).click();
+    await expect(page).toHaveURL("/es");
+  });
+
+  test("welcome: swiping get started to the right opens the sheet", async ({
+    page,
+  }) => {
+    await page.goto("/es");
+    const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
+    await expect(sheet).toBeHidden();
+    await swipeGetStarted(page, 0.95);
+    await expect(sheet).toBeVisible();
+  });
+
+  test("welcome: a half swipe snaps back and keeps the sheet closed", async ({
+    page,
+  }) => {
+    await page.goto("/es");
+    const sheet = page.getByRole("dialog", { name: es.welcome.sheetTitle });
+    await swipeGetStarted(page, 0.4);
+    await expect(sheet).toBeHidden();
+    await page.getByRole("button", { name: es.welcome.start }).click();
+    await expect(sheet).toBeVisible();
+  });
 });
 
 test("login shows translated server errors, focuses the first and keeps the email", async ({
@@ -85,23 +100,27 @@ test("login shows translated server errors, focuses the first and keeps the emai
   await expect(email).toHaveValue("not-an-email");
 });
 
-test("a valid login enters the app (demo mode)", async ({ page }) => {
+test("a valid login enters the app", async ({ page }) => {
   await page.goto("/es/login");
-  await page.getByLabel(t.email).fill("ana@example.com");
-  await page.getByLabel(t.password, { exact: true }).fill("supersecret");
+  await page.getByLabel(t.email).fill(CUSTOMER.email);
+  await page.getByLabel(t.password, { exact: true }).fill(CUSTOMER.password);
   await page.getByRole("button", { name: t.login }).click();
   await expect(page).toHaveURL("/es/home");
 });
 
-test("register validates, then enters the app (demo mode)", async ({
+test("register validates, then asks to confirm the email", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto("/es/login");
   await page.getByRole("link", { name: t.toRegister }).click();
   await expect(page).toHaveURL("/es/register");
+  await page.getByRole("button", { name: t.consent.accept }).click();
+  await expect(page.getByText(t.consent.accepted)).toBeVisible();
 
   await page.getByLabel(t.name).fill("Ana");
-  await page.getByLabel(t.email).fill("ana@example.com");
+  await page
+    .getByLabel(t.email)
+    .fill(`ana-${testInfo.project.name}-${Date.now()}@example.com`);
   await page.getByLabel(t.phone).fill("call me");
   await page.getByLabel(t.password, { exact: true }).fill("supersecret");
   await page.getByRole("button", { name: t.register }).click();
@@ -110,7 +129,7 @@ test("register validates, then enters the app (demo mode)", async ({
   await page.getByLabel(t.phone).fill("+56 9 1234 5678");
   await page.getByLabel(t.password, { exact: true }).fill("supersecret");
   await page.getByRole("button", { name: t.register }).click();
-  await expect(page).toHaveURL("/es/home");
+  await expect(page.getByText(t.recovery.registerSent)).toBeVisible();
 });
 
 test("a guest can explore without an account", async ({ page }) => {

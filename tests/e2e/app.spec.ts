@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { getTenant } from "../../src/entities/tenant/api";
 import es from "../../src/shared/i18n/es";
+import { getTenant } from "./data";
 
 test("main navigation reaches every section and marks the current one", async ({
   page,

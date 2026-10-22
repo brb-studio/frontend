@@ -5,11 +5,18 @@ import {
 } from "@tanstack/react-query";
 import { ExternalLink, LogIn, LogOut, UserPlus, UserRound } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getTenant } from "@/entities/tenant/api";
-import { getMyAppointments, getMyHistory } from "@/features/account/data";
+import {
+  getMyAppointments,
+  getMyHistory,
+  getMyLoyalty,
+} from "@/features/account/data";
+import { LoyaltyCards } from "@/features/account/loyalty-card";
 import { myAppointmentsQuery, myHistoryQuery } from "@/features/account/model";
 import { MyAppointments } from "@/features/account/my-appointments";
 import { logout } from "@/features/auth/actions";
+import { DeleteAccountForm } from "@/features/auth/delete-account-form";
 import { PasswordForm } from "@/features/auth/password-form";
 import { getSession } from "@/features/auth/session";
 import { MyProductOrders } from "@/features/products/my-orders";
@@ -40,15 +47,23 @@ export default async function AccountPage() {
   const t = dict.account;
 
   const instagram = (
-    <a
-      href={tenant.instagramUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex border border-line bg-card animate-rise items-center justify-between rounded-3xl px-5 py-4 transition-colors hover:border-accent [animation-delay:160ms]"
-    >
-      {t.instagram}
-      <ExternalLink size={18} aria-hidden="true" className="text-accent" />
-    </a>
+    <>
+      <a
+        href={tenant.instagramUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex border border-line bg-card animate-rise items-center justify-between rounded-3xl px-5 py-4 transition-colors hover:border-accent [animation-delay:160ms]"
+      >
+        {t.instagram}
+        <ExternalLink size={18} aria-hidden="true" className="text-accent" />
+      </a>
+      <Link
+        href={`/${locale}/privacy`}
+        className="justify-self-center text-sm text-fg-muted underline-offset-4 hover:underline"
+      >
+        {t.privacy}
+      </Link>
+    </>
   );
 
   if (!session) {
@@ -88,7 +103,10 @@ export default async function AccountPage() {
   }
 
   const queryClient = new QueryClient();
-  const pushKey = await getPushKey();
+  const [pushKey, loyalty] = await Promise.all([
+    getPushKey(),
+    session.role === "customer" ? getMyLoyalty().catch(() => []) : [],
+  ]);
   if (session.role === "customer") {
     await Promise.all([
       queryClient.prefetchQuery({
@@ -134,6 +152,12 @@ export default async function AccountPage() {
         </div>
       </section>
       {pushKey && <PushToggle publicKey={pushKey} t={dict.account.push} />}
+      <LoyaltyCards
+        programs={loyalty}
+        currency={tenant.currency}
+        locale={locale}
+        t={t.loyalty}
+      />
       {session.role === "customer" && (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <MyAppointments locale={locale} t={t} tp={dict.payment} />
@@ -144,6 +168,13 @@ export default async function AccountPage() {
         </HydrationBoundary>
       )}
       <PasswordForm t={dict.auth} text={t.password} />
+      {session.role === "customer" && (
+        <DeleteAccountForm
+          t={dict.auth}
+          text={t.deleteAccount}
+          locale={locale}
+        />
+      )}
       {instagram}
     </div>
   );

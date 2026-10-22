@@ -16,6 +16,13 @@ const summarySchema = z.object({
   servicesMinor: z.number(),
   productsMinor: z.number(),
   commissionMinor: z.number(),
+  collected: z.object({
+    onlineMinor: z.number(),
+    cashMinor: z.number(),
+    cardMinor: z.number(),
+    transferMinor: z.number(),
+    unrecordedMinor: z.number(),
+  }),
   days: z.array(z.object({ date: z.string(), totalMinor: z.number() })),
 });
 type Day = z.output<typeof summarySchema>["days"][number];
@@ -107,6 +114,20 @@ export function Revenue({
     }).format(new Date(`${date}T00:00:00Z`));
 
   const total = data ? data.servicesMinor + data.productsMinor : 0;
+  const how = data
+    ? (
+        [
+          [t.methods.cash, data.collected.cashMinor],
+          [t.methods.card, data.collected.cardMinor],
+          [t.methods.transfer, data.collected.transferMinor],
+          [text.online, data.collected.onlineMinor],
+          [text.unrecorded, data.collected.unrecordedMinor],
+        ] as const
+      )
+        .filter(([, minor]) => minor > 0)
+        .map(([name, minor]) => `${name} ${money(minor)}`)
+        .join(" · ")
+    : "";
   const cards = [
     {
       label: text.total,
@@ -115,6 +136,7 @@ export function Revenue({
         productsEnabled && data
           ? `${text.services} ${money(data.servicesMinor)} · ${text.products} ${money(data.productsMinor)}`
           : undefined,
+      how,
     },
     // Only worth a card when there are barber commissions to take away.
     ...(data?.commissionMinor
@@ -170,6 +192,9 @@ export function Revenue({
                 </dd>
                 {card.detail && (
                   <dd className="text-sm text-fg-muted">{card.detail}</dd>
+                )}
+                {"how" in card && card.how && (
+                  <dd className="text-sm text-fg-muted">{card.how}</dd>
                 )}
               </div>
             ))}

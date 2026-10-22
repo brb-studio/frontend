@@ -146,3 +146,30 @@ La sección Entregas SHALL permitir al equipo abrir la cámara trasera del telé
 - **WHEN** el barbero niega el permiso de la cámara
 - **THEN** ve un aviso y puede elegir el apartado en la lista de pendientes
 
+### Requirement: Clientes
+La sección Clientes SHALL estar disponible para owner, admin y manager, en el grupo "Día a día", sin cambiar las pestañas del teléfono. Muestra los 50 clientes más nuevos y un buscador por nombre, correo o teléfono que busca al enviar. Cada cliente muestra nombre, si no tiene cuenta, teléfono (enlace `tel:`), correo (enlace `mailto:`), visitas, faltas, lo gastado en la moneda de la barbería, la fecha de su última visita y, si la tiene, su próxima cita. Sin resultados, MUST decirlo.
+
+#### Scenario: Buscar a quien llama
+- **WHEN** el encargado escribe parte del teléfono de un cliente y toca "Buscar"
+- **THEN** ve a ese cliente con sus visitas, faltas y su próxima cita
+
+### Requirement: Cobro en mostrador al completar
+En la agenda, una cita que ya empezó y tiene saldo SHALL mostrar "Cobrar {saldo}:" con los botones Efectivo, Tarjeta y Transferencia en lugar de "Atendida"; tocar uno la completa con ese método. Sin saldo (pagada en línea), queda el botón "Atendida". Una cita cobrada en mostrador MUST mostrar el método y el monto. El día de la agenda se pide por fecha y es el día local de cada sucursal; las horas se muestran en la zona de la sucursal.
+
+#### Scenario: Resto de un anticipo
+- **WHEN** el encargado toca "Tarjeta" en una cita de 35.00 con 10.00 de anticipo
+- **THEN** la cita queda atendida y muestra "Cobrado en mostrador: Tarjeta · 25.00"
+
+### Requirement: Caja
+La sección Caja SHALL estar disponible para owner, admin y manager, en "Día a día". Muestra para un día (hoy por omisión) lo cobrado en efectivo, tarjeta y transferencia, lo que recibió cada persona y cada movimiento (hora en la zona de su sucursal, corte o productos, cliente, método, monto y quién lo recibió). Owner y admin pueden elegir una sucursal o todas; el manager ve la suya. Si hay cortes completados sin cobro registrado, MUST avisarlo.
+
+#### Scenario: Cierre del encargado
+- **WHEN** el encargado abre Caja al cerrar
+- **THEN** ve cuánto efectivo debe haber en el cajón y quién lo cobró
+
+### Requirement: Desglose de ingresos
+La tarjeta Ingresos de Ganancias SHALL decir cómo entró el dinero: efectivo, tarjeta, transferencia, en línea y sin registrar, solo los que no son cero.
+
+### Requirement: Lealtad en Promociones
+El formulario de promociones SHALL tener el campo "Lealtad: cada N visitas" (2 a 100, vacío = no) y la lista MUST mostrar "cada N visitas" en esas promociones.
+

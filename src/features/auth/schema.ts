@@ -13,7 +13,9 @@ export type ErrorKey =
   | "emailNotVerified"
   | "rateLimited"
   | "invalidToken"
-  | "wrongPassword";
+  | "wrongPassword"
+  | "openBookings"
+  | "terms";
 
 const email = z
   .string({ error: "required" })
@@ -46,6 +48,13 @@ export const passwordChangeSchema = z.object({
   newPassword: password,
 });
 
+export const deleteAccountSchema = z.object({
+  password: z
+    .string({ error: "required" })
+    .min(1, { error: "required" })
+    .max(128, { error: "passwordMax" }),
+});
+
 export const registerSchema = z.object({
   name: z
     .string({ error: "required" })
@@ -60,6 +69,7 @@ export const registerSchema = z.object({
     .or(z.literal(""))
     .default(""),
   password,
+  acceptTerms: z.literal("true", { error: "terms" }),
 });
 
 export type AuthState =

@@ -11,7 +11,12 @@ import { pick } from "@/shared/i18n/localized";
 import { formatMoney } from "@/shared/i18n/money";
 import { adminQuery, useAdminAction } from "./api";
 import { NewAppointmentForm } from "./new-appointment-form";
-import { type AdminAppointment, staffAppointmentSchema } from "./schemas";
+import {
+  type AdminAppointment,
+  COUNTER_METHODS,
+  type CounterMethod,
+  staffAppointmentSchema,
+} from "./schemas";
 import { type AdminText, Result, Row, smallButton } from "./ui";
 
 export const today = () => {
@@ -21,14 +26,8 @@ export const today = () => {
     .slice(0, 10);
 };
 
-export function dayQuery(day: string) {
-  const from = new Date(`${day}T00:00`);
-  const to = new Date(from.getTime() + 24 * 60 * 60 * 1000);
-  return adminQuery(
-    `appointments?from=${encodeURIComponent(from.toISOString())}&to=${encodeURIComponent(to.toISOString())}`,
-    z.array(staffAppointmentSchema),
-  );
-}
+export const dayQuery = (day: string) =>
+  adminQuery(`appointments?date=${day}`, z.array(staffAppointmentSchema));
 
 export function AgendaManager({
   locale,
@@ -52,11 +51,12 @@ export function AgendaManager({
   const change = (
     a: AdminAppointment,
     next: "completed" | "no_show" | "cancelled",
+    paidWith?: CounterMethod,
   ) =>
     action.mutate({
       method: "PATCH",
       path: `appointments/${a.id}`,
-      body: { status: next },
+      body: { status: next, ...(paidWith && { paidWith }) },
     });
   const time = (a: AdminAppointment) =>
     new Intl.DateTimeFormat(locale, {
@@ -130,6 +130,20 @@ export function AgendaManager({
                         )}
                       </span>
                     )}
+                    {a.counter && (
+                      <span className="block">
+                        {t.agenda.collected
+                          .replace("{method}", t.methods[a.counter.method])
+                          .replace(
+                            "{amount}",
+                            formatMoney(
+                              a.counter.amountMinor,
+                              a.currency,
+                              locale,
+                            ),
+                          )}
+                      </span>
+                    )}
                     {a.notes && <span className="block">{a.notes}</span>}
                     {a.customer?.phone && (
                       <Link
@@ -187,14 +201,36 @@ export function AgendaManager({
                   <>
                     {started && (
                       <>
-                        <button
-                          type="button"
-                          className={smallButton}
-                          disabled={action.isPending}
-                          onClick={() => change(a, "completed")}
-                        >
-                          {t.agenda.complete}
-                        </button>
+                        {a.dueMinor ? (
+                          <>
+                            <span className="self-center text-sm">
+                              {t.agenda.charge.replace(
+                                "{amount}",
+                                formatMoney(a.dueMinor, a.currency, locale),
+                              )}
+                            </span>
+                            {COUNTER_METHODS.map((method) => (
+                              <button
+                                key={method}
+                                type="button"
+                                className={smallButton}
+                                disabled={action.isPending}
+                                onClick={() => change(a, "completed", method)}
+                              >
+                                {t.methods[method]}
+                              </button>
+                            ))}
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className={smallButton}
+                            disabled={action.isPending}
+                            onClick={() => change(a, "completed")}
+                          >
+                            {t.agenda.complete}
+                          </button>
+                        )}
                         <button
                           type="button"
                           className={smallButton}

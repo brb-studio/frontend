@@ -48,6 +48,21 @@ const es: Dictionary = {
     toLogin: "Inicia sesión",
     or: "o",
     guest: "Explorar sin cuenta",
+    consent: {
+      title: "Antes de crear tu cuenta",
+      lead: "Lee cómo usamos tus datos y las reglas para agendar.",
+      privacy: "Aviso de privacidad",
+      terms: "Términos y condiciones",
+      rules: [
+        "Tu cuenta es personal: no compartas tu contraseña.",
+        "Agenda, cambia o cancela tus citas desde la app. Si no vas a llegar, cancela para liberar el horario.",
+        "Algunos servicios piden anticipo o pago en línea. Ves el monto antes de pagar y el cobro lo procesa Stripe.",
+      ],
+      accept: "Acepto el aviso de privacidad y los términos",
+      accepted: "Aceptaste el aviso de privacidad y los términos.",
+      review: "Lee y acepta el aviso de privacidad y los términos",
+      close: "Cerrar",
+    },
     errors: {
       required: "Este campo es obligatorio.",
       email: "Ingresa un correo válido.",
@@ -64,6 +79,10 @@ const es: Dictionary = {
       rateLimited: "Demasiados intentos. Espera unos minutos.",
       wrongPassword: "La contraseña actual no es correcta.",
       invalidToken: "Este enlace venció o ya se usó. Pide uno nuevo.",
+      openBookings:
+        "Aún tienes citas próximas o productos apartados. Cancélalos primero o pídelo en la sucursal.",
+      terms:
+        "Acepta el aviso de privacidad y los términos para crear tu cuenta.",
     },
     recovery: {
       registerSent:
@@ -341,6 +360,21 @@ const es: Dictionary = {
       submit: "Actualizar contraseña",
       done: "Contraseña actualizada. Se cerró la sesión en tus otros dispositivos.",
     },
+    deleteAccount: {
+      title: "Borrar mi cuenta",
+      lead: "Borraremos tu nombre, correo, teléfono y contraseña, y cerraremos tu sesión en todos lados. Tus visitas pasadas quedan en la contabilidad de la barbería sin tus datos. No se puede deshacer.",
+      password: "Tu contraseña",
+      submit: "Borrar mi cuenta",
+    },
+    privacy: "Aviso de privacidad",
+    loyalty: {
+      title: "Tu tarjeta de lealtad",
+      progress: "Llevas {n} de {total} visitas",
+      reward: "Tu visita número {total} tiene {reward}.",
+      next: "¡Tu próxima visita tiene {reward}!",
+      free: "el servicio gratis",
+      off: "{amount} de descuento",
+    },
     title: "Cuenta",
     guestTitle: "Estás navegando como invitado",
     guestLead:
@@ -431,6 +465,8 @@ const es: Dictionary = {
       promotions: "Promociones",
       products: "Productos",
       pickups: "Entregas",
+      customers: "Clientes",
+      cash: "Caja",
       payments: "Cobros",
       revenue: "Ganancias",
       earnings: "Pagos a barberos",
@@ -449,6 +485,37 @@ const es: Dictionary = {
       left: "quedan",
       uncounted: "sin control de existencias",
       empty: "Aún no hay productos.",
+    },
+    methods: {
+      cash: "Efectivo",
+      card: "Tarjeta",
+      transfer: "Transferencia",
+    },
+    cash: {
+      day: "Día",
+      branch: "Sucursal",
+      allBranches: "Todas las sucursales",
+      people: "Quién lo recibió",
+      movements: "Movimientos",
+      cut: "Corte",
+      product: "Productos",
+      none: "No se cobró nada en mostrador este día.",
+      unrecorded: "{n} cortes completados este día no tienen cobro registrado.",
+      failed: "No se pudo cargar la caja. Intenta de nuevo.",
+    },
+    customers: {
+      search: "Nombre, correo o teléfono",
+      searchButton: "Buscar",
+      newest:
+        "Los 50 clientes más nuevos. Busca para encontrar a cualquier otro.",
+      none: "Ningún cliente coincide.",
+      guest: "Sin cuenta",
+      visits: "Visitas",
+      noShows: "Faltas",
+      spent: "Gastado",
+      lastVisit: "Última visita",
+      nextVisit: "Próxima cita",
+      never: "—",
     },
     pickups: {
       scanTitle: "Escanear QR",
@@ -560,6 +627,8 @@ const es: Dictionary = {
       cuts: "Cortes completados",
       average: "Ticket promedio",
       byDay: "Por día",
+      online: "En línea",
+      unrecorded: "Sin registrar",
       failed: "No se pudieron cargar las ganancias. Intenta de nuevo.",
     },
     home: {
@@ -618,6 +687,8 @@ const es: Dictionary = {
       book: "Agendar cita",
       day: "Día",
       complete: "Atendida",
+      charge: "Cobrar {amount}:",
+      collected: "Cobrado en mostrador: {method} · {amount}",
       noShow: "No vino",
       cancel: "Cancelar",
       empty: "No hay citas este día.",
@@ -701,6 +772,8 @@ const es: Dictionary = {
       fixed: "Monto fijo",
       value: "Valor",
       firstVisitOnly: "Solo primera visita",
+      everyVisits: "Lealtad: cada N visitas (vacío = no)",
+      everyVisitsShort: "cada {n} visitas",
       maxRedemptions: "Usos máximos (vacío = sin límite)",
       uses: "usos",
       automatic: "Automática",
@@ -1017,6 +1090,58 @@ const es: Dictionary = {
       paidOn: "Pagado el {date}",
       reference: "Referencia",
       minutes: "{n} min",
+    },
+  },
+  privacy: {
+    title: "Aviso de privacidad",
+    updated: "Última actualización: {date}",
+    simplified:
+      "{shop}{address} usa tu nombre, correo y teléfono para tu cuenta, tus citas y sus recordatorios. Puedes apagar las notificaciones del teléfono o borrar tu cuenta cuando quieras.",
+    at: ", con domicilio en {address},",
+    read: "Lee el aviso de privacidad",
+    controller: {
+      title: "Quién es responsable de tus datos",
+      body: "{shop} es responsable del tratamiento de tus datos personales. Nos encuentras en nuestras sucursales:",
+    },
+    data: {
+      title: "Qué datos usamos",
+      body: [
+        "Tu nombre, correo electrónico y teléfono.",
+        "Tus citas (fecha, sucursal, barbero, servicios, precio y notas del equipo), tus solicitudes en la lista de espera y los productos que apartas.",
+        "Si pagas en línea: el estado del pago y la marca y últimos 4 dígitos de tu tarjeta. Los datos completos de tu tarjeta van directo a Stripe y nunca llegan a nuestros servidores.",
+        "No usamos datos personales sensibles.",
+      ],
+    },
+    purposes: {
+      title: "Para qué los usamos",
+      body: [
+        "Crear y administrar tu cuenta.",
+        "Agendar, cambiar y cancelar tus citas, y enviarte confirmaciones, recordatorios y avisos por correo y notificaciones del teléfono.",
+        "Cobrar anticipos o pagos en línea y guardarte los productos que apartas.",
+        "Avisarte cuando se libera un horario en un día que esperas.",
+      ],
+      note: "Todas son necesarias para darte el servicio que pides. No usamos tus datos para publicidad ni los vendemos.",
+    },
+    processors: {
+      title: "Quién más los maneja",
+      body: "Para dar este servicio usamos proveedores que manejan datos solo por encargo nuestro: el software de reservas con su alojamiento y base de datos (Vercel, MongoDB Atlas), el envío de correos (Resend) y los pagos en línea (Stripe). No entregamos tus datos a terceros para sus propios fines.",
+    },
+    limit: {
+      title: "Cómo limitar su uso",
+      body: "Puedes apagar las notificaciones del teléfono en Cuenta, salir de la lista de espera y cancelar tus citas cuando quieras.",
+    },
+    rights: {
+      title: "Tus derechos ARCO",
+      body: "Puedes acceder a tus datos, pedir que se corrijan, cancelarlos u oponerte a su uso, y revocar tu consentimiento.",
+      access: "Acceso: tus datos y tus citas están en Cuenta, cuando quieras.",
+      erase:
+        "Cancelación: en Cuenta → Borrar mi cuenta, al instante. Conservamos el registro de tus citas pasadas sin tus datos de contacto, solo para la contabilidad de la barbería.",
+      other:
+        "Para todo lo demás (o si reservaste sin cuenta), pídelo en cualquier sucursal o por teléfono con tu nombre, un medio para responderte y una identificación. Te respondemos en un máximo de 20 días y, si procede, lo aplicamos dentro de los 15 siguientes.",
+    },
+    changes: {
+      title: "Cambios a este aviso",
+      body: "Publicaremos cualquier cambio en esta página con su fecha de actualización.",
     },
   },
   notFound: {

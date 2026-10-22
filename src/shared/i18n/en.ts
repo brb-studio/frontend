@@ -45,6 +45,21 @@ const en = {
     toLogin: "Sign in",
     or: "or",
     guest: "Explore without an account",
+    consent: {
+      title: "Before you sign up",
+      lead: "Read how we use your data and the booking rules.",
+      privacy: "Privacy notice",
+      terms: "Terms and conditions",
+      rules: [
+        "Your account is personal: don't share your password.",
+        "Book, change or cancel your visits in the app. If you can't make it, cancel to free the slot.",
+        "Some services ask for a deposit or online payment. You see the amount before paying, and Stripe processes the charge.",
+      ],
+      accept: "I accept the privacy notice and the terms",
+      accepted: "You accepted the privacy notice and the terms.",
+      review: "Read and accept the privacy notice and the terms",
+      close: "Close",
+    },
     errors: {
       required: "This field is required.",
       email: "Enter a valid email.",
@@ -62,6 +77,9 @@ const en = {
       wrongPassword: "Your current password is wrong.",
       invalidToken:
         "This link has expired or was already used. Ask for a new one.",
+      openBookings:
+        "You still have upcoming visits or products set aside. Cancel them first, or ask the branch.",
+      terms: "Accept the privacy notice and the terms to create your account.",
     },
     recovery: {
       registerSent:
@@ -333,6 +351,21 @@ const en = {
       submit: "Update password",
       done: "Password updated. Your other devices were signed out.",
     },
+    deleteAccount: {
+      title: "Delete my account",
+      lead: "We'll erase your name, email, phone and password, and sign you out everywhere. Your past visits stay in the shop's books without your details. This can't be undone.",
+      password: "Your password",
+      submit: "Delete my account",
+    },
+    privacy: "Privacy notice",
+    loyalty: {
+      title: "Your loyalty card",
+      progress: "{n} of {total} visits",
+      reward: "Visit number {total} gets {reward}.",
+      next: "Your next visit gets {reward}!",
+      free: "the service free",
+      off: "{amount} off",
+    },
     title: "Account",
     guestTitle: "You're browsing as a guest",
     guestLead: "Sign in or create an account to book and see your visits.",
@@ -421,6 +454,8 @@ const en = {
       promotions: "Promotions",
       products: "Products",
       pickups: "Pickups",
+      customers: "Customers",
+      cash: "Cash",
       payments: "Payments",
       revenue: "Earnings",
       earnings: "Barber pay",
@@ -439,6 +474,36 @@ const en = {
       left: "left",
       uncounted: "stock not counted",
       empty: "No products yet.",
+    },
+    methods: {
+      cash: "Cash",
+      card: "Card",
+      transfer: "Transfer",
+    },
+    cash: {
+      day: "Day",
+      branch: "Branch",
+      allBranches: "All branches",
+      people: "Who received it",
+      movements: "Movements",
+      cut: "Cut",
+      product: "Products",
+      none: "Nothing was collected at the counter this day.",
+      unrecorded: "{n} completed cuts this day have no payment recorded.",
+      failed: "Couldn't load the cash report. Try again.",
+    },
+    customers: {
+      search: "Name, email or phone",
+      searchButton: "Search",
+      newest: "The 50 newest customers. Search to find anyone else.",
+      none: "No customers match.",
+      guest: "No account",
+      visits: "Visits",
+      noShows: "Missed",
+      spent: "Spent",
+      lastVisit: "Last visit",
+      nextVisit: "Next visit",
+      never: "—",
     },
     pickups: {
       scanTitle: "Scan QR",
@@ -548,6 +613,8 @@ const en = {
       cuts: "Completed cuts",
       average: "Average ticket",
       byDay: "By day",
+      online: "Online",
+      unrecorded: "Not recorded",
       failed: "Couldn't load the earnings. Try again.",
     },
     home: {
@@ -605,6 +672,8 @@ const en = {
       book: "Book appointment",
       day: "Day",
       complete: "Done",
+      charge: "Collect {amount}:",
+      collected: "Collected at the counter: {method} · {amount}",
       noShow: "No-show",
       cancel: "Cancel",
       empty: "No appointments this day.",
@@ -688,6 +757,8 @@ const en = {
       fixed: "Fixed amount",
       value: "Value",
       firstVisitOnly: "First visit only",
+      everyVisits: "Loyalty: every N visits (empty = no)",
+      everyVisitsShort: "every {n} visits",
       maxRedemptions: "Max uses (empty = unlimited)",
       uses: "uses",
       automatic: "Automatic",
@@ -1000,6 +1071,58 @@ const en = {
       paidOn: "Paid on {date}",
       reference: "Reference",
       minutes: "{n} min",
+    },
+  },
+  privacy: {
+    title: "Privacy notice",
+    updated: "Last updated: {date}",
+    simplified:
+      "{shop}{address} uses your name, email and phone to run your account, your visits and their reminders. You can turn off phone notifications or delete your account anytime.",
+    at: ", at {address},",
+    read: "Read the privacy notice",
+    controller: {
+      title: "Who is responsible for your data",
+      body: "{shop} is responsible for your personal data. You can find us at our branches:",
+    },
+    data: {
+      title: "What data we use",
+      body: [
+        "Your name, email and phone number.",
+        "Your visits (date, branch, barber, services, price and the team's notes), your waiting-list requests and the products you set aside.",
+        "If you pay online: the payment status and your card's brand and last 4 digits. Your full card details go straight to Stripe and never reach our servers.",
+        "We don't use sensitive personal data.",
+      ],
+    },
+    purposes: {
+      title: "What we use it for",
+      body: [
+        "Creating and running your account.",
+        "Booking, moving and cancelling your visits, and sending you confirmations, reminders and notices by email and phone notification.",
+        "Taking deposits or online payments, and holding the products you set aside.",
+        "Telling you when a time frees up on a day you're waiting for.",
+      ],
+      note: "All of these are needed to give you the service you ask for. We don't use your data for advertising and we don't sell it.",
+    },
+    processors: {
+      title: "Who else handles it",
+      body: "To run this service we use providers that handle data only on our behalf: our booking software and its hosting and database (Vercel, MongoDB Atlas), email delivery (Resend) and online payments (Stripe). We don't hand your data to third parties for their own purposes.",
+    },
+    limit: {
+      title: "How to limit its use",
+      body: "You can turn off phone notifications in Account, leave the waiting list and cancel your visits whenever you want.",
+    },
+    rights: {
+      title: "Your ARCO rights",
+      body: "You can access your data, ask us to correct it, cancel it or object to its use, and withdraw your consent.",
+      access: "Access: your details and your visits are in Account, anytime.",
+      erase:
+        "Cancellation: in Account → Delete my account, right away. We keep the record of your past visits without your contact details, only for the shop's accounting.",
+      other:
+        "For anything else (or if you booked without an account), ask at any branch or by phone with your name, a way to reach you and an ID. We answer within 20 days and, if it applies, carry it out within the following 15.",
+    },
+    changes: {
+      title: "Changes to this notice",
+      body: "We'll publish any change on this page with its update date.",
     },
   },
   notFound: {
