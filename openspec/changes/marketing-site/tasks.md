@@ -14,6 +14,6 @@
 ## 3. Pendiente para lanzar
 - [ ] 3.1 Número de WhatsApp y correo (`MARKETING_WHATSAPP`, `MARKETING_EMAIL`)
 - [ ] 3.2 Identidad legal: razón social, domicilio y contacto ARCO en `MARKETING_LEGAL`; revisión legal del aviso
-- [ ] 3.3 Capturas reales en `public/landing/shots/`
+- [x] 3.3 Capturas reales en `public/landing/shots/`
 - [ ] 3.4 Dominio de producción en `MARKETING_HOSTS` / `MARKETING_URL`
 - [ ] 3.5 e2e `tests/e2e/marketing.spec.ts` en verde (chromium y webkit)

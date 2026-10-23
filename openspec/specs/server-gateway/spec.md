@@ -37,9 +37,16 @@ En producción, `DEFAULT_TENANT_HOST` MUST quedar vacío para que un host descon
 - **WHEN** alguien abre `http://elite.localhost:3000`
 - **THEN** ve la barbería Elite, aunque exista `DEFAULT_TENANT_HOST`
 
-#### Scenario: Host de marketing
+### Requirement: Host de marketing
+Un host listado en `MARKETING_HOSTS` MUST mostrar la landing de brb-studio y no consultar ninguna barbería. Una IP nunca cuenta como host de marketing, y `/site/*` MUST responder 404 a cualquier petición directa.
+
+#### Scenario: Landing en www
 - **WHEN** `MARKETING_HOSTS=www.localhost` y alguien abre `http://www.localhost:3000`
-- **THEN** ve la landing de brb-studio y el servidor no consulta ninguna barbería; `http://localhost:3000` y `http://127.0.0.1:3000` siguen mostrando la barbería de `DEFAULT_TENANT_HOST`
+- **THEN** ve la landing de brb-studio y el servidor no consulta ninguna barbería
+
+#### Scenario: Las barberías no cambian
+- **WHEN** `MARKETING_HOSTS=www.localhost` y alguien abre `http://localhost:3000` o `http://127.0.0.1:3000`
+- **THEN** ve la barbería de `DEFAULT_TENANT_HOST`, y `/site/es` responde 404
 
 ### Requirement: IP real del visitante
 El servidor SHALL tomar la IP del visitante contando `TRUSTED_PROXY_HOPS` entradas (por defecto 1) desde la derecha de `X-Forwarded-For`: ahí está lo que escribieron los proxies propios. Todo lo que está a la izquierda lo escribió el cliente y MUST ignorarse. Solo envía la IP al API en `X-Visitor-IP` junto con `PROXY_SECRET`. Si el valor no parece una IP, no envía nada.
