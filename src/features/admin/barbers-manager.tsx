@@ -9,6 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { Select } from "@/shared/ui/select";
 import { adminQuery, useAdminAction } from "./api";
+import { BecomeBarber } from "./become-barber";
 import { HoursEditor } from "./hours-editor";
 import { ImagesField } from "./image-field";
 import {
@@ -31,7 +32,14 @@ import {
   value,
 } from "./ui";
 
-type Props = { locale: Locale; t: AdminText; canCreate: boolean };
+type Props = {
+  locale: Locale;
+  t: AdminText;
+  canCreate: boolean;
+  canLink: boolean;
+  me: string;
+};
+type Account = z.output<typeof staffSchema>;
 
 const barbersQuery = adminQuery("barbers", z.array(barberSchema));
 const branchesQuery = adminQuery("branches", z.array(branchSchema));
@@ -43,10 +51,12 @@ function BarberEditor({
   services,
   locale,
   t,
+  me,
   onDone,
 }: {
   barber: AdminBarber;
   services: AdminService[];
+  me: string;
   locale: Locale;
   t: AdminText;
   onDone: () => void;
@@ -118,6 +128,7 @@ function BarberEditor({
             <option value="">{t.barbers.noAccount}</option>
             {accounts.map((u) => (
               <option key={u.id} value={u.id}>
+                {u.id === me ? `${t.barbers.you} · ` : ""}
                 {u.name} · {u.email}
               </option>
             ))}
@@ -159,20 +170,49 @@ function BarberEditor({
   );
 }
 
-function NewBarber({ t, onDone }: { t: AdminText; onDone: () => void }) {
+function NewBarber({
+  t,
+  services,
+  accounts,
+  taken,
+  me,
+  onDone,
+}: {
+  t: AdminText;
+  services: AdminService[];
+  accounts?: Account[];
+  taken: Set<string>;
+  me: string;
+  onDone: () => void;
+}) {
   const branches = useQuery(branchesQuery);
   const action = useAdminAction();
+  const [picked, setPicked] = useState("");
+  const branchId = picked || branches.data?.[0]?.id || "";
+  const linkable = accounts?.filter(
+    (u) =>
+      u.active &&
+      !taken.has(u.id) &&
+      (u.role === "owner" ||
+        u.role === "admin" ||
+        (u.role === "barber" && u.branchId === branchId)),
+  );
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const userId = value(form, "userId");
     action.mutate(
       {
         method: "POST",
         path: "barbers",
         body: {
-          branchId: value(form, "branchId"),
+          branchId,
           name: value(form, "name"),
           slug: value(form, "slug") || slugify(value(form, "name")),
+          serviceIds: services
+            .filter((s) => s.active && (!s.branchId || s.branchId === branchId))
+            .map((s) => s.id),
+          ...(userId && { userId }),
         },
       },
       { onSuccess: (result) => result.ok && onDone() },
@@ -180,7 +220,13 @@ function NewBarber({ t, onDone }: { t: AdminText; onDone: () => void }) {
   }
   return (
     <form onSubmit={submit} className="grid gap-3">
-      <Select name="branchId" label={t.common.branch} required>
+      <Select
+        name="branchId"
+        label={t.common.branch}
+        required
+        value={branchId}
+        onChange={(event) => setPicked(event.target.value)}
+      >
         {branches.data?.map((b) => (
           <option key={b.id} value={b.id}>
             {b.name}
@@ -189,6 +235,21 @@ function NewBarber({ t, onDone }: { t: AdminText; onDone: () => void }) {
       </Select>
       <Field name="name" label={t.team.name} required />
       <Field name="slug" label={t.common.slug} hint={t.common.slugHint} />
+      {linkable && linkable.length > 0 && (
+        <div className="grid gap-1">
+          <Select name="userId" label={t.barbers.account} defaultValue="">
+            <option value="">{t.barbers.noAccount}</option>
+            {linkable.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.id === me ? `${t.barbers.you} · ` : ""}
+                {u.name} · {u.email}
+              </option>
+            ))}
+          </Select>
+          <p className="text-xs text-fg-muted">{t.barbers.accountHint}</p>
+        </div>
+      )}
+      <p className="text-xs text-fg-muted">{t.barbers.servicesHint}</p>
       <Result result={action.data} t={t.common} />
       <Button type="submit" disabled={action.isPending}>
         {t.barbers.newBarber}
@@ -197,10 +258,20 @@ function NewBarber({ t, onDone }: { t: AdminText; onDone: () => void }) {
   );
 }
 
-export function BarbersManager({ locale, t, canCreate }: Props) {
+export function BarbersManager({ locale, t, canCreate, canLink, me }: Props) {
   const barbers = useQuery(barbersQuery);
   const services = useQuery(servicesQuery);
   const branches = useQuery(branchesQuery);
+  const users = useQuery({ ...usersQuery, enabled: canLink });
+  const taken = new Set(barbers.data?.flatMap((b) => b.userId ?? []) ?? []);
+  const accountOf = (b: AdminBarber) => {
+    if (!b.userId) return t.barbers.noAccount;
+    if (b.userId === me) return t.barbers.you;
+    const user = users.data?.find((u) => u.id === b.userId);
+    return user
+      ? t.barbers.linkedTo.replace("{name}", user.name)
+      : t.barbers.linked;
+  };
   const toggle = useAdminAction();
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -222,7 +293,19 @@ export function BarbersManager({ locale, t, canCreate }: Props) {
         ) : undefined
       }
     >
-      {adding && <NewBarber t={t} onDone={() => setAdding(false)} />}
+      {canLink && barbers.data && !taken.has(me) && (
+        <BecomeBarber t={t} me={me} />
+      )}
+      {adding && (
+        <NewBarber
+          t={t}
+          services={services.data ?? []}
+          accounts={users.data}
+          taken={taken}
+          me={me}
+          onDone={() => setAdding(false)}
+        />
+      )}
       <Result result={toggle.data} t={t.common} />
       {barbers.isPending ? (
         <p className="text-fg-muted">{t.common.loading}</p>
@@ -234,7 +317,7 @@ export function BarbersManager({ locale, t, canCreate }: Props) {
               muted={!b.active}
               image={b.image ?? ""}
               title={b.name}
-              meta={`${branchName(b.branchId)} · ${b.serviceIds.length} ${t.nav.services.toLowerCase()} · ${b.active ? t.common.active : t.common.inactive}`}
+              meta={`${branchName(b.branchId)} · ${b.serviceIds.length} ${t.nav.services.toLowerCase()} · ${accountOf(b)} · ${b.active ? t.common.active : t.common.inactive}`}
             >
               <button
                 type="button"
@@ -263,6 +346,7 @@ export function BarbersManager({ locale, t, canCreate }: Props) {
                   services={services.data}
                   locale={locale}
                   t={t}
+                  me={me}
                   onDone={() => setEditing(null)}
                 />
               )}

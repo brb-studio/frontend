@@ -173,3 +173,10 @@ La tarjeta Ingresos de Ganancias SHALL decir cómo entró el dinero: efectivo, t
 ### Requirement: Lealtad en Promociones
 El formulario de promociones SHALL tener el campo "Lealtad: cada N visitas" (2 a 100, vacío = no) y la lista MUST mostrar "cada N visitas" en esas promociones.
 
+### Requirement: El dueño también atiende
+Un owner o admin sin perfil de barbero SHALL ver en Mi día y arriba de Barberos la tarjeta "¿También atiendes clientes?" con el botón "Sí, yo también atiendo", que crea su perfil vinculado en un paso (con selector de sucursal si hay varias activas), y "Soy yo: {nombre}" por cada perfil activo sin cuenta para vincularlo. Al tenerlo, la tarjeta desaparece y Mi día muestra sus cortes. Cada perfil en Barberos MUST decir su cuenta ("Tu cuenta", "Cuenta: {nombre}" o "Sin cuenta"); al crear un barbero se puede elegir su cuenta y empieza con todos los servicios activos de su sucursal.
+
+#### Scenario: Barbería de una persona
+- **WHEN** la dueña abre Mi día por primera vez y toca "Sí, yo también atiendo"
+- **THEN** ve "No tienes cortes pendientes hoy." y los clientes ya pueden reservar con ella
+

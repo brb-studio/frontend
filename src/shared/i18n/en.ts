@@ -701,6 +701,11 @@ const en = {
       noAccount: "No account",
       accountHint:
         "The account gets this profile's appointments in “My day” and its alerts on their phone.",
+      you: "Your account",
+      linkedTo: "Account: {name}",
+      linked: "Has an account",
+      servicesHint:
+        "Starts with every service of its branch; change them in Edit.",
     },
     myDay: {
       finished: "Finished ({n})",
@@ -712,6 +717,13 @@ const en = {
       noProfileHint:
         "Link it in Barbers by choosing your account on the profile that is yours.",
       goBarbers: "Go to Barbers",
+      becomeTitle: "Do you also cut hair?",
+      becomeLead:
+        "Create your barber profile with every service of your branch: customers can book with you and your cuts show up in My day. You stay the owner; tune hours and services in Barbers.",
+      becomeButton: "Yes, I cut too",
+      whichBranch: "Branch you work at",
+      existing: "Already have a barber profile? Link it to your account:",
+      itsMe: "That's me: {name}",
     },
     branches: {
       newBranch: "New branch",

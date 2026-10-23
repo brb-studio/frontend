@@ -13,6 +13,8 @@ export default async function BarbersAdminPage() {
         locale={locale}
         t={dict.admin}
         canCreate={session.role !== "barber"}
+        canLink={session.role === "owner" || session.role === "admin"}
+        me={session.id}
       />
     </div>
   );

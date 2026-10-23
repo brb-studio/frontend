@@ -9,6 +9,7 @@ import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
 import { ButtonLink } from "@/shared/ui/button";
 import { adminQuery } from "./api";
+import { BecomeBarber } from "./become-barber";
 import { staffAppointmentSchema } from "./schemas";
 
 const myDayQuery = adminQuery(
@@ -32,13 +33,18 @@ export function MyDay({
   locale,
   t,
   status,
+  me,
+  canBecome,
 }: {
   locale: Locale;
   t: Dictionary["admin"];
   status: Dictionary["account"]["status"];
+  me: string;
+  canBecome: boolean;
 }) {
   const { data, isPending } = useQuery(myDayQuery);
   if (isPending) return <p className="text-fg-muted">{t.common.loading}</p>;
+  if (!data?.barber && canBecome) return <BecomeBarber t={t} me={me} />;
   if (!data?.barber) {
     return (
       <section className="grid gap-3 rounded-[1.75rem] border border-line bg-card p-5">

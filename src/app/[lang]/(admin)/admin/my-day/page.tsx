@@ -7,12 +7,18 @@ import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 
 export default async function MyDayPage() {
   const locale = await getLocale();
-  await adminSession("myDay", locale);
+  const session = await adminSession("myDay", locale);
   const [dict, pushKey] = await Promise.all([getDictionary(), getPushKey()]);
   return (
     <div className="grid gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.myDay}</h1>
-      <MyDay locale={locale} t={dict.admin} status={dict.account.status} />
+      <MyDay
+        locale={locale}
+        t={dict.admin}
+        status={dict.account.status}
+        me={session.id}
+        canBecome={session.role === "owner" || session.role === "admin"}
+      />
       {pushKey && <PushToggle publicKey={pushKey} t={dict.account.push} />}
       <LiveDesk locale={locale} t={dict.account} showAgenda={false} />
     </div>

@@ -716,6 +716,11 @@ const es: Dictionary = {
       noAccount: "Sin cuenta",
       accountHint:
         "La cuenta recibe las citas de este perfil en “Mi día” y sus avisos en el teléfono.",
+      you: "Tu cuenta",
+      linkedTo: "Cuenta: {name}",
+      linked: "Con cuenta",
+      servicesHint:
+        "Empieza con todos los servicios de su sucursal; cámbialos en Editar.",
     },
     myDay: {
       finished: "Terminadas ({n})",
@@ -727,6 +732,13 @@ const es: Dictionary = {
       noProfileHint:
         "Vincúlala en Barberos, eligiendo tu cuenta en el perfil que te corresponda.",
       goBarbers: "Ir a Barberos",
+      becomeTitle: "¿También atiendes clientes?",
+      becomeLead:
+        "Crea tu perfil de barbero con todos los servicios de tu sucursal: los clientes podrán reservar contigo y tus cortes saldrán en Mi día. Sigues siendo el dueño; ajusta horario y servicios en Barberos.",
+      becomeButton: "Sí, yo también atiendo",
+      whichBranch: "Sucursal donde atiendes",
+      existing: "¿Ya tienes un perfil de barbero? Vincúlalo a tu cuenta:",
+      itsMe: "Soy yo: {name}",
     },
     branches: {
       newBranch: "Nueva sucursal",
