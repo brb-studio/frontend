@@ -1,0 +1,1922 @@
+[
+  {
+    "file": "desktop-agenda-dark.avif",
+    "id": "desktop-agenda-dark",
+    "device": "desktop",
+    "screen": "agenda",
+    "scheme": "dark",
+    "route": "/es/admin/agenda",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAAAwAQCdASoQAAoAA4BaJaQAA3AA/vNAxUnf+lIPyW4cNc+AAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-agenda-dark@1x.avif",
+        "2x": "/landing/shots/desktop-agenda-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-agenda-dark@1x.webp",
+        "2x": "/landing/shots/desktop-agenda-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 72338,
+      "webp2x": 114978,
+      "avif1x": 31025,
+      "webp1x": 43854
+    }
+  },
+  {
+    "file": "desktop-agenda-dark-en.avif",
+    "id": "desktop-agenda-dark-en",
+    "device": "desktop",
+    "screen": "agenda",
+    "scheme": "dark",
+    "route": "/en/admin/agenda",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAAAwAQCdASoQAAoAA4BaJaQAA3AA/vNAxUnf+lIPyW4cNc+AAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-agenda-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-agenda-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-agenda-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-agenda-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 73635,
+      "webp2x": 116836,
+      "avif1x": 31987,
+      "webp1x": 44974
+    }
+  },
+  {
+    "file": "desktop-agenda-light.avif",
+    "id": "desktop-agenda-light",
+    "device": "desktop",
+    "screen": "agenda",
+    "scheme": "light",
+    "route": "/es/admin/agenda",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAACQAQCdASoQAAoAA4BaJaQAAudPjMAA/vZaiYakh/IAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-agenda-light@1x.avif",
+        "2x": "/landing/shots/desktop-agenda-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-agenda-light@1x.webp",
+        "2x": "/landing/shots/desktop-agenda-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 68623,
+      "webp2x": 110210,
+      "avif1x": 27490,
+      "webp1x": 41732
+    }
+  },
+  {
+    "file": "desktop-agenda-light-en.avif",
+    "id": "desktop-agenda-light-en",
+    "device": "desktop",
+    "screen": "agenda",
+    "scheme": "light",
+    "route": "/en/admin/agenda",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAAAwAQCdASoQAAoAA4BaJaQAA3AA/vS2jvRat9PO7pIAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-agenda-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-agenda-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-agenda-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-agenda-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 70625,
+      "webp2x": 112790,
+      "avif1x": 28771,
+      "webp1x": 42770
+    }
+  },
+  {
+    "file": "desktop-branches-dark.avif",
+    "id": "desktop-branches-dark",
+    "device": "desktop",
+    "screen": "branches",
+    "scheme": "dark",
+    "route": "/es/admin/branches",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAAAwAQCdASoQAAoAA4BaJaQAA3AA/vQtI0mIzoroX6O8C2JFwT9AAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-branches-dark@1x.avif",
+        "2x": "/landing/shots/desktop-branches-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-branches-dark@1x.webp",
+        "2x": "/landing/shots/desktop-branches-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 60132,
+      "webp2x": 96096,
+      "avif1x": 29746,
+      "webp1x": 37150
+    }
+  },
+  {
+    "file": "desktop-branches-dark-en.avif",
+    "id": "desktop-branches-dark-en",
+    "device": "desktop",
+    "screen": "branches",
+    "scheme": "dark",
+    "route": "/en/admin/branches",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjQAAABXRUJQVlA4ICgAAACwAQCdASoQAAoAA4BaJaQAAud9E+AAAP72vs1W6XwNOte/HwkVQAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-branches-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-branches-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-branches-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-branches-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 57656,
+      "webp2x": 91650,
+      "avif1x": 28614,
+      "webp1x": 35396
+    }
+  },
+  {
+    "file": "desktop-branches-light.avif",
+    "id": "desktop-branches-light",
+    "device": "desktop",
+    "screen": "branches",
+    "scheme": "light",
+    "route": "/es/admin/branches",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACQAQCdASoQAAoAA4BaJaQAAudFrAAA/vgnHn3UGeUv8gAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-branches-light@1x.avif",
+        "2x": "/landing/shots/desktop-branches-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-branches-light@1x.webp",
+        "2x": "/landing/shots/desktop-branches-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 55869,
+      "webp2x": 91054,
+      "avif1x": 26732,
+      "webp1x": 35116
+    }
+  },
+  {
+    "file": "desktop-branches-light-en.avif",
+    "id": "desktop-branches-light-en",
+    "device": "desktop",
+    "screen": "branches",
+    "scheme": "light",
+    "route": "/en/admin/branches",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACQAQCdASoQAAoAA4BaJaQAAudFrAAA/vgnHn3UGeUv8gAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-branches-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-branches-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-branches-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-branches-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 53377,
+      "webp2x": 86868,
+      "avif1x": 25402,
+      "webp1x": 33552
+    }
+  },
+  {
+    "file": "desktop-cash-dark.avif",
+    "id": "desktop-cash-dark",
+    "device": "desktop",
+    "screen": "cash",
+    "scheme": "dark",
+    "route": "/es/admin/cash",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoQAAoAA4BaJaQAApZHkQgAAP715NrJNr3v9q43X91QVeSAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-cash-dark@1x.avif",
+        "2x": "/landing/shots/desktop-cash-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-cash-dark@1x.webp",
+        "2x": "/landing/shots/desktop-cash-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 88821,
+      "webp2x": 136120,
+      "avif1x": 38002,
+      "webp1x": 53050
+    }
+  },
+  {
+    "file": "desktop-cash-dark-en.avif",
+    "id": "desktop-cash-dark-en",
+    "device": "desktop",
+    "screen": "cash",
+    "scheme": "dark",
+    "route": "/en/admin/cash",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjQAAABXRUJQVlA4ICgAAADQAQCdASoQAAoAA4BaJaQAAxbkMCGn4AD+9eTax/DagbrjScXgwAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-cash-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-cash-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-cash-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-cash-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 87822,
+      "webp2x": 134242,
+      "avif1x": 37263,
+      "webp1x": 52756
+    }
+  },
+  {
+    "file": "desktop-cash-light.avif",
+    "id": "desktop-cash-light",
+    "device": "desktop",
+    "screen": "cash",
+    "scheme": "light",
+    "route": "/es/admin/cash",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAABwAQCdASoQAAoAA4BaJaWVuAGIAAD+9H/7xA3gpEwB+wjwAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-cash-light@1x.avif",
+        "2x": "/landing/shots/desktop-cash-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-cash-light@1x.webp",
+        "2x": "/landing/shots/desktop-cash-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 84059,
+      "webp2x": 131080,
+      "avif1x": 35010,
+      "webp1x": 49780
+    }
+  },
+  {
+    "file": "desktop-cash-light-en.avif",
+    "id": "desktop-cash-light-en",
+    "device": "desktop",
+    "screen": "cash",
+    "scheme": "light",
+    "route": "/en/admin/cash",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAABwAQCdASoQAAoAA4BaJaWDrAGIAAD+9H/7jlfSLvZznnE6gAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-cash-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-cash-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-cash-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-cash-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 83659,
+      "webp2x": 130176,
+      "avif1x": 34644,
+      "webp1x": 49790
+    }
+  },
+  {
+    "file": "desktop-customers-dark.avif",
+    "id": "desktop-customers-dark",
+    "device": "desktop",
+    "screen": "customers",
+    "scheme": "dark",
+    "route": "/es/admin/customers",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAADQAQCdASoQAAoAA4BaJaQAAxZhK6acAAD+9d+8ahtVKb+AAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-customers-dark@1x.avif",
+        "2x": "/landing/shots/desktop-customers-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-customers-dark@1x.webp",
+        "2x": "/landing/shots/desktop-customers-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 56898,
+      "webp2x": 93676,
+      "avif1x": 30948,
+      "webp1x": 40220
+    }
+  },
+  {
+    "file": "desktop-customers-dark-en.avif",
+    "id": "desktop-customers-dark-en",
+    "device": "desktop",
+    "screen": "customers",
+    "scheme": "dark",
+    "route": "/en/admin/customers",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAADQAQCdASoQAAoAA4BaJaQAAudP+UnoAAD+9d+8O03Oc2i3KzlAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-customers-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-customers-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-customers-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-customers-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 54708,
+      "webp2x": 90782,
+      "avif1x": 30078,
+      "webp1x": 38976
+    }
+  },
+  {
+    "file": "desktop-customers-light.avif",
+    "id": "desktop-customers-light",
+    "device": "desktop",
+    "screen": "customers",
+    "scheme": "light",
+    "route": "/es/admin/customers",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRi4AAABXRUJQVlA4ICIAAACQAQCdASoQAAoAA4BaJaQAApz9twAA/vZdNYg0noZEaAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-customers-light@1x.avif",
+        "2x": "/landing/shots/desktop-customers-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-customers-light@1x.webp",
+        "2x": "/landing/shots/desktop-customers-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 57756,
+      "webp2x": 93576,
+      "avif1x": 28628,
+      "webp1x": 39186
+    }
+  },
+  {
+    "file": "desktop-customers-light-en.avif",
+    "id": "desktop-customers-light-en",
+    "device": "desktop",
+    "screen": "customers",
+    "scheme": "light",
+    "route": "/en/admin/customers",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAAAwAQCdASoQAAoAA4BaJaQAA3AA/vR/qm3IetwSgAAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-customers-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-customers-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-customers-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-customers-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 55346,
+      "webp2x": 90488,
+      "avif1x": 27850,
+      "webp1x": 37896
+    }
+  },
+  {
+    "file": "desktop-revenue-dark.avif",
+    "id": "desktop-revenue-dark",
+    "device": "desktop",
+    "screen": "revenue",
+    "scheme": "dark",
+    "route": "/es/admin/revenue",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoQAAoAA4BaJZwAAujbw15ieAD+9r7D3fbAFXjG64MTw4dXU5HD2IcaigAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-revenue-dark@1x.avif",
+        "2x": "/landing/shots/desktop-revenue-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-revenue-dark@1x.webp",
+        "2x": "/landing/shots/desktop-revenue-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 60720,
+      "webp2x": 97512,
+      "avif1x": 28960,
+      "webp1x": 38838
+    }
+  },
+  {
+    "file": "desktop-revenue-dark-en.avif",
+    "id": "desktop-revenue-dark-en",
+    "device": "desktop",
+    "screen": "revenue",
+    "scheme": "dark",
+    "route": "/en/admin/revenue",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADwAQCdASoQAAoAA4BaJZwAAujbw2HujoAA/va+zbTFIjczKn8RwUERh/Sc4VoAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-revenue-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-revenue-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-revenue-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-revenue-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 60274,
+      "webp2x": 96964,
+      "avif1x": 28502,
+      "webp1x": 38914
+    }
+  },
+  {
+    "file": "desktop-revenue-light.avif",
+    "id": "desktop-revenue-light",
+    "device": "desktop",
+    "screen": "revenue",
+    "scheme": "light",
+    "route": "/es/admin/revenue",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAABQAQCdASoQAAoAA4BaJZwABAAAAP70Pj5f9Bj14lP1x8w/Rdrqk04o4zQqZ0INUAAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-revenue-light@1x.avif",
+        "2x": "/landing/shots/desktop-revenue-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-revenue-light@1x.webp",
+        "2x": "/landing/shots/desktop-revenue-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 56167,
+      "webp2x": 92510,
+      "avif1x": 26074,
+      "webp1x": 36866
+    }
+  },
+  {
+    "file": "desktop-revenue-light-en.avif",
+    "id": "desktop-revenue-light-en",
+    "device": "desktop",
+    "screen": "revenue",
+    "scheme": "light",
+    "route": "/en/admin/revenue",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAAAwAQCdASoQAAoAA4BaJZwAA3AA/vQ+Pl/0GPXiU/26XJBQvHtR304o4zQqZ0INbLCAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-revenue-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-revenue-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-revenue-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-revenue-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 55304,
+      "webp2x": 92832,
+      "avif1x": 25692,
+      "webp1x": 36890
+    }
+  },
+  {
+    "file": "desktop-settings-dark.avif",
+    "id": "desktop-settings-dark",
+    "device": "desktop",
+    "screen": "settings",
+    "scheme": "dark",
+    "route": "/es/admin/settings",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAoAA4BaJZQAAudfL0fTtAD+9r96RxWfc86C65BN6VGSGYfX+rtRu5fLbuU1oc662cFi87DBicJFJpfM8FIInc0LCHwA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-settings-dark@1x.avif",
+        "2x": "/landing/shots/desktop-settings-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-settings-dark@1x.webp",
+        "2x": "/landing/shots/desktop-settings-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 53597,
+      "webp2x": 87938,
+      "avif1x": 25598,
+      "webp1x": 35818
+    }
+  },
+  {
+    "file": "desktop-settings-dark-en.avif",
+    "id": "desktop-settings-dark-en",
+    "device": "desktop",
+    "screen": "settings",
+    "scheme": "dark",
+    "route": "/en/admin/settings",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAoAA4BaJZQAAudfLixAAAD+9r96RxQ26f2sY1jGH1dK9pff/CIBvGpMF9EzgAchRQbo9FJALda8boraZk3se8mhYQ+AAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-settings-dark-en@1x.avif",
+        "2x": "/landing/shots/desktop-settings-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-settings-dark-en@1x.webp",
+        "2x": "/landing/shots/desktop-settings-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 52956,
+      "webp2x": 86166,
+      "avif1x": 25159,
+      "webp1x": 35110
+    }
+  },
+  {
+    "file": "desktop-settings-light.avif",
+    "id": "desktop-settings-light",
+    "device": "desktop",
+    "screen": "settings",
+    "scheme": "light",
+    "route": "/es/admin/settings",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAoAA4BaJYwAAp1eitFJ3AD++CdPvDvBKJha+lSEdNka9enIMv6RpV7XEQLi98yF7EOdSltBALETsd54SV8+WxiLDGKzMYEry6AA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-settings-light@1x.avif",
+        "2x": "/landing/shots/desktop-settings-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-settings-light@1x.webp",
+        "2x": "/landing/shots/desktop-settings-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 48955,
+      "webp2x": 82618,
+      "avif1x": 23439,
+      "webp1x": 33808
+    }
+  },
+  {
+    "file": "desktop-settings-light-en.avif",
+    "id": "desktop-settings-light-en",
+    "device": "desktop",
+    "screen": "settings",
+    "scheme": "light",
+    "route": "/en/admin/settings",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 2880,
+    "height": 1800,
+    "blurDataURL": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAQCdASoQAAoAA4BaJYwAAp1eitFJ3AD++CdPvDuns3nKFK0/j540UQg/1FpZd9l8B3tqsR1pZNw46KTFZXcI5smpbAgBmd6Wzzr6bAasclCAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/desktop-settings-light-en@1x.avif",
+        "2x": "/landing/shots/desktop-settings-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/desktop-settings-light-en@1x.webp",
+        "2x": "/landing/shots/desktop-settings-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 47893,
+      "webp2x": 81300,
+      "avif1x": 22882,
+      "webp1x": 33142
+    }
+  },
+  {
+    "file": "phone-become-barber-dark.avif",
+    "id": "phone-become-barber-dark",
+    "device": "phone",
+    "screen": "become-barber",
+    "scheme": "dark",
+    "route": "/es/admin/my-day",
+    "lang": "es",
+    "role": "admin",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwAwCdASoQACMAPt1cpk2opSOiNUgBEBuJZwAAex/fHlw2Y/atKX74AP7w5FMNRnrUtHFmjNbydG9nxMce4pSQhqGApgFFenj6T6UgfQm3KhwF7SJfnxP1sBKf/Sy2suvixWezrX8pqHkgAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-become-barber-dark@1x.avif",
+        "2x": "/landing/shots/phone-become-barber-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-become-barber-dark@1x.webp",
+        "2x": "/landing/shots/phone-become-barber-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 28344,
+      "webp2x": 44318,
+      "avif1x": 12446,
+      "webp1x": 18100
+    }
+  },
+  {
+    "file": "phone-become-barber-dark-en.avif",
+    "id": "phone-become-barber-dark-en",
+    "device": "phone",
+    "screen": "become-barber",
+    "scheme": "dark",
+    "route": "/en/admin/my-day",
+    "lang": "en",
+    "role": "admin",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACQAwCdASoQACMAPu1irE2ppaSiKqwBMB2JZwAATxAEqOofVpggAP7wJoxCON51tBz3PTLv7fnqkLejdaFGdw8kwkNbwc09O4Hbh1/X80jx8/la2F6Tq8oCU/+lltZUmdpkdkSBRHMaPwAAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-become-barber-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-become-barber-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-become-barber-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-become-barber-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 25546,
+      "webp2x": 39554,
+      "avif1x": 11268,
+      "webp1x": 16568
+    }
+  },
+  {
+    "file": "phone-become-barber-light.avif",
+    "id": "phone-become-barber-light",
+    "device": "phone",
+    "screen": "become-barber",
+    "scheme": "light",
+    "route": "/es/admin/my-day",
+    "lang": "es",
+    "role": "admin",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBACdASoQACMAPu1aqU2ppKQiNVgIATAdiWcAAL+P7NgYVjm2IJiD6lgA/vPuDhVOalzooA183YkmYhSsztYbRwzCGst4kR7vWzjNbv6V6Y9QETn3yPRmwrfnDiVsgjaeqGId1/FV06f8/XyIY+Jon+7vv/8WW7KMBD8dU+RWgTb69ZSsxqk2HcY6AAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-become-barber-light@1x.avif",
+        "2x": "/landing/shots/phone-become-barber-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-become-barber-light@1x.webp",
+        "2x": "/landing/shots/phone-become-barber-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 29405,
+      "webp2x": 45360,
+      "avif1x": 12077,
+      "webp1x": 18472
+    }
+  },
+  {
+    "file": "phone-become-barber-light-en.avif",
+    "id": "phone-become-barber-light-en",
+    "device": "phone",
+    "screen": "become-barber",
+    "scheme": "light",
+    "route": "/en/admin/my-day",
+    "lang": "en",
+    "role": "admin",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoQACMAPtlepE2oJaOiNUgBABsJZwAAexr/xuJbKC2EDYmAAP7uJIwNwU+tBChB5sNfYxWg2DU59U2bct9wP5QjScYtxE2dSyWg2o2cwo4YEmJTEoD/X6hajH+fdGQXenNecjwr8xtWPdnaJDLJW/k1g34WcTt9N8jFkDYAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-become-barber-light-en@1x.avif",
+        "2x": "/landing/shots/phone-become-barber-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-become-barber-light-en@1x.webp",
+        "2x": "/landing/shots/phone-become-barber-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 26664,
+      "webp2x": 40498,
+      "avif1x": 10993,
+      "webp1x": 16800
+    }
+  },
+  {
+    "file": "phone-booking-barber-dark.avif",
+    "id": "phone-booking-barber-dark",
+    "device": "phone",
+    "screen": "booking-barber",
+    "scheme": "dark",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAwBACdASoQACMAPu1eqU2ppKQiNVgIATAdiWcAAL+G1ZsQNXDX1sbdIAAA/vRcrVJcx0RGEl6zIvqekS2lytxm0tRXnlIGAF7cIyKHqo89hv1xmdc3Dl1rciUrzVan4IjJp/gXgYQxcf+ONzRHlw64r9fn1juv7G81clVolTc7rZl6FCkAkyD/oIAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-barber-dark@1x.avif",
+        "2x": "/landing/shots/phone-booking-barber-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-barber-dark@1x.webp",
+        "2x": "/landing/shots/phone-booking-barber-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 33118,
+      "webp2x": 45684,
+      "avif1x": 16692,
+      "webp1x": 21178
+    }
+  },
+  {
+    "file": "phone-booking-barber-dark-en.avif",
+    "id": "phone-booking-barber-dark-en",
+    "device": "phone",
+    "screen": "booking-barber",
+    "scheme": "dark",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwBACdASoQACMAPt1cpE2opSOiNUgBEBuJZwAAeeKMkIVZM36M5UIYYLZg2QwAAP7uzoOCBisMWZX3uF0sUhkQ3HHzhiDi03IXbpVKoINQZOdraNSa+gQg6l+xBr/QpxCIh//BGf3aIA97Kl9293F7iqLJAvlznc5VlgUdUoNQttfYAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-barber-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-barber-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-barber-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-barber-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 32118,
+      "webp2x": 44564,
+      "avif1x": 16355,
+      "webp1x": 20666
+    }
+  },
+  {
+    "file": "phone-booking-barber-light.avif",
+    "id": "phone-booking-barber-light",
+    "device": "phone",
+    "screen": "booking-barber",
+    "scheme": "light",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAwBACdASoQACMAPuFkpU2opiOiNVgIARAcCWcAAD5aH9ao16tpIK0gW5AA/urwqIRn7OYk1Fo0bbPtDqdfKe9NCE40McEtApq2dWp/WhCOZDI0vBsQ5JXKclRMxGESX2Q42ZSxhOedqurnu2DHthhBGala1wJa9hJGPv4ONxo8yxz9D+z6FxQ9IqZIyRGwSZB/0EAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-barber-light@1x.avif",
+        "2x": "/landing/shots/phone-booking-barber-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-barber-light@1x.webp",
+        "2x": "/landing/shots/phone-booking-barber-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 30969,
+      "webp2x": 43128,
+      "avif1x": 14556,
+      "webp1x": 19414
+    }
+  },
+  {
+    "file": "phone-booking-barber-light-en.avif",
+    "id": "phone-booking-barber-light-en",
+    "device": "phone",
+    "screen": "booking-barber",
+    "scheme": "light",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoQACMAPu1mq04ppaQiKqwBMB2JZwAD5PleHqLhaIn2OGfOD9ZKkAD+6ujuWwjLpuGq3qY3jPPzxRs8n3IpAmWvqXoZY7+IJRq9nonUkYq9oPxCxyaWv53vzGpvl/h9ozPnAkVwBr+cLGMvjRH2+VlmNATTqjz2JWVoExqQCUwFqmf1dhw/JQ5MaYSZB/0EAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-barber-light-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-barber-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-barber-light-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-barber-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 30093,
+      "webp2x": 42116,
+      "avif1x": 14302,
+      "webp1x": 18944
+    }
+  },
+  {
+    "file": "phone-booking-branch-dark.avif",
+    "id": "phone-booking-branch-dark",
+    "device": "phone",
+    "screen": "booking-branch",
+    "scheme": "dark",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACwBACdASoQACMAPu1qrVCppaQiqqgBMB2JZwAAPZB6Z09CAen6B2DrPc3OEe0gAP7sBdvhzt7Y8qgHPUfXLSIHBIWB5Ynf0lzNk/sx5ssb1Fxji+ZrV/vqLlmmTZtOQSb6bya11tbo8eDvWCP2Z3X+HYbh72JVMK4FEVWSv49f7+PWnvPGzg5ornK+sCA0w78Hxa219gAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-branch-dark@1x.avif",
+        "2x": "/landing/shots/phone-booking-branch-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-branch-dark@1x.webp",
+        "2x": "/landing/shots/phone-booking-branch-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 33794,
+      "webp2x": 45306,
+      "avif1x": 16442,
+      "webp1x": 21348
+    }
+  },
+  {
+    "file": "phone-booking-branch-dark-en.avif",
+    "id": "phone-booking-branch-dark-en",
+    "device": "phone",
+    "screen": "booking-branch",
+    "scheme": "dark",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACwBACdASoQACMAPu1qrVCppaQiqqgBMB2JZwAAPa+vWMdsloqyfgKWBp3B45wAAP7sBdvhad5pQIjApX4WYs3pbceu3z7l5lwfI6ZV2HUXMQYHKB0f5f0tUBUXS+IDoawYxiT2ob2ohWxFOa8ySMIdF0Qgdlw5QtiS9SqXGM+Y3h6NtKRJnEXI4v0OMx9tnerVMwBvdyAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-branch-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-branch-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-branch-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-branch-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 34034,
+      "webp2x": 45878,
+      "avif1x": 16868,
+      "webp1x": 21690
+    }
+  },
+  {
+    "file": "phone-booking-branch-light.avif",
+    "id": "phone-booking-branch-light",
+    "device": "phone",
+    "screen": "booking-branch",
+    "scheme": "light",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAAAwBACdASoQACMAPu1srlEppiQiqqgBMB2JZQAAPY9Lun09dSuoWWvLzBAA/uqnCiL58hRMn42c3L8dg3EpiCh5O2IaWFwpaHPZE3rtghA8XAFOcFCKibTEYBKs5G8PvH11U7EsDkGlw6vEU4b+/zrxMWnmbStQ/VfAU/ISW926hv3zOQ4wzAG2p2liY+sexPOO41VMgIo53AZWcAAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-branch-light@1x.avif",
+        "2x": "/landing/shots/phone-booking-branch-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-branch-light@1x.webp",
+        "2x": "/landing/shots/phone-booking-branch-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 32023,
+      "webp2x": 43320,
+      "avif1x": 14910,
+      "webp1x": 19914
+    }
+  },
+  {
+    "file": "phone-booking-branch-light-en.avif",
+    "id": "phone-booking-branch-light-en",
+    "device": "phone",
+    "screen": "booking-branch",
+    "scheme": "light",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAADQBACdASoQACMAPu1mqE8ppaOiKqwBMB2JZQAD5ele0xHIhPuYesdFpJCC8n07AAD+6qZyQwqxComnEYRehYJFioBEXc6g9H4HLk5cxsdi+BKi3iD+8XA7RDGh+/I64z8HgJkVe6aT9Oy7NYMqV948LYizJqkUGy2NXnj5r/3821/oGvnUxZa8jzwREloh6EK6Vj2x0689+BofbYFx3H+WJkH/cKAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-branch-light-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-branch-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-branch-light-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-branch-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 32159,
+      "webp2x": 43810,
+      "avif1x": 15095,
+      "webp1x": 20188
+    }
+  },
+  {
+    "file": "phone-booking-confirm-dark.avif",
+    "id": "phone-booking-confirm-dark",
+    "device": "phone",
+    "screen": "booking-confirm",
+    "scheme": "dark",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACQBACdASoQACMAPu1mqE8ppaOiKqwBMB2JZQDM0EYYrtQCcxh2BJvgVJM5fhAA/vedWEMlVJ8PcE80YVUgYguavrGQKXI2cgUbeDp1YsTDY8R3lS6x5qgeR0efF2JRVTOW+qGOse7MATDjK1AWxfIutCrkVEsDlESKTeVJ4p4GeK2/UaaIXvmalWgtKwkf31iT94DT8IKN2VygrQAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-confirm-dark@1x.avif",
+        "2x": "/landing/shots/phone-booking-confirm-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-confirm-dark@1x.webp",
+        "2x": "/landing/shots/phone-booking-confirm-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 31394,
+      "webp2x": 43624,
+      "avif1x": 15939,
+      "webp1x": 20410
+    }
+  },
+  {
+    "file": "phone-booking-confirm-dark-en.avif",
+    "id": "phone-booking-confirm-dark-en",
+    "device": "phone",
+    "screen": "booking-confirm",
+    "scheme": "dark",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACQBACdASoQACMAPu1krE4ppaSiKqwBMB2JZQDLpEXaxq3Qgk8cOvHqjcXiS6AA/vayGPo0SZE1CCaXxXZG7L4Sw4I89RkN0+T0PYU8cPC+3SkLsHZ65eCPKwvwURtNRbTTfb4waYgicrt2509+UcBJbO+J9pIoUh3Mt4pkFqk4qvChSoA7/uEa8BlU9vIuU29Ru0o6D1MwS8De7nzQAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-confirm-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-confirm-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-confirm-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-confirm-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 30588,
+      "webp2x": 43044,
+      "avif1x": 15857,
+      "webp1x": 20276
+    }
+  },
+  {
+    "file": "phone-booking-confirm-light.avif",
+    "id": "phone-booking-confirm-light",
+    "device": "phone",
+    "screen": "booking-confirm",
+    "scheme": "light",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAABQBACdASoQACMAPu1kqk6ppaOiKqwBMB2JZQDNwEXat9srFgXYmkQcy+UAAP72Yzodw9p46o26LudKWN2pgs8uMH/s7+VZ6jFfetEzWwc2TrEKso1T5wJbUY7EACDyNb4ucvxtWEfQfGDvJpGRCXtmxi9+uh89j+7KOC6KcB6nFxWUPArF+74lrfkNr7wJv0IV4jaoEgEVjS2agu0tGxvBzeD4tba+wAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-confirm-light@1x.avif",
+        "2x": "/landing/shots/phone-booking-confirm-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-confirm-light@1x.webp",
+        "2x": "/landing/shots/phone-booking-confirm-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 29821,
+      "webp2x": 41970,
+      "avif1x": 14349,
+      "webp1x": 19156
+    }
+  },
+  {
+    "file": "phone-booking-confirm-light-en.avif",
+    "id": "phone-booking-confirm-light-en",
+    "device": "phone",
+    "screen": "booking-confirm",
+    "scheme": "light",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAADQBACdASoQACMAPu1mqk6ppaOiKqwBMB2JZQDO7YyBzIwJd4Yu1/bLmkQY1T/pQAD+9mM6HcKVWnVtvj5QbVL0UUOjQsqTT/DHm0vpFG4Gt6lBMVkZ14/2G3VCWrLSCk6XRB3A31zqMNiT14dqx685ISJCYgBy/ZQW5RpTXxRj/MPtCvqScZ95pxEtxShncH6EK6V4MzJRaHEkI+Oq6cl4tba+wAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-confirm-light-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-confirm-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-confirm-light-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-confirm-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 28900,
+      "webp2x": 41132,
+      "avif1x": 14260,
+      "webp1x": 19046
+    }
+  },
+  {
+    "file": "phone-booking-date-dark.avif",
+    "id": "phone-booking-date-dark",
+    "device": "phone",
+    "screen": "booking-date",
+    "scheme": "dark",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAwBACdASoQACMAPu1mq04ppaQiKqwBMB2JYwDO7HVuvU4hogjvcXVtbogA/vzAtMP52azcp7qDyO3SzMGNXF48NlN5hWi04RJTyC8Ze6YTjCfyJCDQNLLZkdSEPG7a0DJ3FDm1UZ//IldgUmJMOseQHOov+iJgoI0yEb1c/UIIoAPUQAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-date-dark@1x.avif",
+        "2x": "/landing/shots/phone-booking-date-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-date-dark@1x.webp",
+        "2x": "/landing/shots/phone-booking-date-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 29497,
+      "webp2x": 40428,
+      "avif1x": 15216,
+      "webp1x": 18742
+    }
+  },
+  {
+    "file": "phone-booking-date-dark-en.avif",
+    "id": "phone-booking-date-dark-en",
+    "device": "phone",
+    "screen": "booking-date",
+    "scheme": "dark",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAABQBACdASoQACMAPuVmrU2pJiUiNUgBIByJYwAFEAPQd489cIKxk+gVmTGAAP7uzoNLOqNlCPAERyZwARnLWIMgyz/rSv0gtOrZsrA+3ZTWgdpSXlRT6Ru+U9AwsVuqbiL7e67dey1o+zex8Zg9J7q/YlqFvvQb9bG8IN4cVFJXmc/+xMdPA7J6AAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-date-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-date-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-date-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-date-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 28151,
+      "webp2x": 38922,
+      "avif1x": 14522,
+      "webp1x": 18094
+    }
+  },
+  {
+    "file": "phone-booking-date-light.avif",
+    "id": "phone-booking-date-light",
+    "device": "phone",
+    "screen": "booking-date",
+    "scheme": "light",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoQACMAPt1epk2opaOiNUgBEBuJQApgA067PKi9ztOjAadHjCx4AP78OBS5g/51zdQv5q0UTG51361o+KLqeannKKAE1dxnsBCjROlGBw1gCsMJg/eJSk7I0jgBW6PpY1IPW4CGMLPM2nsbDoNUOPYoEoaGszAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-date-light@1x.avif",
+        "2x": "/landing/shots/phone-booking-date-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-date-light@1x.webp",
+        "2x": "/landing/shots/phone-booking-date-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 27256,
+      "webp2x": 37968,
+      "avif1x": 13197,
+      "webp1x": 16804
+    }
+  },
+  {
+    "file": "phone-booking-date-light-en.avif",
+    "id": "phone-booking-date-light-en",
+    "device": "phone",
+    "screen": "booking-date",
+    "scheme": "light",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwBACdASoQACMAPulgqk2pJaQiNVgIASAdCUAKYANOuzwI5Bi33ylG1KILA8oAAP78OBS5g/51zdQv5q0UTG5136vfF435FMaJm9LpYC2fRcz6Bpoy/tkV16di1AKwpVGt+WMDdGP1Kuv/iqsEc/HIbUH5Lbo7vFtm1qJaeNOvvuuAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-date-light-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-date-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-date-light-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-date-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 26036,
+      "webp2x": 36298,
+      "avif1x": 12666,
+      "webp1x": 16228
+    }
+  },
+  {
+    "file": "phone-booking-time-dark.avif",
+    "id": "phone-booking-time-dark",
+    "device": "phone",
+    "screen": "booking-time",
+    "scheme": "dark",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABQBACdASoQACMAPt1cpU2opSOiNUgBEBuJZQAAeiB0PL2tcHy1dzOsaEEwAP7xBQqlKZmv/BCMvwUqD3gLgG8V2m2bKa8yBwvkThFNdJHhu2hDKbC5fWa9NDU2B6rOTkcl4auy8I91bYT9aOImKcvew1hgkZchu1630z1gl+9PmvIfTpdks48fH3GdBdmfCGBqFtr7AAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-time-dark@1x.avif",
+        "2x": "/landing/shots/phone-booking-time-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-time-dark@1x.webp",
+        "2x": "/landing/shots/phone-booking-time-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 31015,
+      "webp2x": 43572,
+      "avif1x": 15965,
+      "webp1x": 19464
+    }
+  },
+  {
+    "file": "phone-booking-time-dark-en.avif",
+    "id": "phone-booking-time-dark-en",
+    "device": "phone",
+    "screen": "booking-time",
+    "scheme": "dark",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABwBACdASoQACMAPuleqE2pJSOiNVgIASAdCWUAAL8Q5+jR+KnuTQfhpBpDwAD+9ZHBwQO7G5y9gK81+qDLvrqBAZ0esK0GJl5/iVFFC7Zcm11+6AzxHQGAzE50V+ihIEeBqLq2CkgdP1o4htcjiFwgU9OTKH36YYulnxufQXt45w4Xsgh+fTXQVA15lJgHA8eXsUAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-time-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-time-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-time-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-time-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 28825,
+      "webp2x": 40724,
+      "avif1x": 15185,
+      "webp1x": 18942
+    }
+  },
+  {
+    "file": "phone-booking-time-light.avif",
+    "id": "phone-booking-time-light",
+    "device": "phone",
+    "screen": "booking-time",
+    "scheme": "light",
+    "route": "/es/services/corte-signature",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAACQBACdASoQACMAPu1kqU6ppaOiKqwBMB2JZQAD5dQ+IpWIZ762wPvNJ5BEqqAA/vZjOh3ChVpgoaR+cBWuJuLqC1bbVFbfzOCv3fcAzwCzU1DROSAt1LKOKlOb5GX3nTUANGh+FdCvbBBzHLY2vmSbl9aOIbXI4hejsxbjoZH2veYlK9hQAZ3wH+zT12lQw4vZPME4efJku16gVMLBqFtr7AAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-time-light@1x.avif",
+        "2x": "/landing/shots/phone-booking-time-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-time-light@1x.webp",
+        "2x": "/landing/shots/phone-booking-time-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 30372,
+      "webp2x": 43112,
+      "avif1x": 14692,
+      "webp1x": 19662
+    }
+  },
+  {
+    "file": "phone-booking-time-light-en.avif",
+    "id": "phone-booking-time-light-en",
+    "device": "phone",
+    "screen": "booking-time",
+    "scheme": "light",
+    "route": "/en/services/corte-signature",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAACQBACdASoQACMAPu1qrlCppaQiqqgBMB2JZQAA/iEC3UjGA3yTYzQNNhkG4AAA/vpJkHH7WrwqgeuPx6kA+vCwTF5nnccxw06eoFB2uoY4WkCX0ecD0SX2ptm9KWA5GX3qY3/SPDh3WSVd+FS2DppYSZ9aOIbXI4hexZfp4Sh/S0Icf7CPM0Z4gowcDLNBeHZD2O07sdXKlQNSdccABB/0EAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-booking-time-light-en@1x.avif",
+        "2x": "/landing/shots/phone-booking-time-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-booking-time-light-en@1x.webp",
+        "2x": "/landing/shots/phone-booking-time-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 28416,
+      "webp2x": 40148,
+      "avif1x": 14184,
+      "webp1x": 18550
+    }
+  },
+  {
+    "file": "phone-counter-dark.avif",
+    "id": "phone-counter-dark",
+    "device": "phone",
+    "screen": "counter",
+    "scheme": "dark",
+    "route": "/es/admin/agenda",
+    "lang": "es",
+    "role": "manager",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACQBACdASoQACMAPu1cqE2ppKOiNVgIATAdiWkAAD8NfwSAjFwAL3q4O+A9dvgA/u7NhaI2tpa4hl0ALu3Z7883vRh7sgcUQtk365WLrpQEwj6we5Z0LKA/PrKAd2l0QjLXwTy0cBjMvemby8kKJieF6G68o0CiigqgAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-counter-dark@1x.avif",
+        "2x": "/landing/shots/phone-counter-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-counter-dark@1x.webp",
+        "2x": "/landing/shots/phone-counter-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 45433,
+      "webp2x": 67724,
+      "avif1x": 20407,
+      "webp1x": 26636
+    }
+  },
+  {
+    "file": "phone-counter-dark-en.avif",
+    "id": "phone-counter-dark-en",
+    "device": "phone",
+    "screen": "counter",
+    "scheme": "dark",
+    "route": "/en/admin/agenda",
+    "lang": "en",
+    "role": "manager",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACQBACdASoQACMAPu1cqE2ppKOiNVgIATAdiWkAAD8PInjAT6Lh+oQq+mbngYAA/u7NhaI2tpa4g29vjdk/RvLs/fTgag/6c+zrJgU+kGIMbxili8Mvu1gaDGMBD2DAnFHIR8FMF1IU057rLyNDqqP56FLn6UFJVEqKAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-counter-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-counter-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-counter-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-counter-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 46359,
+      "webp2x": 69224,
+      "avif1x": 20705,
+      "webp1x": 27618
+    }
+  },
+  {
+    "file": "phone-counter-light.avif",
+    "id": "phone-counter-light",
+    "device": "phone",
+    "screen": "counter",
+    "scheme": "light",
+    "route": "/es/admin/agenda",
+    "lang": "es",
+    "role": "manager",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACQBACdASoQACMAPu1qrlEppaQiqqgBMB2JaQAA/x+SUVjrE/OExJ7alMtf/YAA/vmpjrQakUoYHtPwx4pwFzFQmGxzbnu0tf15Km5lq5/7L4X8Loloj/VWDySaJ7XCe1YCPt+1gH5XT3E/aEULHVFvoJumCMLJXNVdnBpNm0DQbQAAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-counter-light@1x.avif",
+        "2x": "/landing/shots/phone-counter-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-counter-light@1x.webp",
+        "2x": "/landing/shots/phone-counter-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 45891,
+      "webp2x": 68064,
+      "avif1x": 19179,
+      "webp1x": 26186
+    }
+  },
+  {
+    "file": "phone-counter-light-en.avif",
+    "id": "phone-counter-light-en",
+    "device": "phone",
+    "screen": "counter",
+    "scheme": "light",
+    "route": "/en/admin/agenda",
+    "lang": "en",
+    "role": "manager",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAACwAwCdASoQACMAPu1oqE8ppiOiKqwBMB2JaQAAzgqUrZ2+0fLSIAD+9bJoksA+1f9240NcD7ddd8hY6N5KR5MuTKN3ZIaSGSJKwBIt9xdqzf4glxrrhhtAU9wkGNi3+u3xDa+c0WqGLQ//OPy5V/T0o5P/0tESpwHUb44UynlHi5z/BIAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-counter-light-en@1x.avif",
+        "2x": "/landing/shots/phone-counter-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-counter-light-en@1x.webp",
+        "2x": "/landing/shots/phone-counter-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 47333,
+      "webp2x": 69766,
+      "avif1x": 19504,
+      "webp1x": 27194
+    }
+  },
+  {
+    "file": "phone-loyalty-dark.avif",
+    "id": "phone-loyalty-dark",
+    "device": "phone",
+    "screen": "loyalty",
+    "scheme": "dark",
+    "route": "/es/account",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACwBACdASoQACMAPu1aqE2ppKOiNVgIATAdiWcAyrRFbpYUPgrOi3dDG81HtBqAAP71kcHBBHc0vbmqrk29gpAfWgZUI+ibS0tv4guR0WlR0WKPvYGCjPQANvhnU3Cv6gG21PgrwF2DA/OZ8GoCgJaYgy1lOiQ2RLondET5u/ZZm9W40nw+rh/so9VvGiCt82JhYfI2zlAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-loyalty-dark@1x.avif",
+        "2x": "/landing/shots/phone-loyalty-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-loyalty-dark@1x.webp",
+        "2x": "/landing/shots/phone-loyalty-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 40095,
+      "webp2x": 56170,
+      "avif1x": 19398,
+      "webp1x": 25476
+    }
+  },
+  {
+    "file": "phone-loyalty-dark-en.avif",
+    "id": "phone-loyalty-dark-en",
+    "device": "phone",
+    "screen": "loyalty",
+    "scheme": "dark",
+    "route": "/en/account",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACwBACdASoQACMAPt1Wo02opKMiNUgBEBuJZwAOfIT1bvS9Q+sRKWy03CBNYzUAAP7xBQqlKY3yCgaPXKVRGIRwDk+2CNW6hG/6oA2bPstuZzT2uqL2YsZGL3WlYHIOj8X6l3g2wwD4d/fPrnkgSTTgyH9x8EK6Cv8+7c1JNWAWchseLvLyfI2zlAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-loyalty-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-loyalty-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-loyalty-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-loyalty-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 38440,
+      "webp2x": 55052,
+      "avif1x": 18481,
+      "webp1x": 24876
+    }
+  },
+  {
+    "file": "phone-loyalty-light.avif",
+    "id": "phone-loyalty-light",
+    "device": "phone",
+    "screen": "loyalty",
+    "scheme": "light",
+    "route": "/es/account",
+    "lang": "es",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADQBACdASoQACMAPulkp02pJaOiNVgIASAdCWcAyrQWbp/pZEugVE+4z+UmWuNTgAD+7iU7nEhWbQKOVFfInD4hMXQ2ZiyCWPUtL75KrSE56HMLye7UMkBy196dSOfNZrmsi6djtsFiDMe73Ac/iI/O5oFwHWAXUhcXqt0YpveetH8mwh1JMrlwMnXi4G9pDAAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-loyalty-light@1x.avif",
+        "2x": "/landing/shots/phone-loyalty-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-loyalty-light@1x.webp",
+        "2x": "/landing/shots/phone-loyalty-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 39089,
+      "webp2x": 55536,
+      "avif1x": 17728,
+      "webp1x": 24916
+    }
+  },
+  {
+    "file": "phone-loyalty-light-en.avif",
+    "id": "phone-loyalty-light-en",
+    "device": "phone",
+    "screen": "loyalty",
+    "scheme": "light",
+    "route": "/en/account",
+    "lang": "en",
+    "role": "customer",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQACMAPt1cpU2opSOiNUgBEBuJZwDOOCzc8s/wH8PGFJwx0QAA/u4lO5923TrO0F3G1ttpv7E+30vM+8jXY6FtOTwt+00AHWdqdN4h3/K9ZoZl0p3Xyp3lxFrhjZ1n+Ql0CYfdPhqGlkHDo7PDKSCHf1cCPwRVo8iQ8BVewje0hgAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-loyalty-light-en@1x.avif",
+        "2x": "/landing/shots/phone-loyalty-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-loyalty-light-en@1x.webp",
+        "2x": "/landing/shots/phone-loyalty-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 37510,
+      "webp2x": 53998,
+      "avif1x": 17082,
+      "webp1x": 24450
+    }
+  },
+  {
+    "file": "phone-my-day-dark.avif",
+    "id": "phone-my-day-dark",
+    "device": "phone",
+    "screen": "my-day",
+    "scheme": "dark",
+    "route": "/es/admin/my-day",
+    "lang": "es",
+    "role": "barber",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABQBACdASoQACMAPu1mqE8ppaOiKqwBMB2JaQAAPg/4Xz9Dr+siJsaL1IRQAP7upz02VAX7i2jV+pQL/ncanOSYAbbTfzNqKGFZAMWl4dwsdefu/TnBHAU5kg8wVHQ68PjXks2qDQrFqld/CuyLEPkfYzhRlUZfPBMAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-my-day-dark@1x.avif",
+        "2x": "/landing/shots/phone-my-day-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-my-day-dark@1x.webp",
+        "2x": "/landing/shots/phone-my-day-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 37519,
+      "webp2x": 51688,
+      "avif1x": 17193,
+      "webp1x": 23458
+    }
+  },
+  {
+    "file": "phone-my-day-dark-en.avif",
+    "id": "phone-my-day-dark-en",
+    "device": "phone",
+    "screen": "my-day",
+    "scheme": "dark",
+    "route": "/en/admin/my-day",
+    "lang": "en",
+    "role": "barber",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQBACdASoQACMAPu1kq04ppaQiKqwBMB2JZwAD35Q/xV8oD6YNyb++nYuVlqdviAD+7qc/5tuUiMYWxWGQQOYNP9yDLF9tiauW4ACQkp6Kt6dAKJhc65+SB6gIoQFnkuo8YgTLEY36/vlEvryb3t63z7Q4oIFxj/tFtaWOOBcQ6jr4AAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-my-day-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-my-day-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-my-day-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-my-day-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 36236,
+      "webp2x": 50780,
+      "avif1x": 17069,
+      "webp1x": 23180
+    }
+  },
+  {
+    "file": "phone-my-day-light.avif",
+    "id": "phone-my-day-light",
+    "device": "phone",
+    "screen": "my-day",
+    "scheme": "light",
+    "route": "/es/admin/my-day",
+    "lang": "es",
+    "role": "barber",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQBACdASoQACMAPu1kqU6ppaOiKqwBMB2JaQAAPg+7n5Llii8Rftd0rzwmAP7rctCvztmkBKGOgjaW3+UtqCsOEtHYtvzQZX6yIxdlBsmvrI39NV5z0AvaPVK8mZ68FuY/Ls/+nn/H3y/Sb4P3aJt/hZxO3y+hB3tgAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-my-day-light@1x.avif",
+        "2x": "/landing/shots/phone-my-day-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-my-day-light@1x.webp",
+        "2x": "/landing/shots/phone-my-day-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 37447,
+      "webp2x": 52056,
+      "avif1x": 16241,
+      "webp1x": 23478
+    }
+  },
+  {
+    "file": "phone-my-day-light-en.avif",
+    "id": "phone-my-day-light-en",
+    "device": "phone",
+    "screen": "my-day",
+    "scheme": "light",
+    "route": "/en/admin/my-day",
+    "lang": "en",
+    "role": "barber",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABQBACdASoQACMAPu1mqU6ppaOiKqwBMB2JZwAAPg/QXiWLc9AOewgwaoLoAP7rcfkKlNF+gaE/Gs7NCHJvZiTQSHoVzU9LpZXXC5Zr4gF5Wrmax2YoUXjc3JE127VxixbxMvx9sVCF+iFt6O6oK/dSwoB9BsZ/6m7lXDrcLoAAAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-my-day-light-en@1x.avif",
+        "2x": "/landing/shots/phone-my-day-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-my-day-light-en@1x.webp",
+        "2x": "/landing/shots/phone-my-day-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 35765,
+      "webp2x": 50988,
+      "avif1x": 15869,
+      "webp1x": 22982
+    }
+  },
+  {
+    "file": "phone-welcome-dark.avif",
+    "id": "phone-welcome-dark",
+    "device": "phone",
+    "screen": "welcome",
+    "scheme": "dark",
+    "route": "/es",
+    "lang": "es",
+    "role": "anon",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASoQACMAPt1apE2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS7AowUlVi4VbWQAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1XlyTaM8MxFRgmp1mJzw+kKv9WcTMSYa34tjHX3UFP4YyejENw7xgAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-welcome-dark@1x.avif",
+        "2x": "/landing/shots/phone-welcome-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-welcome-dark@1x.webp",
+        "2x": "/landing/shots/phone-welcome-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 41822,
+      "webp2x": 56980,
+      "avif1x": 19091,
+      "webp1x": 25432
+    }
+  },
+  {
+    "file": "phone-welcome-dark-en.avif",
+    "id": "phone-welcome-dark-en",
+    "device": "phone",
+    "screen": "welcome",
+    "scheme": "dark",
+    "route": "/en",
+    "lang": "en",
+    "role": "anon",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBQCdASoQACMAPt1cpU2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS6dytZpbZ+D9IwAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1yEObrgrjRt/IDWz189MiIyp3cY497Q06pJhtkuTsoqiznNd6RNAOYMgAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-welcome-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-welcome-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-welcome-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-welcome-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 41432,
+      "webp2x": 56756,
+      "avif1x": 19021,
+      "webp1x": 25430
+    }
+  },
+  {
+    "file": "phone-welcome-light.avif",
+    "id": "phone-welcome-light",
+    "device": "phone",
+    "screen": "welcome",
+    "scheme": "light",
+    "route": "/es",
+    "lang": "es",
+    "role": "anon",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASoQACMAPt1apE2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS7AowUlVi4VbWQAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1XlyTaM8MxFRgmp1mJzw+kKv9WcTMSYa34tjHX3UFP4YyejENw7xgAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-welcome-light@1x.avif",
+        "2x": "/landing/shots/phone-welcome-light.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-welcome-light@1x.webp",
+        "2x": "/landing/shots/phone-welcome-light.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 41822,
+      "webp2x": 56980,
+      "avif1x": 19091,
+      "webp1x": 25432
+    }
+  },
+  {
+    "file": "phone-welcome-light-en.avif",
+    "id": "phone-welcome-light-en",
+    "device": "phone",
+    "screen": "welcome",
+    "scheme": "light",
+    "route": "/en",
+    "lang": "en",
+    "role": "anon",
+    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "width": 780,
+    "height": 1688,
+    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBQCdASoQACMAPt1cpU2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS6dytZpbZ+D9IwAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1yEObrgrjRt/IDWz189MiIyp3cY497Q06pJhtkuTsoqiznNd6RNAOYMgAAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-welcome-light-en@1x.avif",
+        "2x": "/landing/shots/phone-welcome-light-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-welcome-light-en@1x.webp",
+        "2x": "/landing/shots/phone-welcome-light-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 41432,
+      "webp2x": 56756,
+      "avif1x": 19021,
+      "webp1x": 25430
+    }
+  }
+]
