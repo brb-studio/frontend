@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { getTenant } from "@/entities/tenant/api";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
+import {
+  LegalList as Bullets,
+  LegalHeader,
+  LegalSection as Part,
+} from "@/shared/ui/legal";
 
 const UPDATED = "2026-10-22";
 
@@ -12,25 +16,6 @@ export async function generateMetadata(): Promise<Metadata> {
     title: dict.privacy.title,
     alternates: alternates(locale, "/privacy"),
   };
-}
-
-function Part({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="grid gap-3">
-      <h2 className="text-lg font-medium text-fg">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function Bullets({ items }: { items: readonly string[] }) {
-  return (
-    <ul className="grid list-outside list-disc gap-2 pl-5">
-      {items.map((item) => (
-        <li key={item}>{item}</li>
-      ))}
-    </ul>
-  );
 }
 
 export default async function PrivacyPage() {
@@ -47,12 +32,10 @@ export default async function PrivacyPage() {
 
   return (
     <article className="grid gap-8">
-      <header className="grid animate-rise gap-2">
-        <h1 className="font-medium text-title">{t.title}</h1>
-        <p className="text-sm text-fg-muted">
-          {t.updated.replace("{date}", updated)}
-        </p>
-      </header>
+      <LegalHeader
+        title={t.title}
+        updated={t.updated.replace("{date}", updated)}
+      />
       <div className="grid animate-rise gap-8 rounded-[2rem] border border-line bg-card p-6 text-fg-muted shadow-soft [animation-delay:80ms]">
         <Part title={t.controller.title}>
           <p>{t.controller.body.replace("{shop}", tenant.name)}</p>

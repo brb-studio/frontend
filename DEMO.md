@@ -7,6 +7,7 @@ Guía rápida para probar el portal completo en tu máquina: frontend (este repo
 | Qué | Dirección | Notas |
 |---|---|---|
 | Frontend (Next.js) | `http://localhost:3000` | Abre MagicStudio (`DEFAULT_TENANT_HOST`). Cada barbería en su subdominio: `http://magicstudio.localhost:3000`, `http://elite.localhost:3000` |
+| Landing de brb-studio | `http://www.localhost:3000` | El sitio de marketing (con `MARKETING_HOSTS=www.localhost` en `.env`). `localhost` sigue abriendo MagicStudio |
 | Backend (API) | `http://127.0.0.1:4000` | `GET /health` → `{"status":"ok"}`. Solo lo llama el servidor de Next, nunca el navegador |
 | MongoDB | `127.0.0.1:27017` | Replica set `rs0`. Base `magicstudio` (dev) y `magicstudio_test` (tests). No toca otras bases |
 

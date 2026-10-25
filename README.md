@@ -59,6 +59,31 @@ One deployment serves many barbershop companies (tenants), each with one or more
 - `getTenant()` (`src/entities/tenant/api.ts`) returns name, currency, languages, brand, theme and branches; theme colors become CSS variables (`entities/tenant/theme.ts`), so each tenant gets its own look with the same code.
 - The backend owns tenant isolation: the tenant comes from the host mapping, never from client input.
 
+## Marketing site (landing)
+
+The product landing for brb-studio itself lives in the same app, with its own root layout:
+`src/app/(marketing)/site/[lang]/` (page, `/privacy`, OG image, 404), sections in `src/widgets/landing/`,
+copy in `src/shared/i18n/landing-{es,en}.ts`.
+
+- `src/proxy.ts` rewrites `/{lang}/…` to `/site/{lang}/…` only when the host is in `MARKETING_HOSTS`
+  (`src/shared/api/marketing-host.ts`; IP hosts never match). On every other host `/site/*` is a 404,
+  and the tenant tree is untouched. Dev: `http://www.localhost:3000`; e2e: `http://localhost:3200`.
+- It never calls the API or `getTenant()`. `manifest.ts`, `robots.ts` and `sitemap.ts` branch on the host:
+  no installable PWA, crawlable, sitemap of the landing only (tenant hosts: an empty sitemap and robots
+  that keep `/admin`, `/platform`, `/account`, `/pay` and `/api` out).
+- Static page: `MARKETING_URL`, `MARKETING_WHATSAPP`, `MARKETING_EMAIL` and `MARKETING_SHOWCASE_URL` are read
+  at build time (see `.env.example`); a production build with `MARKETING_HOSTS` but no `MARKETING_URL` fails.
+  No WhatsApp or email → the CTA becomes "Contact" and says contact is coming soon.
+- Next bound to a loopback IP (`next start --hostname 127.0.0.1`, as in e2e) replays the rewrite as an
+  external request; `proxy.ts` lets that hop through with a per-process secret header, nothing else.
+- Screenshots are real captures of the sample shop (Montecobre Barber Co.) dropped into
+  `public/landing/shots/` as `{device}-{id}-{scheme}[-{lang}].avif|webp` (+ optional `manifest.json` with
+  sizes); the catalog is `src/widgets/landing/shots.ts`. A missing file shows an empty frame, never drawn UI.
+- Fonts: Fraunces and Geist Mono (`next/font`, self-hosted) load only here. No third-party requests; the
+  global CSP is unchanged. Palette contrast is tested in `landing.test.ts`.
+- Copy rules: only claims true today (one price, MXN 300 a month by SPEI; no online deposits, no
+  self-serve signup, no "zero fees"). See `openspec/changes/marketing-site`.
+
 ## Languages
 
 - English and Spanish under `/en` and `/es`. `src/proxy.ts` redirects unprefixed URLs using the browser's `Accept-Language` (fallback: `es`, set in `src/shared/i18n/locales.ts`).

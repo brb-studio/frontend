@@ -1,10 +1,16 @@
+import { headers } from "next/headers";
 import { ImageResponse } from "next/og";
 import { getTenant } from "@/entities/tenant/api";
+import { isMarketingHost, requestHostOf } from "@/shared/api/marketing-host";
 
 const DEFAULT_ACCENT = "#ff6a1a";
 const INK = "#111111";
 
+const MARKETING = { letter: "b", accent: "#d9773a" };
+
 async function brand() {
+  // The product site has no tenant: use its own copper mark instead of a barbershop's.
+  if (isMarketingHost(requestHostOf(await headers()))) return MARKETING;
   try {
     const tenant = await getTenant();
     const accent = tenant.theme?.accent;

@@ -35,6 +35,9 @@ export default defineConfig({
         ...(process.env as Record<string, string>),
         BACKEND_URL: `http://127.0.0.1:${API_PORT}`,
         DEFAULT_TENANT_HOST: TENANT_HOST,
+        // localhost is the marketing site in e2e (marketing.spec.ts); 127.0.0.1 stays the tenant.
+        MARKETING_HOSTS: "localhost",
+        MARKETING_URL: `http://localhost:${port}`,
       },
     },
   ],
