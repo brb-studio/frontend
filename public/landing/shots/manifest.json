@@ -1808,10 +1808,10 @@
     "route": "/es",
     "lang": "es",
     "role": "anon",
-    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "capturedFor": "2026-10-28T19:00:00.000Z",
     "width": 780,
     "height": 1688,
-    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASoQACMAPt1apE2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS7AowUlVi4VbWQAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1XlyTaM8MxFRgmp1mJzw+kKv9WcTMSYa34tjHX3UFP4YyejENw7xgAAAA",
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoQACMAPu1irE2ppaSiKqwBMB2JZQC7ABNeRgVt9S2Xq+qVuIAAAP7Zld25JEIaopNVTzrf1EV9AAe2O9qHtIKciKSYTpczbbIRZGcORVjuwTmXrZgJRSSh0XkPQn7f+0F5mJ5u39dmvKqPakP8/+wDN432APZ+sFPPN4d4jaAnRUBJrnFw6igA",
     "files": {
       "avif": {
         "1x": "/landing/shots/phone-welcome-dark@1x.avif",
@@ -1823,10 +1823,10 @@
       }
     },
     "bytes": {
-      "avif2x": 41822,
-      "webp2x": 56980,
-      "avif1x": 19091,
-      "webp1x": 25432
+      "avif2x": 39195,
+      "webp2x": 56196,
+      "avif1x": 18199,
+      "webp1x": 26948
     }
   },
   {
@@ -1838,10 +1838,10 @@
     "route": "/en",
     "lang": "en",
     "role": "anon",
-    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "capturedFor": "2026-10-28T19:00:00.000Z",
     "width": 780,
     "height": 1688,
-    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBQCdASoQACMAPt1cpU2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS6dytZpbZ+D9IwAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1yEObrgrjRt/IDWz189MiIyp3cY497Q06pJhtkuTsoqiznNd6RNAOYMgAAAA=",
+    "blurDataURL": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACwBACdASoQACMAPu1aqU2ppKOiNVgIATAdiWUAuwHcAIvzqtTk+7tm5HyvDxTAAP7Zld1tSJpkmBWYFTCv0kyA++wMiH+xWJBLmmo+ELjD/sRgrrpFEc+D45TOqvVKxQGdcqqiIdmpmmOjwPfhQ/XFFskpN5sFESpgtEPU1JeBdWHmVv0AS5N+Mr/wPlIAAAA=",
     "files": {
       "avif": {
         "1x": "/landing/shots/phone-welcome-dark-en@1x.avif",
@@ -1853,10 +1853,10 @@
       }
     },
     "bytes": {
-      "avif2x": 41432,
-      "webp2x": 56756,
-      "avif1x": 19021,
-      "webp1x": 25430
+      "avif2x": 38627,
+      "webp2x": 55726,
+      "avif1x": 18114,
+      "webp1x": 26534
     }
   },
   {
@@ -1868,10 +1868,10 @@
     "route": "/es",
     "lang": "es",
     "role": "anon",
-    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "capturedFor": "2026-10-28T19:00:00.000Z",
     "width": 780,
     "height": 1688,
-    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASoQACMAPt1apE2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS7AowUlVi4VbWQAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1XlyTaM8MxFRgmp1mJzw+kKv9WcTMSYa34tjHX3UFP4YyejENw7xgAAAA",
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoQACMAPu1irE2ppaSiKqwBMB2JZQC7ABNeRgVt9S2Xq+qVuIAAAP7Zld25JEIaopNVTzrf1EV9AAe2O9qHtIKciKSYTpczbbIRZGcORVjuwTmXrZgJRSSh0XkPQn7f+0F5mJ5u39dmvKqPakP8/+wDN432APZ+sFPPN4d4jaAnRUBJrnFw6igA",
     "files": {
       "avif": {
         "1x": "/landing/shots/phone-welcome-light@1x.avif",
@@ -1883,10 +1883,10 @@
       }
     },
     "bytes": {
-      "avif2x": 41822,
-      "webp2x": 56980,
-      "avif1x": 19091,
-      "webp1x": 25432
+      "avif2x": 39195,
+      "webp2x": 56196,
+      "avif1x": 18199,
+      "webp1x": 26948
     }
   },
   {
@@ -1898,10 +1898,10 @@
     "route": "/en",
     "lang": "en",
     "role": "anon",
-    "capturedFor": "2026-10-23T19:00:00.000Z",
+    "capturedFor": "2026-10-28T19:00:00.000Z",
     "width": 780,
     "height": 1688,
-    "blurDataURL": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAQBQCdASoQACMAPt1cpU2opSOiNUgBEBuJYwC7BAgBUMTv9TWXMS6dytZpbZ+D9IwAAP7Bhu57UNPw5JFrlAnpO+3SowzHeEpsw5FxdCGEPJPFr9KdYRA+pZZSMW3Z8A+h895Elhf9zjS1yEObrgrjRt/IDWz189MiIyp3cY497Q06pJhtkuTsoqiznNd6RNAOYMgAAAA=",
+    "blurDataURL": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACwBACdASoQACMAPu1aqU2ppKOiNVgIATAdiWUAuwHcAIvzqtTk+7tm5HyvDxTAAP7Zld1tSJpkmBWYFTCv0kyA++wMiH+xWJBLmmo+ELjD/sRgrrpFEc+D45TOqvVKxQGdcqqiIdmpmmOjwPfhQ/XFFskpN5sFESpgtEPU1JeBdWHmVv0AS5N+Mr/wPlIAAAA=",
     "files": {
       "avif": {
         "1x": "/landing/shots/phone-welcome-light-en@1x.avif",
@@ -1913,10 +1913,10 @@
       }
     },
     "bytes": {
-      "avif2x": 41432,
-      "webp2x": 56756,
-      "avif1x": 19021,
-      "webp1x": 25430
+      "avif2x": 38627,
+      "webp2x": 55726,
+      "avif1x": 18114,
+      "webp1x": 26534
     }
   }
 ]
