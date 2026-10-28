@@ -12,6 +12,7 @@ import { Button, ButtonLink } from "@/shared/ui/button";
 import { FormAlert } from "@/shared/ui/form";
 import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
 import { cancelAppointment } from "./actions";
+import { InvoiceRequest } from "./invoice-request";
 import {
   type Appointment,
   myAppointmentsKey,
@@ -34,10 +35,12 @@ export function MyAppointments({
   locale,
   t,
   tp,
+  invoicesOn = false,
 }: {
   locale: Locale;
   t: Dictionary["account"];
   tp: Dictionary["payment"];
+  invoicesOn?: boolean;
 }) {
   const queryClient = useQueryClient();
   const appointments = useQuery(myAppointmentsQuery());
@@ -100,6 +103,12 @@ export function MyAppointments({
       <p className="flex flex-wrap items-center justify-between gap-3 text-fg-muted">
         <span>
           {a.branch?.name} · {formatMoney(a.totalMinor, a.currency, locale)}
+          {a.iva && (
+            <>
+              {" "}
+              · {t.vat} {formatMoney(a.iva.ivaMinor, a.currency, locale)}
+            </>
+          )}
           {a.payment && (
             <>
               {" "}
@@ -150,6 +159,9 @@ export function MyAppointments({
             </Button>
           </span>
         </p>
+      )}
+      {invoicesOn && a.status === "completed" && (
+        <InvoiceRequest appointmentId={a.id} t={t.invoice} />
       )}
       {rescheduling === a.id && (
         <ReschedulePanel

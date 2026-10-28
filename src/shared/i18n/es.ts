@@ -366,6 +366,22 @@ const es: Dictionary = {
       submit: "Guardar cambios",
       done: "Datos actualizados.",
     },
+    vat: "IVA incl.",
+    invoice: {
+      title: "Pedir factura",
+      lead: "Escribe los datos fiscales que debe llevar la factura. La emite la barbería.",
+      rfc: "RFC",
+      legalName: "Razón social",
+      taxRegime: "Régimen fiscal (3 dígitos)",
+      postalCode: "Código postal",
+      cfdiUse: "Uso del CFDI",
+      cfdiGeneral: "Gastos en general",
+      cfdiUndefined: "Por definir",
+      submit: "Enviar solicitud",
+      sent: "Solicitud enviada. La barbería emitirá tu factura.",
+      error:
+        "No pudimos enviar la solicitud. Revisa los datos e intenta de nuevo.",
+    },
     exportData: {
       title: "Descargar mis datos",
       lead: "Un archivo con tus citas, avisos, lista de espera y apartados en esta barbería.",
@@ -821,6 +837,29 @@ const es: Dictionary = {
         "Contraseña temporal. Compártela una sola vez; podrá cambiarla al iniciar sesión:",
     },
     settings: {
+      fiscal: {
+        title: "Fiscal",
+        iva: "Precios con IVA incluido (16 %)",
+        ivaHint:
+          "Los tickets muestran cuánto IVA trae cada total. Los cobros no cambian.",
+        invoicing: "Los clientes pueden pedir factura (CFDI)",
+        invoicingHint:
+          "El cliente manda sus datos fiscales por una cita completada. Tú emites la factura en tu sistema y la registras aquí.",
+        rfc: "RFC",
+        legalName: "Razón social",
+        taxRegime: "Régimen fiscal (3 dígitos)",
+        postalCode: "Código postal",
+      },
+      invoices: {
+        title: "Solicitudes de factura",
+        empty: "Todavía no hay solicitudes.",
+        uuid: "UUID del CFDI",
+        issue: "Marcar emitida",
+        cancel: "Cancelar",
+        requested: "Pendiente",
+        issued: "Emitida",
+        cancelled: "Cancelada",
+      },
       name: "Nombre del negocio",
       accent: "Color de acento",
       backgroundLight: "Fondo, modo claro",

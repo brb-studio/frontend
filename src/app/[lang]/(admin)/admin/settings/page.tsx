@@ -9,7 +9,7 @@ export default async function SettingsAdminPage() {
   return (
     <div className="grid gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.settings}</h1>
-      <SettingsForm t={dict.admin} />
+      <SettingsForm t={dict.admin} locale={locale} />
     </div>
   );
 }

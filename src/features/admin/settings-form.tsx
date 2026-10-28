@@ -2,9 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { type FormEvent, useState } from "react";
+import type { Locale } from "@/shared/i18n/locales";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
+import { FiscalForm } from "./fiscal-form";
+import { InvoicesQueue } from "./invoices-queue";
 import { tenantSchema } from "./schemas";
 import { DEFAULT_DARK, DEFAULT_LIGHT, ThemeFields } from "./theme-fields";
 import { type AdminText, Panel, Result, Toggle, value } from "./ui";
@@ -73,7 +76,7 @@ function ProductsForm({ enabled, t }: { enabled: boolean; t: AdminText }) {
   );
 }
 
-export function SettingsForm({ t }: { t: AdminText }) {
+export function SettingsForm({ t, locale }: { t: AdminText; locale: Locale }) {
   const tenant = useQuery(tenantQuery);
   const action = useAdminAction();
   const accent = tenant.data?.theme.accent;
@@ -136,6 +139,14 @@ export function SettingsForm({ t }: { t: AdminText }) {
       </Panel>
       <RemindersForm enabled={tenant.data.reminders.enabled} t={t} />
       <ProductsForm enabled={tenant.data.products.enabled} t={t} />
+      <FiscalForm
+        iva={tenant.data.iva?.enabled ?? false}
+        invoicing={tenant.data.invoicing}
+        t={t}
+      />
+      {tenant.data.invoicing?.enabled && (
+        <InvoicesQueue t={t} locale={locale} />
+      )}
       <Panel title={t.settings.plan}>
         <p className="text-sm">
           {subscription.plan} · {subscription.status} · {t.settings.limits}:{" "}

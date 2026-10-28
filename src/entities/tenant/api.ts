@@ -29,6 +29,8 @@ export type Tenant = {
   paymentsTransfer: boolean;
   /** The optional products module is on for this barbershop. */
   productsEnabled: boolean;
+  /** Customers can ask for a CFDI for their completed visits. */
+  invoicesEnabled: boolean;
   /** Card and bank-transfer payments through Stripe, with the shop's deposit rule; absent when off. */
   paymentsOnline?: {
     deposit: { enabled: boolean; percentBps: number };
@@ -72,6 +74,7 @@ const apiTenant = z.object({
     })
     .optional(),
   products: z.boolean().optional(),
+  invoices: z.boolean().optional(),
   branches: z.array(
     z.object({
       slug: z.string(),
@@ -130,6 +133,7 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
     theme: api.theme,
     paymentsTransfer: api.payments?.transfer ?? false,
     productsEnabled: api.products ?? false,
+    invoicesEnabled: api.invoices ?? false,
     ...(api.payments?.online &&
       api.payments.deposit &&
       api.payments.holdMinutes && {

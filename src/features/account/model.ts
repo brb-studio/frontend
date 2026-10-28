@@ -24,6 +24,10 @@ export const appointmentSchema = z.object({
   items: z.array(z.object({ name: localized, durationMin: z.number().int() })),
   currency: z.string(),
   totalMinor: z.number().int(),
+  /** Only shops with IVA on: the base and the tax inside `totalMinor`. */
+  iva: z
+    .object({ baseMinor: z.number().int(), ivaMinor: z.number().int() })
+    .optional(),
   payment: ticketSchema.nullable().optional(),
   cancellable: z.boolean().optional(),
   customer: z

@@ -137,6 +137,24 @@ export const staffAppointmentSchema = appointmentSchema.extend({
 });
 export type AdminAppointment = z.output<typeof staffAppointmentSchema>;
 
+export const invoiceSchema = z.object({
+  id: z.string(),
+  appointmentId: z.string(),
+  status: z.enum(["requested", "issued", "cancelled"]),
+  amountMinor: z.number().int(),
+  currency: z.string(),
+  receiver: z.object({
+    rfc: z.string(),
+    legalName: z.string(),
+    taxRegime: z.string(),
+    postalCode: z.string(),
+    cfdiUse: z.string(),
+  }),
+  cfdiUuid: z.string().optional(),
+  createdAt: z.string(),
+});
+export type Invoice = z.output<typeof invoiceSchema>;
+
 export const tenantSchema = z.object({
   slug: z.string(),
   name: z.string(),
@@ -145,6 +163,16 @@ export const tenantSchema = z.object({
   brand: z.object({ instagramUrl: z.string().optional() }),
   reminders: z.object({ enabled: z.boolean() }),
   products: z.object({ enabled: z.boolean() }),
+  iva: z.object({ enabled: z.boolean() }).optional(),
+  invoicing: z
+    .object({
+      enabled: z.boolean(),
+      rfc: z.string().optional(),
+      legalName: z.string().optional(),
+      taxRegime: z.string().optional(),
+      postalCode: z.string().optional(),
+    })
+    .optional(),
   subscription: z.object({
     plan: z.string(),
     status: z.string(),

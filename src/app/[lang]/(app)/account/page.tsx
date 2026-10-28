@@ -168,7 +168,12 @@ export default async function AccountPage() {
       />
       {session.role === "customer" && (
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <MyAppointments locale={locale} t={t} tp={dict.payment} />
+          <MyAppointments
+            locale={locale}
+            t={t}
+            tp={dict.payment}
+            invoicesOn={tenant.invoicesEnabled}
+          />
           {tenant.productsEnabled && (
             <MyProductOrders locale={locale} t={dict.products} />
           )}
