@@ -13,6 +13,8 @@ mock.module("next/headers", () => ({
   }),
   headers: async () => new Headers({ host: "magicstudio.localhost:3000" }),
 }));
+const refreshed = mock(() => {});
+mock.module("next/cache", () => ({ refresh: refreshed }));
 const {
   changePassword,
   forgotPassword,
@@ -20,6 +22,7 @@ const {
   register,
   resendVerification,
   resetPassword,
+  updateProfile,
   verifyEmail,
 } = await import("./actions");
 
@@ -192,6 +195,26 @@ test("changing the password keeps this session and maps a wrong current password
     newPassword: "new-secret-123",
   });
   expect(jar.get("ms_session")?.value).toBe("t".repeat(43));
+});
+
+test("correcting my details sends name and phone, and checks them before calling the API", async () => {
+  const spy = api(200, { user: { id: "u1" } });
+  restore = () => spy.mockRestore();
+  expect(
+    await updateProfile(undefined, form({ name: "Ana", phone: "abc" })),
+  ).toMatchObject({ errors: { phone: ["phone"] } });
+  expect(spy).not.toHaveBeenCalled();
+  expect(
+    await updateProfile(undefined, form({ name: " Ana López ", phone: "" })),
+  ).toMatchObject({ done: true });
+  const [url, init] = spy.mock.calls[0] ?? [];
+  expect(String(url)).toBe("http://api.test/v1/auth/me");
+  expect(init?.method).toBe("PATCH");
+  expect(JSON.parse(String(init?.body))).toEqual({
+    name: "Ana López",
+    phone: "",
+  });
+  expect(refreshed).toHaveBeenCalledTimes(1);
 });
 
 const noContent = () =>

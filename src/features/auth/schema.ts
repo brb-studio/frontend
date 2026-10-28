@@ -55,22 +55,28 @@ export const deleteAccountSchema = z.object({
     .max(128, { error: "passwordMax" }),
 });
 
+const name = z
+  .string({ error: "required" })
+  .trim()
+  .min(2, { error: "name" })
+  .max(80, { error: "name" });
+
+const phone = z
+  .string()
+  .trim()
+  .regex(/^\+?[0-9 ()-]{7,20}$/, { error: "phone" })
+  .or(z.literal(""))
+  .default("");
+
 export const registerSchema = z.object({
-  name: z
-    .string({ error: "required" })
-    .trim()
-    .min(2, { error: "name" })
-    .max(80, { error: "name" }),
+  name,
   email,
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[0-9 ()-]{7,20}$/, { error: "phone" })
-    .or(z.literal(""))
-    .default(""),
+  phone,
   password,
   acceptTerms: z.literal("true", { error: "terms" }),
 });
+
+export const profileSchema = z.object({ name, phone });
 
 export type AuthState =
   | {

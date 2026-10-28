@@ -1,5 +1,6 @@
 "use server";
 
+import { refresh } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
@@ -13,6 +14,7 @@ import {
   forgotSchema,
   loginSchema,
   passwordChangeSchema,
+  profileSchema,
   registerSchema,
   resetSchema,
   tokenSchema,
@@ -126,6 +128,28 @@ export async function changePassword(
     return { formError: errorKey(error) };
   }
   return { done: true };
+}
+
+export async function updateProfile(
+  _: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const values = {
+    name: text(formData, "name"),
+    phone: text(formData, "phone"),
+  };
+  const parsed = profileSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { errors: fieldErrors(parsed.error), values };
+  try {
+    await backend("/v1/auth/me", z.object({ user: z.object({}) }), {
+      method: "PATCH",
+      body: parsed.data,
+    });
+  } catch (error) {
+    return { formError: errorKey(error), values };
+  }
+  refresh();
+  return { done: true, values };
 }
 
 export async function deleteAccount(

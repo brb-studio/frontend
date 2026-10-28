@@ -360,6 +360,12 @@ const es: Dictionary = {
       submit: "Actualizar contraseña",
       done: "Contraseña actualizada. Se cerró la sesión en tus otros dispositivos.",
     },
+    profile: {
+      title: "Mis datos",
+      lead: "Corrige tu nombre o tu teléfono. Para cambiar tu correo, pídelo en tu sucursal.",
+      submit: "Guardar cambios",
+      done: "Datos actualizados.",
+    },
     deleteAccount: {
       title: "Borrar mi cuenta",
       lead: "Borraremos tu nombre, correo, teléfono y contraseña, y cerraremos tu sesión en todos lados. Tus visitas pasadas quedan en la contabilidad de la barbería sin tus datos. No se puede deshacer.",

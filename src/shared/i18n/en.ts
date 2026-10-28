@@ -351,6 +351,12 @@ const en = {
       submit: "Update password",
       done: "Password updated. Your other devices were signed out.",
     },
+    profile: {
+      title: "My details",
+      lead: "Correct your name or phone. To change your email, ask at your branch.",
+      submit: "Save changes",
+      done: "Details updated.",
+    },
     deleteAccount: {
       title: "Delete my account",
       lead: "We'll erase your name, email, phone and password, and sign you out everywhere. Your past visits stay in the shop's books without your details. This can't be undone.",

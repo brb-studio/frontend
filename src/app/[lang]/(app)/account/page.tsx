@@ -18,6 +18,7 @@ import { MyAppointments } from "@/features/account/my-appointments";
 import { logout } from "@/features/auth/actions";
 import { DeleteAccountForm } from "@/features/auth/delete-account-form";
 import { PasswordForm } from "@/features/auth/password-form";
+import { ProfileForm } from "@/features/auth/profile-form";
 import { getSession } from "@/features/auth/session";
 import { MyProductOrders } from "@/features/products/my-orders";
 import { getPushKey } from "@/features/staff/data";
@@ -166,6 +167,14 @@ export default async function AccountPage() {
           )}
           <MyWaitlist locale={locale} t={dict.waitlist} />
         </HydrationBoundary>
+      )}
+      {session.role === "customer" && (
+        <ProfileForm
+          t={dict.auth}
+          text={t.profile}
+          name={session.name}
+          phone={session.phone}
+        />
       )}
       <PasswordForm t={dict.auth} text={t.password} />
       {session.role === "customer" && (
