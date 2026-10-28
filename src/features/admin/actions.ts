@@ -9,7 +9,7 @@ export type AdminResult =
   | { ok: false; code: string; message: string; issues: Issue[] };
 
 const request = z.object({
-  method: z.enum(["POST", "PATCH", "DELETE"]),
+  method: z.enum(["POST", "PUT", "PATCH", "DELETE"]),
   path: z.string().max(200).refine(isAdminPath),
   body: z.unknown().optional(),
 });

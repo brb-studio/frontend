@@ -240,7 +240,9 @@ export const productSchema = z.object({
   images: z.array(z.string()).default([]),
   priceMinor: z.number().int(),
   category: z.string().optional(),
-  stock: z.number().int().optional(),
+  stock: z
+    .array(z.object({ branchId: z.string(), quantity: z.number().int() }))
+    .default([]),
   position: z.number().int(),
   active: z.boolean(),
 });
