@@ -32,7 +32,7 @@ export default async function AuthLayout({
       <div className="fixed inset-0 -z-10 md:sticky md:top-0 md:z-auto md:h-dvh md:p-3">
         <div className="relative size-full overflow-hidden bg-black md:rounded-[2rem]">
           <Image
-            src={tenant.authImage}
+            src="/images/auth/background.webp"
             alt=""
             fill
             preload
