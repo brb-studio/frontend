@@ -357,6 +357,11 @@ const en = {
       submit: "Save changes",
       done: "Details updated.",
     },
+    exportData: {
+      title: "Download my data",
+      lead: "A file with your visits, notifications, waitlist and product orders at this shop.",
+      action: "Download",
+    },
     deleteAccount: {
       title: "Delete my account",
       lead: "We'll erase your name, email, phone and password, and sign you out everywhere. Your past visits stay in the shop's books without your details. This can't be undone.",
@@ -448,6 +453,10 @@ const en = {
   admin: {
     title: "Admin panel",
     forbidden: "This area is only for the team.",
+    mustChangePassword: {
+      title: "Choose your password",
+      lead: "Your password is temporary. Choose your own to start using the panel.",
+    },
     nav: {
       label: "Admin",
       home: "Today",

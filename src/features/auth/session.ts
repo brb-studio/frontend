@@ -11,6 +11,7 @@ const me = z.object({
     role: z.enum(["owner", "admin", "manager", "barber", "customer"]),
     branchId: z.string().optional(),
     emailVerified: z.boolean().default(true),
+    mustChangePassword: z.boolean().optional(),
   }),
 });
 

@@ -6,10 +6,12 @@ import { getTenant } from "@/entities/tenant/api";
 import { AdminSidebarNav, AdminTabBar } from "@/features/admin/admin-nav";
 import { sectionsFor } from "@/features/admin/sections";
 import { logout } from "@/features/auth/actions";
+import { PasswordForm } from "@/features/auth/password-form";
 import { getSession } from "@/features/auth/session";
 import { VerifyNotice } from "@/features/auth/verify-notice";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { BrandMark } from "@/shared/ui/brand-mark";
+import { Button } from "@/shared/ui/button";
 import { Providers } from "../../providers";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,6 +33,26 @@ export default async function AdminLayout({
   if (!session) redirect(`/${locale}/login`);
   if (session.role === "customer") redirect(`/${locale}/home`);
   const t = dict.admin;
+  if (session.mustChangePassword) {
+    return (
+      <main className="mx-auto grid min-h-dvh max-w-md content-center gap-6 p-6">
+        <div className="grid gap-2">
+          <h1 className="text-title font-medium">
+            {dict.admin.mustChangePassword.title}
+          </h1>
+          <p className="text-fg-muted">{dict.admin.mustChangePassword.lead}</p>
+        </div>
+        <PasswordForm t={dict.auth} text={dict.account.password} defaultOpen />
+        <form action={logout}>
+          <input type="hidden" name="lang" value={locale} />
+          <Button type="submit" variant="secondary" className="w-full">
+            <LogOut size={18} aria-hidden="true" />
+            {dict.account.logout}
+          </Button>
+        </form>
+      </main>
+    );
+  }
   const sections = sectionsFor(session.role, tenant.productsEnabled);
   const signOut = (
     <form action={logout}>

@@ -366,6 +366,11 @@ const es: Dictionary = {
       submit: "Guardar cambios",
       done: "Datos actualizados.",
     },
+    exportData: {
+      title: "Descargar mis datos",
+      lead: "Un archivo con tus citas, avisos, lista de espera y apartados en esta barbería.",
+      action: "Descargar",
+    },
     deleteAccount: {
       title: "Borrar mi cuenta",
       lead: "Borraremos tu nombre, correo, teléfono y contraseña, y cerraremos tu sesión en todos lados. Tus visitas pasadas quedan en la contabilidad de la barbería sin tus datos. No se puede deshacer.",
@@ -459,6 +464,10 @@ const es: Dictionary = {
   admin: {
     title: "Panel de administración",
     forbidden: "Esta sección es solo para el equipo.",
+    mustChangePassword: {
+      title: "Elige tu contraseña",
+      lead: "Tu contraseña es temporal. Elige una propia para usar el panel.",
+    },
     nav: {
       label: "Administración",
       home: "Hoy",

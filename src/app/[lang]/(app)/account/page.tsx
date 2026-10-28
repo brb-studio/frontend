@@ -3,7 +3,14 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { ExternalLink, LogIn, LogOut, UserPlus, UserRound } from "lucide-react";
+import {
+  Download,
+  ExternalLink,
+  LogIn,
+  LogOut,
+  UserPlus,
+  UserRound,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTenant } from "@/entities/tenant/api";
@@ -175,6 +182,20 @@ export default async function AccountPage() {
           name={session.name}
           phone={session.phone}
         />
+      )}
+      {session.role === "customer" && (
+        <section className="grid gap-4 rounded-[2rem] border border-line bg-card p-6">
+          <h2 className="font-medium">{t.exportData.title}</h2>
+          <p className="text-sm text-fg-muted">{t.exportData.lead}</p>
+          <a
+            href="/api/me/export"
+            download
+            className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full border border-line px-5 font-medium transition-colors hover:bg-surface"
+          >
+            <Download size={18} aria-hidden="true" />
+            {t.exportData.action}
+          </a>
+        </section>
       )}
       <PasswordForm t={dict.auth} text={t.password} />
       {session.role === "customer" && (
