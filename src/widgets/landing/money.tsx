@@ -3,6 +3,7 @@ import type { LandingDictionary } from "@/shared/i18n/landing";
 import type { Locale } from "@/shared/i18n/locales";
 import { Headline, Section, Timecode } from "./parts";
 import { ShotFrame } from "./shot";
+import { WidgetExample } from "./widget-example";
 
 const STAMPS = 6;
 const FILLED = 4;
@@ -44,6 +45,7 @@ export function Loyalty({
               {t.loyalty.progress}
             </p>
           </div>
+          <WidgetExample t={t} filled={FILLED} total={STAMPS} />
         </div>
         <ShotFrame id="loyalty" locale={locale} t={t} maxWidth={320} />
       </div>

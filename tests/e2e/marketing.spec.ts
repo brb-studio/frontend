@@ -38,14 +38,14 @@ for (const { lang, browserLocale, t } of [
       );
     });
 
-    test("states the one price and links its own privacy notice", async ({
+    test("states the plans and links its own privacy notice", async ({
       page,
     }) => {
       await page.goto(`${MARKETING}/${lang}`);
       await expect(
-        page.getByText(t.start.price, { exact: true }),
+        page.getByText(t.plans.items.sixAll.price, { exact: true }),
       ).toBeVisible();
-      await expect(page.getByText(t.start.payment)).toBeVisible();
+      await expect(page.getByText(t.plans.payment)).toBeVisible();
       await page
         .getByRole("contentinfo")
         .getByRole("link", { name: t.footer.privacy })

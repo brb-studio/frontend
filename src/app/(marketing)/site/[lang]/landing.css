@@ -217,6 +217,7 @@ main:focus {
   max-width: 56ch;
 }
 
+.lp-section--paper .lp-lede,
 .lp-section--paper .lp-body,
 .lp-section--paper .lp-note,
 .lp-section--paper .lp-footnote {
@@ -890,6 +891,42 @@ main:focus {
   font-size: 1.5rem;
 }
 
+.lp-widget {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  margin: 0;
+}
+
+.lp-widget__tile {
+  display: grid;
+  gap: 0.6rem;
+  width: 15rem;
+  padding: 1.1rem;
+  border: 1px solid var(--color-smoke);
+  border-radius: 1.4rem;
+  background: var(--color-char);
+}
+
+.lp-widget__name {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+}
+
+.lp-widget .lp-stamps {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.lp-widget__progress {
+  color: var(--color-ash);
+  font-size: 0.8rem;
+}
+
+.lp-widget__reward {
+  font-size: 0.85rem;
+}
+
 /* ---------- S6 ledger (paper) ---------- */
 .lp-receipt-wrap {
   display: grid;
@@ -1108,31 +1145,6 @@ main:focus {
 .lp-numbered .lp-mono {
   color: var(--color-ember);
   padding-top: 0.3rem;
-}
-
-.lp-price {
-  display: grid;
-  gap: 1rem;
-  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-  border: 1px solid var(--color-ember);
-  border-radius: 1.5rem;
-}
-
-.lp-price__label {
-  color: var(--color-ember);
-}
-
-.lp-price__figure {
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-
-.lp-price__period {
-  font-size: 1.25rem;
-  color: var(--color-ash);
 }
 
 .lp-price__terms {
@@ -1384,5 +1396,271 @@ main:focus {
 @media (forced-colors: active) {
   .lp-stamp.is-filled {
     background: CanvasText;
+  }
+}
+
+/* ---------- platforms and plans ---------- */
+.lp-plans__head {
+  max-width: 46rem;
+}
+
+.lp-platforms__sides {
+  display: grid;
+  gap: 3rem;
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+}
+
+@media (min-width: 900px) {
+  .lp-platforms__sides {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+    gap: 4rem;
+  }
+}
+
+.lp-platform {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  min-width: 0;
+}
+
+.lp-platform__shots {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: end;
+}
+
+.lp-platform__shots--app {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lp-platform__shots--app .lp-frame--phone {
+  border-width: 7px;
+  border-radius: 32px;
+}
+
+.lp-platform__shots--app .lp-frame--phone .lp-frame__img {
+  border-radius: 25px;
+}
+
+.lp-platform__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.lp-platform__sub {
+  color: var(--color-ember-deep);
+}
+
+.lp-section--paper .lp-price__terms {
+  color: var(--color-ink);
+}
+
+.lp-section--paper .lp-price__term::before {
+  color: var(--color-ember-deep);
+}
+
+.lp-compare {
+  margin-top: clamp(3rem, 8vh, 5rem);
+  overflow-x: auto;
+}
+
+.lp-compare table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+}
+
+.lp-compare caption {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.lp-compare__c {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid #d6cdbd;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lp-compare__head {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-umber);
+  font-weight: 500;
+}
+
+.lp-compare__row {
+  font-weight: 400;
+}
+
+.lp-compare__cell {
+  white-space: nowrap;
+}
+
+.lp-compare__mark {
+  color: var(--color-ember-deep);
+}
+
+.lp-compare__cell--no {
+  color: var(--color-umber);
+}
+
+.lp-compare__note {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--color-umber);
+}
+
+.lp-plans__group {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+}
+
+.lp-plans__label {
+  color: var(--color-ember);
+}
+
+.lp-plans__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.15;
+}
+
+.lp-plans__grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 720px) {
+  .lp-plans__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lp-plans__grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.lp-plan {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  border: 1px solid var(--color-smoke);
+  border-radius: 1.5rem;
+  background: var(--color-char);
+}
+
+.lp-plan--featured {
+  border-color: var(--color-ember);
+}
+
+.lp-plan__badge {
+  justify-self: start;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--color-ember);
+  color: var(--color-ink);
+}
+
+.lp-plan__name {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.lp-plan__figure {
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 1.75rem + 2vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-plan__amount {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.5rem;
+}
+
+.lp-plan__period {
+  font-size: 1.0625rem;
+  color: var(--color-ash);
+  white-space: nowrap;
+}
+
+.lp-plans__grid--three .lp-plan__figure {
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
+}
+
+.lp-plan__equals {
+  color: var(--color-ash);
+  font-size: 0.9375rem;
+}
+
+.lp-plans__note {
+  margin-top: 1.5rem;
+  color: var(--color-ash);
+}
+
+.lp-compare__legend {
+  display: none;
+  margin-top: 1rem;
+  color: var(--color-umber);
+}
+
+@media (max-width: 639px) {
+  .lp-compare table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .lp-compare__head:first-child {
+    width: 46%;
+  }
+
+  .lp-compare__c {
+    padding-inline: 0.4rem;
+  }
+
+  .lp-compare__head {
+    font-size: 0.6875rem;
+    letter-spacing: 0;
+  }
+
+  .lp-compare__cell {
+    text-align: center;
+  }
+
+  .lp-compare__head:not(:first-child) {
+    text-align: center;
+  }
+
+  .lp-compare__mark {
+    font-size: 1.125rem;
+  }
+
+  .lp-compare__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .lp-compare__legend {
+    display: block;
   }
 }

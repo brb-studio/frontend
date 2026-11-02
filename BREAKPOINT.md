@@ -47,7 +47,9 @@ Probado a mano contra servidores reales: login de las cuentas demo, una cuenta d
 
 ## Siguiente, en orden
 
-### 1. Reprogramar una cita desde el panel
+### 1. Reprogramar una cita desde el panel (hecho el 2026-11-01)
+Hecho: `GET /v1/appointments/:id/slots` en el backend (cambio openspec `staff-reschedule-slots`), botón "Reprogramar" en la Agenda del panel web y en la de la app. Lo de abajo queda como referencia.
+
 - Ya existe: `PATCH /v1/appointments/:id` con `{ startAt, barberId }`. `reschedule()` vuelve a validar dentro de la transacción e ignora la propia cita (`assertFree(..., appointment._id)`).
 - Falta en el backend: `GET /v1/appointments/:id/slots?from=&days=&barberId=`. Debe usar la duración guardada en la cita (`bookedMinutes(items)`), no la del catálogo actual. También los servicios que exige (`bookedServiceIds`), para ofrecer solo barberos que los hagan. Y debe excluir la propia cita de los ocupados (si no, su hora y las que se le enciman salen tomadas).
 - Falta en el frontend: un botón "Reprogramar" en cada cita confirmada de `agenda-manager.tsx`, con fecha y horarios por barbero (el mismo selector de `new-appointment-form.tsx`) y luego `PATCH`. Hay que agregar la ruta `appointments/:id/slots` a `src/features/admin/paths.ts`.

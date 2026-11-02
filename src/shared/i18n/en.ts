@@ -710,6 +710,9 @@ const en = {
       refund: "Refund",
       refundConfirm: "Refund the whole payment to the customer?",
       refunded: "Refund requested.",
+      reschedule: "Reschedule",
+      currentSlot: "current time",
+      confirmMove: "Move appointment",
     },
     services: {
       services: "Services",

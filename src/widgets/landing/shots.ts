@@ -58,6 +58,8 @@ export const SHOTS = {
   cash: desktop("cash", "light"),
   revenue: desktop("revenue", "light"),
   settings: desktop("settings", "dark"),
+  "app-home": phone("app-home", "dark"),
+  "app-staff": phone("app-staff", "dark"),
 } satisfies Record<ShotCopyId, Shot>;
 
 export const SHOTS_DIR = "/landing/shots";

@@ -726,6 +726,9 @@ const es: Dictionary = {
       refund: "Reembolsar",
       refundConfirm: "¿Reembolsar todo el pago al cliente?",
       refunded: "Reembolso solicitado.",
+      reschedule: "Reprogramar",
+      currentSlot: "horario actual",
+      confirmMove: "Mover la cita",
     },
     services: {
       services: "Servicios",

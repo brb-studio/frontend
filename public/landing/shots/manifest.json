@@ -720,6 +720,126 @@
     }
   },
   {
+    "file": "phone-app-home-dark.avif",
+    "id": "phone-app-home-dark",
+    "device": "phone",
+    "screen": "app-home",
+    "scheme": "dark",
+    "route": "app:/home",
+    "lang": "es",
+    "role": "anon",
+    "capturedFor": "2026-11-02T02:09:58.621Z",
+    "width": 780,
+    "height": 1696,
+    "blurDataURL": "data:image/webp;base64,UklGRroAAABXRUJQVlA4IK4AAACQBACdASoQACMAPulgp02pJaOiNVgIASAdCWUAygBDNHKJiYHlI727SSkTB0AA/vWiN4u7v30PcIlHwDPRtjzwZWRbs7jIxpAq5644UNBz3TslBn2m51k6jo3GkfLBo2LNiWkqCUjeEE/obzUSiWIhEK52HWmD2R9qyhQoAjgMFGMVG4rCvLmbUKH/vsfd4RbCc8ndgigaWfVvbVxillZ3HCyHLJB7woVrvrUgAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-app-home-dark@1x.avif",
+        "2x": "/landing/shots/phone-app-home-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-app-home-dark@1x.webp",
+        "2x": "/landing/shots/phone-app-home-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 38511,
+      "webp2x": 56628,
+      "avif1x": 18617,
+      "webp1x": 24978
+    }
+  },
+  {
+    "file": "phone-app-home-dark-en.avif",
+    "id": "phone-app-home-dark-en",
+    "device": "phone",
+    "screen": "app-home",
+    "scheme": "dark",
+    "route": "app:/home",
+    "lang": "en",
+    "role": "anon",
+    "capturedFor": "2026-11-02T02:10:00.419Z",
+    "width": 780,
+    "height": 1696,
+    "blurDataURL": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADQBACdASoQACMAPu1cqE2ppKOiNVgIATAdiWUAygHcAeY1negw//vddNoxy5qVgAD+9rMRqu72Fw3XgFYcEghmW/rZy9CKc+H43DBMhUE+KlsFlTcjZ+ZLwbtb8bbEYBf1hvy7ZI1AoaGcQNn9M6Fclqm7LEqaUc7VFp1sE4Hai2a+dfIknVfgB+S0s5NAEdqHoEY9NAGnm51liBmMUoThuT6Lqqpjf8lgAA==",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-app-home-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-app-home-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-app-home-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-app-home-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 37883,
+      "webp2x": 55822,
+      "avif1x": 18310,
+      "webp1x": 25160
+    }
+  },
+  {
+    "file": "phone-app-staff-dark.avif",
+    "id": "phone-app-staff-dark",
+    "device": "phone",
+    "screen": "app-staff",
+    "scheme": "dark",
+    "route": "app:/admin",
+    "lang": "es",
+    "role": "owner",
+    "capturedFor": "2026-11-02T02:10:02.174Z",
+    "width": 780,
+    "height": 1696,
+    "blurDataURL": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABwBACdASoQACMAPt1cpU2opSOiNUgBEBuJaQAAfUUoR8fBlmzcQPxEcBuOAAD+8uiK1dyfSLKJwbykn4U+1GDit9Dx408O+3tWb0tVfZyn8Uu8GHYa3mfRPIFGqC/krlX+ScmxlgyfwRx4RRim1J5wQ2cAAAAA",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-app-staff-dark@1x.avif",
+        "2x": "/landing/shots/phone-app-staff-dark.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-app-staff-dark@1x.webp",
+        "2x": "/landing/shots/phone-app-staff-dark.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 36995,
+      "webp2x": 52118,
+      "avif1x": 18088,
+      "webp1x": 23448
+    }
+  },
+  {
+    "file": "phone-app-staff-dark-en.avif",
+    "id": "phone-app-staff-dark-en",
+    "device": "phone",
+    "screen": "app-staff",
+    "scheme": "dark",
+    "route": "app:/admin",
+    "lang": "en",
+    "role": "owner",
+    "capturedFor": "2026-11-02T02:10:03.860Z",
+    "width": 780,
+    "height": 1696,
+    "blurDataURL": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADQAwCdASoQACMAPt1apE2opSOiNUgBEBuJaQAAmMy5d5WwqrGi86AA/vDdIg8hzEs7Js4G+G1BS29dVaGWfhRppKT5Af1X7TWplPeZFGSKD+Yg9UmUr7iLuWdWzZ6e2bGWDJ/BHHfxA2pIvCBE7HhvAAA=",
+    "files": {
+      "avif": {
+        "1x": "/landing/shots/phone-app-staff-dark-en@1x.avif",
+        "2x": "/landing/shots/phone-app-staff-dark-en.avif"
+      },
+      "webp": {
+        "1x": "/landing/shots/phone-app-staff-dark-en@1x.webp",
+        "2x": "/landing/shots/phone-app-staff-dark-en.webp"
+      }
+    },
+    "bytes": {
+      "avif2x": 37931,
+      "webp2x": 54494,
+      "avif1x": 18458,
+      "webp1x": 24116
+    }
+  },
+  {
     "file": "phone-become-barber-dark.avif",
     "id": "phone-become-barber-dark",
     "device": "phone",

@@ -11,6 +11,7 @@ import { pick } from "@/shared/i18n/localized";
 import { formatMoney } from "@/shared/i18n/money";
 import { adminQuery, useAdminAction } from "./api";
 import { NewAppointmentForm } from "./new-appointment-form";
+import { RescheduleForm } from "./reschedule-form";
 import {
   type AdminAppointment,
   COUNTER_METHODS,
@@ -44,6 +45,7 @@ export function AgendaManager({
   canRefund: boolean;
 }) {
   const [refunding, setRefunding] = useState<string | null>(null);
+  const [moving, setMoving] = useState<string | null>(null);
   const [day, setDay] = useState(today);
   const [adding, setAdding] = useState(false);
   const appointments = useQuery(dayQuery(day));
@@ -244,11 +246,31 @@ export function AgendaManager({
                     <button
                       type="button"
                       className={smallButton}
+                      aria-expanded={moving === a.id}
+                      onClick={() =>
+                        setMoving((current) => (current === a.id ? null : a.id))
+                      }
+                    >
+                      {moving === a.id ? t.common.close : t.agenda.reschedule}
+                    </button>
+                    <button
+                      type="button"
+                      className={smallButton}
                       disabled={action.isPending}
                       onClick={() => change(a, "cancelled")}
                     >
                       {t.agenda.cancel}
                     </button>
+                    {moving === a.id && (
+                      <RescheduleForm
+                        appointment={a}
+                        t={t}
+                        onMoved={(date) => {
+                          setMoving(null);
+                          setDay(date);
+                        }}
+                      />
+                    )}
                   </>
                 )}
               </Row>

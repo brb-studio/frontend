@@ -7,6 +7,7 @@ import { Closing, Start } from "./closing";
 import { Hero } from "./hero";
 import { Ledger, Loyalty } from "./money";
 import { demoCta } from "./parts";
+import { Plans, Platforms } from "./plans";
 import { Booking, Branches, Solo } from "./story";
 
 /** The product landing: one day of one shop, from the first booking to the cash count. */
@@ -34,6 +35,8 @@ export function LandingPage({
         <Ledger locale={locale} t={t} />
         <Brand locale={locale} t={t} />
         <Rest t={t} />
+        <Plans t={t} />
+        <Platforms locale={locale} t={t} />
         <Start t={t} />
         <Closing locale={locale} t={t} cta={cta} contact={contact} />
       </main>

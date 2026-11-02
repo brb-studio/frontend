@@ -6,7 +6,7 @@ const landingEn = {
   meta: {
     title: "brb-studio · Booking, cash desk and customers for barbershops",
     description:
-      "Online booking with no double bookings, a cash desk that adds up at closing and a stamp card that brings customers back. For one chair or many branches, under your shop's name. MXN 300 a month.",
+      "Online booking with no double bookings, a cash desk that adds up at closing and a stamp card that brings customers back. For one chair or many branches, under your shop's name. From MXN 600 a month.",
     ogAlt: "brb-studio: your barbershop, in order. Even when you're not there.",
   },
   a11y: {
@@ -18,7 +18,7 @@ const landingEn = {
   },
   nav: {
     product: "Product",
-    pricing: "Pricing",
+    pricing: "Plans",
     contact: "Contact",
   },
   cta: {
@@ -93,6 +93,13 @@ const landingEn = {
     progress: "4 of 6 visits",
     stampsLabel: "Stamp card: {n} of {total} visits",
     note: "Your customer list shows the latest 50 and finds anyone by name, email or phone.",
+    widget: {
+      label: "Stamp widget on the iPhone",
+      name: "Every 6th visit",
+      reward: "50% off your cut",
+      caption:
+        "On the iPhone home screen, the customer sees their stamps without opening the app.",
+    },
   },
   ledger: {
     time: "21:04",
@@ -169,12 +176,142 @@ const landingEn = {
       "If you cut too, you add yourself as a barber in one step.",
       "You share the link.",
     ],
-    priceLabel: "Price",
-    price: "MXN 300",
-    period: "a month",
-    payment: "Paid by SPEI bank transfer.",
-    plan: "One plan for every shop.",
-    trial: "You start with a 14-day trial.",
+  },
+  plans: {
+    title: ["Pay to be", "where", "your customers are."],
+    lede: "Your shop on the web, in the App Store and on Google Play, under your own name, icon and color. Pick where you want to be.",
+    firstLabel: "To start",
+    firstTitle: "Your first plan is 3 months",
+    laterLabel: "Afterwards",
+    laterTitle: "Stay month to month, or pay 6 months at once",
+    per: "{months} months",
+    monthly: "a month",
+    equals: "Works out to {amount} a month.",
+    recommended: "All included",
+    from: "From",
+    payment: "Paid by SPEI bank transfer, before each period starts.",
+    currency: "Prices in Mexican pesos.",
+    items: {
+      firstIos: {
+        name: "iPhone + Web",
+        price: "MXN 1,800",
+        months: 3,
+        perMonth: "MXN 600",
+        includes: [
+          "Your app in the App Store",
+          "Your booking site on the web",
+          "Staff panel on the web and in the app",
+        ],
+      },
+      firstAndroid: {
+        name: "Android + Web",
+        price: "MXN 1,800",
+        months: 3,
+        perMonth: "MXN 600",
+        includes: [
+          "Your app on Google Play",
+          "Your booking site on the web",
+          "Staff panel on the web and in the app",
+        ],
+      },
+      monthly: {
+        name: "Month to month",
+        price: "MXN 600",
+        includes: [
+          "The same platforms as your first plan",
+          "No commitment beyond the month you pay",
+        ],
+      },
+      sixAll: {
+        name: "iPhone + Android + Web",
+        price: "MXN 3,600",
+        months: 6,
+        perMonth: "MXN 600",
+        includes: [
+          "Your app in the App Store and on Google Play",
+          "Your booking site on the web",
+          "Every platform, one payment",
+        ],
+      },
+      sixApps: {
+        name: "iPhone + Android",
+        price: "MXN 3,200",
+        months: 6,
+        perMonth: "about MXN 533",
+        includes: [
+          "Your app in the App Store and on Google Play",
+          "No booking site on the web",
+        ],
+      },
+    },
+  },
+  platforms: {
+    title: ["The same shop on", "every", "screen."],
+    lede: "Web and app share the account, the agenda and the data: a customer who books on the web sees the appointment in the app, and the other way round.",
+    web: {
+      name: "Web",
+      sub: "Any browser, nothing to install",
+      points: [
+        "Your shop's own address, shared by link or QR",
+        "Staff panel built for the computer, with a side menu",
+        "Online card payments with Stripe",
+        "Installable on the home screen from the browser",
+      ],
+    },
+    app: {
+      name: "iPhone and Android app",
+      sub: "The same app, in the App Store and on Google Play",
+      points: [
+        "Its own app with your name, icon and color, not ours",
+        "Native notifications for bookings, changes and reminders",
+        "Scan pickup QR codes with the phone's camera",
+        "The whole staff panel in your pocket",
+      ],
+    },
+    tableTitle: "What each one does",
+    feature: "Feature",
+    yes: "Yes",
+    no: "No",
+    soon: "Coming soon",
+    rows: [
+      {
+        name: "Online booking for customers",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Staff panel (agenda, cash, catalog, team)",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Your own app in the store, with your name and icon",
+        web: "no",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Phone notifications",
+        web: "partial",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Scan product pickup QR codes",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      { name: "Online card payment", web: "yes", ios: "soon", android: "soon" },
+      { name: "Bank transfer payment", web: "yes", ios: "yes", android: "yes" },
+      { name: "Works on a computer", web: "yes", ios: "no", android: "no" },
+      { name: "Nothing to install", web: "yes", ios: "no", android: "no" },
+    ],
+    partial: "Partial",
+    partialNote:
+      "On the web, phone notifications work on Android and on an iPhone only after adding the site to the home screen.",
   },
   closing: {
     title: ["See a barbershop", "running."],
@@ -214,6 +351,10 @@ const landingEn = {
     revenue:
       "Revenue this month: bars per day, revenue, what's left after commissions and average ticket.",
     settings: "Settings: choosing the shop's theme color.",
+    "app-home":
+      "Montecobre Barber Co.'s app home on an iPhone: the book button and the branch with its hours.",
+    "app-staff":
+      "Staff panel in the app: today's appointments, expected revenue and the live agenda.",
   },
   privacy: {
     title: "Privacy notice",

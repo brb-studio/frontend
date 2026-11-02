@@ -63,7 +63,7 @@ export default async function OpenGraphImage({
       <div
         style={{ display: "flex", fontSize: 30, color: ASH, letterSpacing: 2 }}
       >
-        {`${t.start.price} ${t.start.period} · SPEI`}
+        {`${t.plans.from} ${t.plans.items.monthly.price} ${t.plans.monthly} · SPEI`}
       </div>
     </div>,
     size,

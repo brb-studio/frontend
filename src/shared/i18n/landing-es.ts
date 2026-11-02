@@ -4,7 +4,7 @@ const landingEs: LandingDictionary = {
   meta: {
     title: "brb-studio · Reservas, caja y clientes para barberías",
     description:
-      "Reservas en línea sin citas dobles, una caja que cuadra al cierre y una tarjeta de sellos para que tus clientes vuelvan. Para una silla o varias sucursales, con el nombre de tu barbería. MXN 300 al mes.",
+      "Reservas en línea sin citas dobles, una caja que cuadra al cierre y una tarjeta de sellos para que tus clientes vuelvan. Para una silla o varias sucursales, con el nombre de tu barbería. Desde MXN 600 al mes.",
     ogAlt: "brb-studio: tu barbería, en orden. Aunque no estés.",
   },
   a11y: {
@@ -16,7 +16,7 @@ const landingEs: LandingDictionary = {
   },
   nav: {
     product: "Producto",
-    pricing: "Precio",
+    pricing: "Planes",
     contact: "Contacto",
   },
   cta: {
@@ -98,6 +98,13 @@ const landingEs: LandingDictionary = {
     progress: "4 de 6 visitas",
     stampsLabel: "Tarjeta de sellos: {n} de {total} visitas",
     note: "Tu lista de clientes muestra los 50 más recientes y encuentra a cualquiera por nombre, correo o teléfono.",
+    widget: {
+      label: "Widget de sellos en el iPhone",
+      name: "Cada 6.ª visita",
+      reward: "50 % en tu corte",
+      caption:
+        "En la pantalla de inicio del iPhone, el cliente ve sus sellos sin abrir la app.",
+    },
   },
   ledger: {
     time: "21:04",
@@ -174,12 +181,157 @@ const landingEs: LandingDictionary = {
       "Si atiendes tú, te das de alta como barbero en un paso.",
       "Compartes el enlace.",
     ],
-    priceLabel: "Precio",
-    price: "MXN 300",
-    period: "al mes",
-    payment: "Pago por transferencia SPEI.",
-    plan: "Un solo plan para todas las barberías.",
-    trial: "Empiezas con 14 días de prueba.",
+  },
+  plans: {
+    title: ["Paga por estar", "donde", "están tus clientes."],
+    lede: "Tu barbería en la web, en la App Store y en Google Play, con tu propio nombre, ícono y color. Elige dónde quieres estar.",
+    firstLabel: "Para empezar",
+    firstTitle: "Tu primer plan es de 3 meses",
+    laterLabel: "Después",
+    laterTitle: "Sigue mes a mes, o paga 6 meses de una vez",
+    per: "{months} meses",
+    monthly: "al mes",
+    equals: "Sale a {amount} al mes.",
+    recommended: "Todo incluido",
+    from: "Desde",
+    payment: "Pago por transferencia SPEI, antes de que empiece cada periodo.",
+    currency: "Precios en pesos mexicanos.",
+    items: {
+      firstIos: {
+        name: "iPhone + Web",
+        price: "MXN 1,800",
+        months: 3,
+        perMonth: "MXN 600",
+        includes: [
+          "Tu app en la App Store",
+          "Tu sitio de reservas en la web",
+          "Panel del equipo en la web y en la app",
+        ],
+      },
+      firstAndroid: {
+        name: "Android + Web",
+        price: "MXN 1,800",
+        months: 3,
+        perMonth: "MXN 600",
+        includes: [
+          "Tu app en Google Play",
+          "Tu sitio de reservas en la web",
+          "Panel del equipo en la web y en la app",
+        ],
+      },
+      monthly: {
+        name: "Mes a mes",
+        price: "MXN 600",
+        includes: [
+          "Las mismas plataformas de tu primer plan",
+          "Sin compromiso más allá del mes que pagas",
+        ],
+      },
+      sixAll: {
+        name: "iPhone + Android + Web",
+        price: "MXN 3,600",
+        months: 6,
+        perMonth: "MXN 600",
+        includes: [
+          "Tu app en la App Store y en Google Play",
+          "Tu sitio de reservas en la web",
+          "Todas las plataformas, un solo pago",
+        ],
+      },
+      sixApps: {
+        name: "iPhone + Android",
+        price: "MXN 3,200",
+        months: 6,
+        perMonth: "unos MXN 533",
+        includes: [
+          "Tu app en la App Store y en Google Play",
+          "Sin sitio de reservas en la web",
+        ],
+      },
+    },
+  },
+  platforms: {
+    title: ["La misma barbería en", "cada", "pantalla."],
+    lede: "La web y la app comparten la cuenta, la agenda y los datos: un cliente que reserva en la web ve su cita en la app, y al revés.",
+    web: {
+      name: "Web",
+      sub: "Cualquier navegador, sin instalar nada",
+      points: [
+        "La dirección propia de tu barbería, para compartir por enlace o QR",
+        "Panel del equipo pensado para la computadora, con menú lateral",
+        "Pago en línea con tarjeta, con Stripe",
+        "Se puede agregar a la pantalla de inicio desde el navegador",
+      ],
+    },
+    app: {
+      name: "App para iPhone y Android",
+      sub: "La misma app, en la App Store y en Google Play",
+      points: [
+        "Una app propia con tu nombre, ícono y color, no la nuestra",
+        "Notificaciones nativas de reservas, cambios y recordatorios",
+        "Escanea el QR de los apartados con la cámara del teléfono",
+        "Todo el panel del equipo en tu bolsillo",
+      ],
+    },
+    tableTitle: "Qué hace cada una",
+    feature: "Función",
+    yes: "Sí",
+    no: "No",
+    soon: "Próximamente",
+    rows: [
+      {
+        name: "Reserva en línea para tus clientes",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Panel del equipo (agenda, caja, catálogo, equipo)",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "App propia en la tienda, con tu nombre e ícono",
+        web: "no",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Notificaciones en el teléfono",
+        web: "partial",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Escanear el QR de los apartados",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Pago en línea con tarjeta",
+        web: "yes",
+        ios: "soon",
+        android: "soon",
+      },
+      {
+        name: "Pago por transferencia",
+        web: "yes",
+        ios: "yes",
+        android: "yes",
+      },
+      {
+        name: "Funciona en la computadora",
+        web: "yes",
+        ios: "no",
+        android: "no",
+      },
+      { name: "Sin instalar nada", web: "yes", ios: "no", android: "no" },
+    ],
+    partial: "Parcial",
+    partialNote:
+      "En la web, las notificaciones llegan en Android, y en iPhone solo después de agregar el sitio a la pantalla de inicio.",
   },
   closing: {
     title: ["Mira una barbería", "funcionando."],
@@ -219,6 +371,10 @@ const landingEs: LandingDictionary = {
     revenue:
       "Ingresos de este mes: barras por día, ingresos, lo que te queda tras comisiones y ticket promedio.",
     settings: "Ajustes: elegir el color de la barbería.",
+    "app-home":
+      "Inicio de la app de Montecobre Barber Co. en un iPhone: botón para reservar y la sucursal con su horario.",
+    "app-staff":
+      "Panel del equipo en la app: citas de hoy, ingresos esperados y la agenda en vivo.",
   },
   privacy: {
     title: "Aviso de privacidad",

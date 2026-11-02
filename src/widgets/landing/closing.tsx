@@ -5,40 +5,26 @@ import type { LandingDictionary } from "@/shared/i18n/landing";
 import type { Locale } from "@/shared/i18n/locales";
 import { type Cta, CtaLink, Headline, SampleLink, Section } from "./parts";
 
-/** S9a · how it starts, and the one price. */
+/** S9a · how it starts. */
 export function Start({ t }: { t: LandingDictionary }) {
   return (
-    <Section id="precio" labelledBy="start-title" className="lp-start">
-      <div className="lp-split">
-        <div className="lp-copy">
-          <Headline
-            id="start-title"
-            parts={t.start.title}
-            className="lp-reveal"
-          />
-          <ol className="lp-numbered">
-            {t.start.steps.map((step, i) => (
-              <li key={step} className="lp-reveal">
-                <span className="lp-mono" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {step}
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div className="lp-price lp-reveal">
-          <p className="lp-mono lp-price__label">{t.start.priceLabel}</p>
-          <p className="lp-price__amount">
-            <span className="lp-price__figure">{t.start.price}</span>{" "}
-            <span className="lp-price__period">{t.start.period}</span>
-          </p>
-          <ul className="lp-price__terms">
-            <li className="lp-price__term">{t.start.payment}</li>
-            <li className="lp-price__term">{t.start.plan}</li>
-            <li className="lp-price__term">{t.start.trial}</li>
-          </ul>
-        </div>
+    <Section labelledBy="start-title" className="lp-start">
+      <div className="lp-copy">
+        <Headline
+          id="start-title"
+          parts={t.start.title}
+          className="lp-reveal"
+        />
+        <ol className="lp-numbered">
+          {t.start.steps.map((step, i) => (
+            <li key={step} className="lp-reveal">
+              <span className="lp-mono" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
       </div>
     </Section>
   );
