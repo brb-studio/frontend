@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
 import { FiscalForm } from "./fiscal-form";
+import { ImagesField } from "./image-field";
 import { InvoicesQueue } from "./invoices-queue";
 import { tenantSchema } from "./schemas";
 import { DEFAULT_DARK, DEFAULT_LIGHT, ThemeFields } from "./theme-fields";
@@ -86,6 +87,12 @@ export function SettingsForm({ t, locale }: { t: AdminText; locale: Locale }) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const instagram = value(form, "instagram");
+    const logo = value(form, "logo");
+    const {
+      instagramUrl: _instagram,
+      logo: _logo,
+      ...brand
+    } = tenant.data?.brand ?? {};
     const light = value(form, "canvasLight");
     const dark = value(form, "canvasDark");
 
@@ -104,8 +111,9 @@ export function SettingsForm({ t, locale }: { t: AdminText; locale: Locale }) {
           ...(isDefault ? {} : { canvas: { light, dark } }),
         },
         brand: {
-          ...tenant.data?.brand,
+          ...brand,
           ...(instagram ? { instagramUrl: instagram } : {}),
+          ...(logo ? { logo } : {}),
         },
       },
     });
@@ -123,6 +131,16 @@ export function SettingsForm({ t, locale }: { t: AdminText; locale: Locale }) {
             label={t.settings.name}
             required
             defaultValue={tenant.data.name}
+          />
+          <ImagesField
+            kind="logo"
+            name="logo"
+            max={1}
+            label={t.settings.logo}
+            defaultValue={
+              tenant.data.brand.logo ? [tenant.data.brand.logo] : []
+            }
+            t={t.images}
           />
           <ThemeFields t={t.settings} accent={accent} canvas={canvas} />
           <Field

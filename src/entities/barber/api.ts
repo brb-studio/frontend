@@ -8,7 +8,8 @@ export type Barber = {
   slug: string;
   name: string;
   specialty: string;
-
+  image?: string;
+  images: string[];
   branch: string;
 };
 
@@ -17,6 +18,8 @@ const apiBarbers = z.array(
     slug: z.string(),
     name: z.string(),
     specialty: localized.optional(),
+    image: z.string().optional(),
+    images: z.array(z.string()).default([]),
     branch: z.string().optional(),
   }),
 );
@@ -27,6 +30,8 @@ export const getBarbers = cache(
       slug: b.slug,
       name: b.name,
       specialty: pick(b.specialty, locale),
+      ...(b.image && { image: b.image }),
+      images: b.images,
       branch: b.branch ?? "",
     })),
 );

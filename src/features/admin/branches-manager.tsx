@@ -73,6 +73,7 @@ function BranchForm({
   return (
     <form onSubmit={submit} className="grid w-full gap-4">
       <ImagesField
+        kind="branches"
         label={t.images.photo}
         defaultValue={branch?.images}
         t={t.images}

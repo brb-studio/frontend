@@ -15,6 +15,16 @@ const request = z.object({
 });
 
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const imageKind = z.enum([
+  "logo",
+  "brand",
+  "services",
+  "packages",
+  "products",
+  "barbers",
+  "branches",
+]);
+export type ImageKind = z.infer<typeof imageKind>;
 const MAX_IMAGE_BYTES = 1024 * 1024;
 
 export type UploadResult =
@@ -23,7 +33,9 @@ export type UploadResult =
 
 export async function uploadImage(form: FormData): Promise<UploadResult> {
   const file = form.get("file");
+  const kind = imageKind.safeParse(form.get("kind"));
   if (
+    !kind.success ||
     !(file instanceof File) ||
     !IMAGE_TYPES.has(file.type) ||
     file.size > MAX_IMAGE_BYTES
@@ -31,12 +43,15 @@ export async function uploadImage(form: FormData): Promise<UploadResult> {
     return { ok: false, code: "UNSUPPORTED_IMAGE", message: "Invalid image" };
   }
   try {
-    const { id } = await backend(
-      "/v1/images",
-      z.object({ id: z.string().regex(/^[\w-]{22}$/) }),
+    const { id, url } = await backend(
+      `/v1/images?kind=${kind.data}`,
+      z.object({
+        id: z.string().regex(/^[\w-]{22}$/),
+        url: z.url({ protocol: /^https$/ }).optional(),
+      }),
       { method: "POST", body: file },
     );
-    return { ok: true, path: `/api/images/${id}` };
+    return { ok: true, path: url ?? `/api/images/${id}` };
   } catch (error) {
     return error instanceof ApiError
       ? { ok: false, code: error.code, message: error.message }

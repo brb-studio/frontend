@@ -41,6 +41,17 @@ const tunnelOrigins = isDev ? [...tunnels, "localhost:3000"] : [];
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    minimumCacheTTL: 2678400,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "api.getpronto.io",
+        pathname: "/v1/file/**",
+      },
+      { protocol: "https", hostname: "cdn.getpronto.io" },
+    ],
+  },
   allowedDevOrigins: tunnels,
   experimental: { serverActions: { allowedOrigins: tunnelOrigins } },
   async headers() {

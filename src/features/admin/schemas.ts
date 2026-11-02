@@ -160,7 +160,12 @@ export const tenantSchema = z.object({
   name: z.string(),
   currency: z.string(),
   theme: z.record(z.string(), z.unknown()),
-  brand: z.object({ instagramUrl: z.string().optional() }),
+  brand: z.object({
+    instagramUrl: z.string().optional(),
+    authImage: z.string().optional(),
+    coverImage: z.string().optional(),
+    logo: z.string().optional(),
+  }),
   reminders: z.object({ enabled: z.boolean() }),
   products: z.object({ enabled: z.boolean() }),
   iva: z.object({ enabled: z.boolean() }).optional(),

@@ -203,6 +203,8 @@ const es: Dictionary = {
     },
   },
   products: {
+    close: "Cerrar",
+    photos: "fotos · desliza",
     title: "Productos",
     lead: "Aparta lo que quieras y pásalo a recoger a la sucursal. Pagas en efectivo o por transferencia al recoger.",
     branch: "Recoger en",
@@ -869,6 +871,7 @@ const es: Dictionary = {
       backgroundDark: "Fondo, modo oscuro",
       backgroundReset: "Restaurar fondos por defecto",
       instagram: "URL de Instagram",
+      logo: "Logo de la barbería",
       plan: "Plan",
       limits: "Límites",
       branches: "sucursales",

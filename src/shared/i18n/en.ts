@@ -200,6 +200,8 @@ const en = {
     },
   },
   products: {
+    close: "Close",
+    photos: "photos · swipe",
     title: "Products",
     lead: "Set aside what you want and pick it up at the branch. You pay in cash or by transfer when you pick up.",
     branch: "Pick up at",
@@ -853,6 +855,7 @@ const en = {
       backgroundDark: "Background, dark mode",
       backgroundReset: "Restore default backgrounds",
       instagram: "Instagram URL",
+      logo: "Barbershop logo",
       plan: "Plan",
       limits: "Limits",
       branches: "branches",

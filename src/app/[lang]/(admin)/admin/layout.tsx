@@ -77,7 +77,7 @@ export default async function AdminLayout({
       </a>
       <aside className="sticky top-0 hidden h-dvh flex-col gap-6 overflow-y-auto border-r border-line bg-card p-4 md:flex">
         <div className="flex items-center gap-2.5 px-2 pt-2">
-          <BrandMark />
+          <BrandMark logo={tenant.logo} />
           <div className="grid min-w-0">
             <span className="truncate font-medium">{tenant.name}</span>
             <span className="text-xs text-fg-muted">{t.nav.label}</span>
@@ -102,7 +102,7 @@ export default async function AdminLayout({
       <div className="min-w-0">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-3 border-b border-line bg-canvas/85 px-4 backdrop-blur-xl md:hidden">
           <span className="flex min-w-0 items-center gap-2 font-medium">
-            <BrandMark />
+            <BrandMark logo={tenant.logo} />
             <span className="truncate">{tenant.name}</span>
           </span>
           {signOut}

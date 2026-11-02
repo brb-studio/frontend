@@ -3,7 +3,7 @@
 import { Camera, Star, X } from "lucide-react";
 import Image from "next/image";
 import { type ChangeEvent, useId, useState, useTransition } from "react";
-import { uploadImage } from "./actions";
+import { type ImageKind, uploadImage } from "./actions";
 import type { AdminText } from "./ui";
 
 const MAX_SIDE = 1600;
@@ -36,10 +36,16 @@ export function ImagesField({
   label,
   defaultValue = [],
   t,
+  kind,
+  name = "images",
+  max = MAX_PHOTOS,
 }: {
+  kind: ImageKind;
   label: string;
   defaultValue?: string[];
   t: AdminText["images"];
+  name?: string;
+  max?: number;
 }) {
   const id = useId();
   const [paths, setPaths] = useState(defaultValue);
@@ -49,7 +55,7 @@ export function ImagesField({
   function add(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []).slice(
       0,
-      MAX_PHOTOS - paths.length,
+      max - paths.length,
     );
     event.target.value = "";
     if (files.length === 0) return;
@@ -58,6 +64,7 @@ export function ImagesField({
       for (const file of files) {
         try {
           const form = new FormData();
+          form.set("kind", kind);
           form.set(
             "file",
             new File([await shrink(file)], "photo.jpg", { type: "image/jpeg" }),
@@ -98,7 +105,7 @@ export function ImagesField({
               sizes="160px"
               className="object-cover"
             />
-            {index === 0 ? (
+            {max === 1 ? null : index === 0 ? (
               <span className="absolute left-1.5 top-1.5 rounded-full bg-accent px-2 py-1 text-[0.6875rem] font-medium text-accent-fg">
                 {t.cover}
               </span>
@@ -120,10 +127,10 @@ export function ImagesField({
             >
               <X size={14} aria-hidden="true" />
             </button>
-            <input type="hidden" name="images" value={path} />
+            <input type="hidden" name={name} value={path} />
           </li>
         ))}
-        {paths.length < MAX_PHOTOS && (
+        {paths.length < max && (
           <li>
             <label
               htmlFor={id}
@@ -136,7 +143,7 @@ export function ImagesField({
                 id={id}
                 type="file"
                 accept="image/*"
-                multiple
+                multiple={max > 1}
                 onChange={add}
                 disabled={pending}
                 className="sr-only"

@@ -103,6 +103,7 @@ function BarberEditor({
   return (
     <form onSubmit={submit} className="grid w-full gap-4">
       <ImagesField
+        kind="barbers"
         label={t.images.photo}
         defaultValue={barber.images}
         t={t.images}

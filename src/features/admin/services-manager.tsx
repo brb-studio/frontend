@@ -57,14 +57,17 @@ export function commonFields(form: FormData, isNew: boolean) {
 
 export function CommonInputs({
   item,
+  kind,
   t,
 }: {
   item?: Pick<AdminService, "name" | "description" | "images">;
+  kind: "services" | "packages" | "products";
   t: AdminText;
 }) {
   return (
     <>
       <ImagesField
+        kind={kind}
         label={t.images.photo}
         defaultValue={item?.images}
         t={t.images}
@@ -128,7 +131,7 @@ function ServiceForm({
   }
   return (
     <form onSubmit={submit} className="grid gap-4">
-      <CommonInputs item={service} t={t} />
+      <CommonInputs item={service} kind="services" t={t} />
       <div className="grid grid-cols-2 gap-3">
         <Field
           name="durationMin"
@@ -190,7 +193,7 @@ function PackageForm({
   }
   return (
     <form onSubmit={submit} className="grid gap-4">
-      <CommonInputs item={pkg} t={t} />
+      <CommonInputs item={pkg} kind="packages" t={t} />
       <Field
         name="price"
         inputMode="decimal"

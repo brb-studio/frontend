@@ -12,6 +12,7 @@ import { formatHours } from "@/shared/i18n/format";
 import { alternates } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
 import { ButtonLink } from "@/shared/ui/button";
+import { PhotoButton } from "@/shared/ui/photo-viewer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
@@ -117,14 +118,33 @@ export default async function HomePage() {
               key={barber.slug}
               className="grid w-24 shrink-0 justify-items-center gap-2 text-center"
             >
-              <span
-                aria-hidden="true"
-                className="bg-accent grid size-20 place-items-center rounded-full p-0.5"
-              >
-                <span className="grid size-full place-items-center rounded-full bg-surface font-medium text-2xl text-accent-text">
-                  {barber.name.charAt(0)}
+              {barber.image ? (
+                <PhotoButton
+                  images={barber.images}
+                  label={barber.name}
+                  closeLabel={dict.products.close}
+                  className="bg-accent grid size-20 place-items-center rounded-full p-0.5"
+                >
+                  <span className="relative size-full overflow-hidden rounded-full bg-surface">
+                    <Image
+                      src={barber.image}
+                      alt=""
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  </span>
+                </PhotoButton>
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="bg-accent grid size-20 place-items-center rounded-full p-0.5"
+                >
+                  <span className="grid size-full place-items-center rounded-full bg-surface font-medium text-2xl text-accent-text">
+                    {barber.name.charAt(0)}
+                  </span>
                 </span>
-              </span>
+              )}
               <span className="font-medium">{barber.name}</span>
               <span className="text-xs text-fg-muted">{barber.specialty}</span>
             </li>

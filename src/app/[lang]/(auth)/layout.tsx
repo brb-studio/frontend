@@ -48,7 +48,7 @@ export default async function AuthLayout({
       <div className="flex min-h-dvh flex-col">
         <header className="flex items-center justify-between p-4 text-white md:px-10 md:text-fg">
           <span className="flex animate-rise items-center gap-2.5 text-lg font-medium">
-            <BrandMark />
+            <BrandMark logo={tenant.logo} />
             {tenant.name}
           </span>
           <LanguageMenu label={dict.language.label} />

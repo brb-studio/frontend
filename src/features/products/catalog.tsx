@@ -13,6 +13,7 @@ import { ButtonLink } from "@/shared/ui/button";
 import { FormAlert, SubmitButton } from "@/shared/ui/form";
 import { reserveProducts } from "./actions";
 import { type Catalog, myOrdersKey } from "./model";
+import { ProductDetail } from "./product-detail";
 
 const select =
   "h-13 w-full rounded-2xl border border-line-strong bg-surface px-4 text-fg focus:border-accent";
@@ -36,6 +37,8 @@ export function ProductCatalog({
   const queryClient = useQueryClient();
   const [branch, setBranch] = useState(initialBranch);
   const [cart, setCart] = useState<Record<string, number>>({});
+  const [detail, setDetail] = useState<string>();
+  const shown = catalog.products.find((p) => p.slug === detail);
   const reserve = useMutation({
     mutationFn: reserveProducts,
     onSuccess: (result) => {
@@ -85,28 +88,39 @@ export function ProductCatalog({
           return (
             <li
               key={p.slug}
-              className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-3 rounded-3xl border border-line bg-card p-3"
+              className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-3xl border border-line bg-card p-3"
             >
-              <span className="relative size-18 overflow-hidden rounded-2xl bg-surface">
-                {p.image && (
-                  <Image
-                    src={p.image}
-                    alt=""
-                    fill
-                    sizes="72px"
-                    className="object-cover"
-                  />
-                )}
-              </span>
-              <span className="grid min-w-0">
-                <span className="truncate font-medium">
-                  {pick(p.name, locale)}
+              <button
+                type="button"
+                onClick={() => setDetail(p.slug)}
+                className="grid min-w-0 grid-cols-[4.5rem_1fr] items-center gap-3 rounded-2xl text-left"
+              >
+                <span className="relative size-18 overflow-hidden rounded-2xl bg-surface">
+                  {p.image && (
+                    <Image
+                      src={p.image}
+                      alt=""
+                      fill
+                      sizes="72px"
+                      className="object-cover"
+                    />
+                  )}
+                  {p.images.length > 1 && (
+                    <span className="pointer-events-none absolute right-1 bottom-1 rounded-full bg-black/55 px-1.5 text-[0.625rem] font-medium text-white tabular-nums">
+                      {p.images.length}
+                    </span>
+                  )}
                 </span>
-                <span className="text-sm text-fg-muted">
-                  {money(p.priceMinor)}
-                  {p.category && ` · ${p.category}`}
+                <span className="grid min-w-0">
+                  <span className="truncate font-medium">
+                    {pick(p.name, locale)}
+                  </span>
+                  <span className="text-sm text-fg-muted">
+                    {money(p.priceMinor)}
+                    {p.category && ` · ${p.category}`}
+                  </span>
                 </span>
-              </span>
+              </button>
               {p.available ? (
                 <span className="flex items-center gap-1">
                   {quantity > 0 && (
@@ -140,6 +154,17 @@ export function ProductCatalog({
           );
         })}
       </ul>
+      <ProductDetail
+        product={shown}
+        price={shown ? money(shown.priceMinor) : ""}
+        onAdd={() => {
+          if (shown) change(shown.slug, 1);
+          setDetail(undefined);
+        }}
+        onClose={() => setDetail(undefined)}
+        locale={locale}
+        t={t}
+      />
 
       {reserve.data?.ok ? (
         <div

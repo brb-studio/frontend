@@ -1,11 +1,11 @@
 import { Navigation, Phone } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { getTenant } from "@/entities/tenant/api";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { formatHours } from "@/shared/i18n/format";
 import { alternates } from "@/shared/i18n/locales";
 import { buttonClass } from "@/shared/ui/button";
+import { ZoomGallery } from "@/shared/ui/photo-viewer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [dict, locale] = await Promise.all([getDictionary(), getLocale()]);
@@ -36,13 +36,17 @@ export default async function BranchesPage() {
             className="grid border border-line bg-card animate-rise overflow-hidden rounded-[2rem] shadow-soft sm:grid-cols-[2fr_3fr]"
           >
             <div className="relative aspect-[16/10] sm:aspect-auto">
-              <Image
-                src={branch.image}
-                alt=""
-                fill
+              <ZoomGallery
+                images={branch.images}
                 sizes="(min-width: 40rem) 18rem, 100vw"
-                className="object-cover"
+                closeLabel={dict.products.close}
+                className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
               />
+              {branch.images.length > 1 && (
+                <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-black/55 px-3 py-1 text-xs font-medium text-white">
+                  {branch.images.length} {dict.products.photos}
+                </span>
+              )}
             </div>
             <div className="grid gap-5 p-6">
               <div className="grid gap-1">

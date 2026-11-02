@@ -5,7 +5,6 @@ import {
 } from "@tanstack/react-query";
 import { ChevronLeft, Clock, Tag } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getService, getServices } from "@/entities/service/api";
@@ -24,6 +23,7 @@ import { WaitlistForm } from "@/features/waitlist/waitlist-form";
 import { getDictionary, getLocale } from "@/shared/i18n/dictionary";
 import { alternates } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
+import { ZoomGallery } from "@/shared/ui/photo-viewer";
 
 export async function generateMetadata({
   params,
@@ -80,20 +80,13 @@ export default async function ServicePage({
     <div className="grid gap-8">
       <div className="-mx-4 -mt-6 md:mx-0 md:mt-0">
         <div className="relative isolate aspect-[4/3] animate-rise overflow-hidden md:aspect-[16/9] md:rounded-[2rem] md:shadow-soft">
-          <div className="absolute inset-0 -z-20 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]">
-            {service.images.map((src, index) => (
-              <div key={src} className="relative size-full shrink-0 snap-start">
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  preload={index === 0}
-                  sizes="(min-width: 48rem) 46rem, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
+          <ZoomGallery
+            images={service.images}
+            sizes="(min-width: 48rem) 46rem, 100vw"
+            closeLabel={dict.products.close}
+            preloadFirst
+            className="absolute inset-0 -z-20 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
+          />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-black/35 to-black/0 to-40%"

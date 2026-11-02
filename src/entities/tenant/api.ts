@@ -14,6 +14,7 @@ export type Branch = {
   phoneDisplay: string;
   mapsUrl: string;
   image: string;
+  images: string[];
   hours: Hours[];
   timeZone: string;
 };
@@ -25,6 +26,7 @@ export type Tenant = {
   instagramUrl: string;
   authImage: string;
   coverImage: string;
+  logo?: string;
   theme?: TenantTheme;
   paymentsTransfer: boolean;
   /** The optional products module is on for this barbershop. */
@@ -56,6 +58,7 @@ const apiTenant = z.object({
     instagramUrl: z.string().optional(),
     authImage: z.string().optional(),
     coverImage: z.string().optional(),
+    logo: z.string().optional(),
   }),
   payments: z
     .object({
@@ -83,6 +86,7 @@ const apiTenant = z.object({
       phone: z.string().optional(),
       mapsUrl: z.string().optional(),
       image: z.string().optional(),
+      images: z.array(z.string()).default([]),
       timeZone: z.string(),
       hours: apiHours,
     }),
@@ -130,6 +134,7 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
     instagramUrl: api.brand.instagramUrl ?? "https://www.instagram.com/",
     authImage: api.brand.authImage ?? FALLBACK_IMAGE,
     coverImage: api.brand.coverImage ?? FALLBACK_IMAGE,
+    logo: api.brand.logo,
     theme: api.theme,
     paymentsTransfer: api.payments?.transfer ?? false,
     productsEnabled: api.products ?? false,
@@ -153,6 +158,7 @@ export function toTenant(api: z.output<typeof apiTenant>): Tenant {
         b.mapsUrl ??
         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address.join(", "))}`,
       image: b.image ?? FALLBACK_IMAGE,
+      images: b.images.length > 0 ? b.images : [b.image ?? FALLBACK_IMAGE],
       hours: groupHours(b.hours),
       timeZone: b.timeZone,
     })),

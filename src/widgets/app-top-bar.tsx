@@ -25,7 +25,7 @@ export async function AppTopBar() {
           href={`/${locale}/home`}
           className="flex items-center gap-2.5 font-medium text-xl"
         >
-          <BrandMark />
+          <BrandMark logo={tenant.logo} />
           {tenant.name}
         </Link>
         <AppNav variant="top" labels={dict.nav} />
