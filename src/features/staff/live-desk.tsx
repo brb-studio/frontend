@@ -3,33 +3,25 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Radio } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Appointment } from "@/features/account/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
 import { Button } from "@/shared/ui/button";
-import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
 import { markAllRead } from "./actions";
 import {
-  agendaKey,
-  agendaQuery,
   notificationSchema,
   notificationsKey,
   notificationsQuery,
   type StaffNotification,
 } from "./model";
+import { byNoticeDay, noticeAgo } from "./notice-time";
 
-export function when(at: string, timeZone: string, locale: Locale) {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone,
-  }).format(new Date(at));
-}
+/** Notices shown first, added per "show more", and the most the API returns in one page. */
+const FIRST = 5;
+const STEP = 10;
+const MAX = 50;
 
+/** The appointment's local start ("YYYY-MM-DDTHH:MM", already in the branch's zone). */
 const localStart = (start: string, locale: Locale) =>
   new Intl.DateTimeFormat(locale, {
     weekday: "short",
@@ -40,24 +32,32 @@ const localStart = (start: string, locale: Locale) =>
     timeZone: "UTC",
   }).format(new Date(`${start}:00Z`));
 
+/** The current time, ticking every minute so "5 min ago" stays true. */
+function useNow() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+  return now;
+}
+
+/** Live notices for the staff, newest first, grouped by the day they arrived. */
 export function LiveDesk({
   locale,
   t,
-  showAgenda = true,
 }: {
   locale: Locale;
   t: Dictionary["account"];
-  showAgenda?: boolean;
 }) {
   const queryClient = useQueryClient();
-  const agenda = useQuery(agendaQuery());
+  const now = useNow();
   const [live, setLive] = useState(false);
   const [latest, setLatest] = useState<StaffNotification | null>(null);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number>(PAGE_SIZES[0]);
-  const feed = useQuery(notificationsQuery(page, pageSize));
-  const total = feed.data?.total ?? 0;
-  const pages = Math.max(1, Math.ceil(total / pageSize));
+  const [shown, setShown] = useState(FIRST);
+  const feed = useQuery(notificationsQuery(1, shown));
+  const items = feed.data?.items ?? [];
+  const more = items.length < Math.min(feed.data?.total ?? 0, MAX);
   const reading = useMutation({
     mutationFn: markAllRead,
     onSuccess: () =>
@@ -65,14 +65,9 @@ export function LiveDesk({
   });
 
   useEffect(() => {
-    if (feed.data && page > pages) setPage(pages);
-  }, [feed.data, page, pages]);
-
-  useEffect(() => {
     const source = new EventSource("/api/staff/notifications/stream");
     const refresh = () => {
       void queryClient.invalidateQueries({ queryKey: notificationsKey });
-      void queryClient.invalidateQueries({ queryKey: agendaKey });
       void queryClient.invalidateQueries({ queryKey: ["admin"] });
     };
     source.addEventListener("ready", () => {
@@ -88,8 +83,8 @@ export function LiveDesk({
     return () => source.close();
   }, [queryClient]);
 
-  const items = (list: { name: Parameters<typeof pick>[0] }[]) =>
-    list.map((item) => pick(item.name, locale)).join(" + ");
+  const names = (list: Parameters<typeof pick>[0][]) =>
+    list.map((name) => pick(name, locale)).join(" + ");
 
   return (
     <div className="grid gap-8">
@@ -98,47 +93,6 @@ export function LiveDesk({
           ? `${t.notificationTypes[latest.type]}: ${latest.summary.customerName}`
           : ""}
       </p>
-      <section
-        aria-labelledby="agenda-title"
-        className={showAgenda ? "grid gap-3" : "hidden"}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <h2 id="agenda-title" className="text-xl font-medium">
-            {t.agendaTitle}
-          </h2>
-          {live && (
-            <span className="flex items-center gap-1.5 text-xs text-accent-text">
-              <Radio size={14} aria-hidden="true" />
-              {t.live}
-            </span>
-          )}
-        </div>
-        {agenda.isPending ? (
-          <p className="text-fg-muted">{t.loading}</p>
-        ) : agenda.data && agenda.data.length > 0 ? (
-          <ul className="grid gap-2">
-            {agenda.data.map((a: Appointment) => (
-              <li
-                key={a.id}
-                className={`grid gap-1 rounded-3xl border border-line bg-card px-4 py-3 text-sm ${a.status === "cancelled" ? "opacity-60" : ""}`}
-              >
-                <p className="flex justify-between gap-3 font-medium">
-                  <span>{when(a.startAt, a.timeZone, locale)}</span>
-                  <span className="text-fg-muted">{t.status[a.status]}</span>
-                </p>
-                <p>
-                  {a.customer?.name} · {items(a.items)}
-                </p>
-                <p className="text-fg-muted">
-                  {a.barber?.name} · {a.branch?.name}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-fg-muted">{t.noAgenda}</p>
-        )}
-      </section>
       <section aria-labelledby="notifications-title" className="grid gap-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="notifications-title" className="text-xl font-medium">
@@ -149,6 +103,12 @@ export function LiveDesk({
               </span>
             )}
           </h2>
+          {live && (
+            <span className="flex items-center gap-1.5 text-xs text-accent-text">
+              <Radio size={14} aria-hidden="true" />
+              {t.live}
+            </span>
+          )}
           {feed.data && feed.data.unread > 0 && (
             <Button
               variant="secondary"
@@ -159,38 +119,64 @@ export function LiveDesk({
             </Button>
           )}
         </div>
-        {feed.data && feed.data.items.length > 0 ? (
+        {items.length > 0 ? (
           <>
-            <ul className="grid gap-2">
-              {feed.data.items.map((n) => (
-                <li
-                  key={n.id}
-                  className={`grid gap-0.5 rounded-2xl border bg-card px-4 py-2.5 text-sm ${n.read ? "border-line" : "border-accent"}`}
-                >
-                  <p className="flex flex-wrap justify-between gap-x-3 font-medium">
-                    <span>{t.notificationTypes[n.type]}</span>
-                    <span className="shrink-0 text-xs text-fg-muted">
-                      {localStart(n.summary.start, locale)}
-                    </span>
-                  </p>
-                  <p className="line-clamp-2 text-fg-muted">
-                    {n.summary.customerName} ·{" "}
-                    {items(n.summary.items.map((name) => ({ name })))} ·{" "}
-                    {n.summary.branchName}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <Pager
-              label={t.notificationsTitle}
-              page={page}
-              pageSize={pageSize}
-              total={total}
-              shown={feed.data.items.length}
-              onPage={setPage}
-              onPageSize={setPageSize}
-              t={t}
-            />
+            {byNoticeDay(items, now).map((group) => (
+              <div key={group.day} className="grid gap-2">
+                <h3 className="text-sm font-medium text-fg-muted">
+                  {t.noticeDays[group.day]}
+                </h3>
+                <ul className="grid gap-2">
+                  {group.items.map((n) => (
+                    <li
+                      key={n.id}
+                      className={`grid gap-0.5 rounded-2xl border bg-card px-4 py-2.5 text-sm ${n.read ? "border-line" : "border-accent"}`}
+                    >
+                      <p className="flex flex-wrap justify-between gap-x-3 font-medium">
+                        <span>{t.notificationTypes[n.type]}</span>
+                        <time
+                          dateTime={n.createdAt}
+                          className="shrink-0 text-xs font-normal text-fg-muted"
+                        >
+                          {noticeAgo(
+                            n.createdAt,
+                            n.summary.timeZone,
+                            locale,
+                            t.ago,
+                            now,
+                          )}
+                        </time>
+                      </p>
+                      <p>
+                        {t.appointmentAt.replace(
+                          "{when}",
+                          localStart(n.summary.start, locale),
+                        )}
+                      </p>
+                      <p className="line-clamp-2 text-fg-muted">
+                        {[
+                          n.summary.customerName,
+                          names(n.summary.items),
+                          n.summary.barberName,
+                          n.summary.branchName,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            {more && (
+              <Button
+                variant="secondary"
+                onClick={() => setShown((n) => Math.min(n + STEP, MAX))}
+                disabled={feed.isFetching}
+              >
+                {t.loadMore}
+              </Button>
+            )}
           </>
         ) : (
           <p className="text-fg-muted">

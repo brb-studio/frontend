@@ -25,11 +25,28 @@ export const formatDate = (
     new Date(`${date}T00:00:00Z`),
   );
 
-export const formatHours = (hours: Hours[], locale: Locale) =>
-  hours.map(({ from, to, open, close }) => ({
-    days:
-      from === to
-        ? weekday(from, locale)
-        : `${weekday(from, locale)} – ${weekday(to, locale)}`,
-    time: `${formatTime(open, locale)} – ${formatTime(close, locale)}`,
-  }));
+/**
+ * One row per run of days; a split shift (10–14 and 15–20) stays on its day's row, so no day shows
+ * twice: "sábado · 10:00 – 14:00, 15:00 – 20:00".
+ */
+export function formatHours(hours: Hours[], locale: Locale) {
+  const rows: { from: number; to: number; days: string; time: string }[] = [];
+  for (const { from, to, open, close } of hours) {
+    const time = `${formatTime(open, locale)} – ${formatTime(close, locale)}`;
+    const row = rows.find((r) => r.from === from && r.to === to);
+    if (row) {
+      row.time = `${row.time}, ${time}`;
+      continue;
+    }
+    rows.push({
+      from,
+      to,
+      days:
+        from === to
+          ? weekday(from, locale)
+          : `${weekday(from, locale)} – ${weekday(to, locale)}`,
+      time,
+    });
+  }
+  return rows.map(({ days, time }) => ({ days, time }));
+}

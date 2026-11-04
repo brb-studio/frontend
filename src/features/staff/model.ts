@@ -18,6 +18,7 @@ export const notificationSchema = z.object({
     start: z.string(),
     timeZone: z.string(),
     customerName: z.string(),
+    barberName: z.string().optional(),
     items: z.array(localized),
     branchName: z.string(),
   }),

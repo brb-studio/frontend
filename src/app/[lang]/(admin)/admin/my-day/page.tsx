@@ -20,7 +20,7 @@ export default async function MyDayPage() {
         canBecome={session.role === "owner" || session.role === "admin"}
       />
       {pushKey && <PushToggle publicKey={pushKey} t={dict.account.push} />}
-      <LiveDesk locale={locale} t={dict.account} showAgenda={false} />
+      <LiveDesk locale={locale} t={dict.account} />
     </div>
   );
 }

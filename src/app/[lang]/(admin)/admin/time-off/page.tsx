@@ -10,6 +10,7 @@ export default async function TimeOffAdminPage() {
     <div className="grid gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.timeOff}</h1>
       <TimeOffManager
+        locale={locale}
         t={dict.admin}
         canCloseBranch={session.role !== "barber"}
       />

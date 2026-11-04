@@ -1,25 +1,36 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { type FormEvent, useState } from "react";
+import {
+  CalendarRange,
+  Gift,
+  Plus,
+  Sparkles,
+  Tag,
+  Ticket,
+  X,
+  Zap,
+} from "lucide-react";
+import { useState } from "react";
 import * as z from "zod";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
-import { formatMoney, toMinor } from "@/shared/i18n/money";
+import { formatMoney } from "@/shared/i18n/money";
 import { Button } from "@/shared/ui/button";
-import { Field } from "@/shared/ui/field";
-import { Select } from "@/shared/ui/select";
-import { adminQuery, useAdminAction } from "./api";
-import { type AdminPromotion, promotionSchema } from "./schemas";
 import {
-  type AdminText,
-  Panel,
-  Result,
-  Row,
-  smallButton,
-  Toggle,
-  value,
-} from "./ui";
+  ActiveSwitch,
+  ChoicePills,
+  EditButton,
+  EntityCard,
+  Fact,
+  Notice,
+} from "./admin-kit";
+import { promoPhase, usesShare } from "./admin-view";
+import { adminQuery, useAdminAction } from "./api";
+import type { StatusFilter } from "./catalog-view";
+import { PromotionForm } from "./promotion-form";
+import { type AdminPromotion, promotionSchema } from "./schemas";
+import { type AdminText, Panel, Result } from "./ui";
 
 const promotionsQuery = adminQuery("promotions", z.array(promotionSchema));
 
@@ -32,152 +43,193 @@ export function PromotionsManager({
   currency: string;
   t: AdminText;
 }) {
+  const text = t.promotions;
   const promotions = useQuery(promotionsQuery);
-  const create = useAdminAction();
-  const toggle = useAdminAction();
-  const [adding, setAdding] = useState(false);
-  const [type, setType] = useState<"percent" | "fixed">("percent");
-  const [firstVisit, setFirstVisit] = useState(false);
-
+  const action = useAdminAction();
+  const [editing, setEditing] = useState<AdminPromotion | "new" | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [status, setStatus] = useState<StatusFilter>("active");
   const amount = (p: AdminPromotion) =>
     p.type === "percent"
-      ? `${p.value}%`
+      ? `${p.value} %`
       : formatMoney(p.value, currency, locale);
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const code = value(form, "code");
-    const max = value(form, "maxRedemptions");
-    const every = value(form, "everyVisits");
-    const raw = value(form, "value");
-    create.mutate(
-      {
-        method: "POST",
-        path: "promotions",
-        body: {
-          name: { es: value(form, "name") },
-          type,
-          value:
-            type === "percent" ? Number(raw) : (toMinor(raw, currency) ?? 0),
-          firstVisitOnly: firstVisit,
-          ...(code ? { code } : {}),
-          ...(max ? { maxRedemptions: Number(max) } : {}),
-          ...(every ? { everyVisits: Number(every) } : {}),
-        },
-      },
-      { onSuccess: (result) => result.ok && setAdding(false) },
+  const day = (iso: string) =>
+    new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" }).format(
+      new Date(iso),
     );
-  }
+  const shown = (promotions.data ?? []).filter(
+    (p) => status === "all" || p.active === (status === "active"),
+  );
+  const open = (next: AdminPromotion | "new") => {
+    setNotice(null);
+    setEditing(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
-    <Panel
-      title={t.nav.promotions}
-      action={
-        <button
-          type="button"
-          className={smallButton}
-          onClick={() => setAdding(!adding)}
+    <div className="grid gap-5">
+      <Notice
+        message={notice}
+        closeLabel={t.common.close}
+        onClose={() => setNotice(null)}
+      />
+      {editing && (
+        <Panel
+          title={
+            editing === "new"
+              ? text.newPromotion
+              : `${t.common.edit}: ${pick(editing.name, locale)}`
+          }
+          action={
+            <Button variant="secondary" onClick={() => setEditing(null)}>
+              <X size={18} aria-hidden="true" />
+              {t.common.close}
+            </Button>
+          }
         >
-          {adding ? t.common.close : t.promotions.newPromotion}
-        </button>
-      }
-    >
-      {adding && (
-        <form onSubmit={submit} className="grid gap-3">
-          <Field name="name" label={t.common.nameEs} required />
-          <Field
-            name="code"
-            label={t.promotions.code}
-            autoCapitalize="characters"
+          <PromotionForm
+            key={editing === "new" ? "new" : editing.id}
+            {...(editing === "new" ? {} : { promotion: editing })}
+            locale={locale}
+            currency={currency}
+            t={t}
+            onDone={(message) => {
+              setEditing(null);
+              setNotice(message);
+            }}
           />
-          <div className="grid grid-cols-2 gap-3">
-            <Select
-              name="type"
-              label={t.promotions.type}
-              value={type}
-              onChange={(event) =>
-                setType(event.target.value === "fixed" ? "fixed" : "percent")
-              }
-            >
-              <option value="percent">{t.promotions.percent}</option>
-              <option value="fixed">{t.promotions.fixed}</option>
-            </Select>
-            <Field
-              name="value"
-              inputMode="decimal"
-              label={`${t.promotions.value}${type === "percent" ? " (%)" : ""}`}
-              required
-            />
-          </div>
-          <Field
-            name="maxRedemptions"
-            type="number"
-            min={1}
-            label={t.promotions.maxRedemptions}
-          />
-          <Field
-            name="everyVisits"
-            type="number"
-            min={2}
-            max={100}
-            label={t.promotions.everyVisits}
-          />
-          <Toggle
-            label={t.promotions.firstVisitOnly}
-            checked={firstVisit}
-            onChange={setFirstVisit}
-          />
-          <Result result={create.data} t={t.common} />
-          <Button type="submit" disabled={create.isPending}>
-            {t.promotions.newPromotion}
-          </Button>
-        </form>
+        </Panel>
       )}
-      <Result result={toggle.data} t={t.common} />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ChoicePills
+          name="status"
+          label={t.common.active}
+          value={status}
+          options={[
+            ["active", t.services.filterActive],
+            ["inactive", t.services.filterInactive],
+            ["all", t.services.filterAll],
+          ]}
+          onChange={setStatus}
+        />
+        <Button onClick={() => open("new")}>
+          <Plus size={18} aria-hidden="true" />
+          {text.newPromotion}
+        </Button>
+      </div>
+      {action.data && !action.data.ok && (
+        <Result result={action.data} t={t.common} />
+      )}
+
       {promotions.isPending ? (
         <p className="text-fg-muted">{t.common.loading}</p>
-      ) : promotions.data && promotions.data.length > 0 ? (
-        <ul className="grid gap-2">
-          {promotions.data.map((p) => (
-            <Row
-              key={p.id}
-              muted={!p.active}
-              title={`${pick(p.name, locale)} · ${amount(p)}`}
-              meta={[
-                p.code ?? t.promotions.automatic,
-                p.firstVisitOnly ? t.promotions.firstVisitOnly : "",
-                p.everyVisits
-                  ? t.promotions.everyVisitsShort.replace(
-                      "{n}",
-                      String(p.everyVisits),
-                    )
-                  : "",
-                `${p.redemptions}${p.maxRedemptions ? `/${p.maxRedemptions}` : ""} ${t.promotions.uses}`,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
-            >
-              <button
-                type="button"
-                className={smallButton}
-                disabled={toggle.isPending}
-                onClick={() =>
-                  toggle.mutate({
-                    method: "PATCH",
-                    path: `promotions/${p.id}`,
-                    body: { active: !p.active },
-                  })
+      ) : shown.length === 0 ? (
+        <p className="text-fg-muted">{text.empty}</p>
+      ) : (
+        <ul className="grid gap-3">
+          {shown.map((p) => {
+            const phase = promoPhase(p);
+            const share = usesShare(p.redemptions, p.maxRedemptions);
+            const state =
+              phase === "live"
+                ? p.endsAt
+                  ? text.until.replace("{date}", day(p.endsAt))
+                  : text.live
+                : phase === "scheduled" && p.startsAt
+                  ? text.scheduled.replace("{date}", day(p.startsAt))
+                  : phase === "ended"
+                    ? text.ended
+                    : text.inactive;
+            return (
+              <EntityCard
+                key={p.id}
+                icon={Tag}
+                badge={amount(p)}
+                title={pick(p.name, locale)}
+                muted={!p.active || phase === "ended"}
+                highlight={phase === "live"}
+                aside={
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${phase === "live" ? "bg-accent text-accent-fg" : "border border-line text-fg-muted"}`}
+                  >
+                    {state}
+                  </span>
+                }
+                actions={
+                  <>
+                    <ActiveSwitch
+                      label={t.services.activeLabel}
+                      checked={p.active}
+                      disabled={action.isPending}
+                      onChange={(active) =>
+                        action.mutate({
+                          method: "PATCH",
+                          path: `promotions/${p.id}`,
+                          body: { active },
+                        })
+                      }
+                    />
+                    <EditButton label={t.common.edit} onClick={() => open(p)} />
+                  </>
                 }
               >
-                {p.active ? t.common.deactivate : t.common.activate}
-              </button>
-            </Row>
-          ))}
+                <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  {p.code ? (
+                    <span className="inline-flex items-center gap-1 rounded-lg border border-dashed border-accent px-2 py-0.5 font-mono text-xs tracking-wider">
+                      <Ticket size={12} aria-hidden="true" />
+                      {p.code}
+                    </span>
+                  ) : (
+                    <Fact icon={Zap}>{text.automatic}</Fact>
+                  )}
+                  {p.firstVisitOnly && (
+                    <Fact icon={Sparkles}>{text.firstVisitOnly}</Fact>
+                  )}
+                  {p.everyVisits && (
+                    <Fact icon={Gift}>
+                      {text.everyVisitsShort.replace(
+                        "{n}",
+                        String(p.everyVisits),
+                      )}
+                    </Fact>
+                  )}
+                  {(p.startsAt || p.endsAt) && (
+                    <Fact icon={CalendarRange}>
+                      {[
+                        p.startsAt && day(p.startsAt),
+                        p.endsAt && day(p.endsAt),
+                      ]
+                        .filter(Boolean)
+                        .join(" – ")}
+                    </Fact>
+                  )}
+                </p>
+                <div className="grid gap-1 pt-1">
+                  <p className="text-fg-muted tabular-nums">
+                    {p.maxRedemptions
+                      ? text.usesOf
+                          .replace("{n}", String(p.redemptions))
+                          .replace("{max}", String(p.maxRedemptions))
+                      : text.usesCount.replace("{n}", String(p.redemptions))}
+                  </p>
+                  {share !== null && (
+                    <div
+                      className="h-1.5 max-w-xs overflow-hidden rounded-full bg-line"
+                      role="img"
+                      aria-label={`${share} %`}
+                    >
+                      <div
+                        className={`h-full rounded-full ${share >= 100 ? "bg-danger" : "bg-accent"}`}
+                        style={{ width: `${share}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </EntityCard>
+            );
+          })}
         </ul>
-      ) : (
-        <p className="text-fg-muted">{t.common.empty}</p>
       )}
-    </Panel>
+    </div>
   );
 }

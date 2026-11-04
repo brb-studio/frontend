@@ -1,371 +1,435 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { type FormEvent, useState } from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  CircleCheck,
+  Clock,
+  MapPin,
+  Package,
+  Pencil,
+  Plus,
+  Scissors,
+  Search,
+  TriangleAlert,
+  Users,
+  X,
+} from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 import * as z from "zod";
-import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
-import { formatMoney, toMajor, toMinor } from "@/shared/i18n/money";
+import { formatMoney } from "@/shared/i18n/money";
 import { Button } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { adminQuery, useAdminAction } from "./api";
-import { ImagesField } from "./image-field";
+import {
+  filterCatalog,
+  formatDuration,
+  moveTo,
+  offeredBy,
+  type StatusFilter,
+  savingsOf,
+} from "./catalog-view";
+import { PackageForm } from "./package-form";
 import {
   type AdminPackage,
   type AdminService,
+  barberSchema,
+  branchSchema,
   packageSchema,
   serviceSchema,
 } from "./schemas";
-import {
-  type AdminText,
-  Panel,
-  Result,
-  Row,
-  slugify,
-  smallButton,
-  Toggle,
-  value,
-} from "./ui";
-
-type Props = { locale: Locale; currency: string; t: AdminText };
+import { type CatalogProps, ServiceForm } from "./service-form";
+import { Panel, pill, Result } from "./ui";
 
 const servicesQuery = adminQuery("services", z.array(serviceSchema));
 const packagesQuery = adminQuery("packages", z.array(packageSchema));
+const barbersQuery = adminQuery("barbers", z.array(barberSchema));
+const branchesQuery = adminQuery("branches", z.array(branchSchema));
+type Tab = "services" | "packages";
+type Editing = { kind: Tab; item: AdminService | AdminPackage | null };
 
-export function both(form: FormData, es: string, en: string) {
-  const textEs = value(form, es);
-  const textEn = value(form, en);
-  if (!textEs && !textEn) return undefined;
-  return {
-    ...(textEs ? { es: textEs } : {}),
-    ...(textEn ? { en: textEn } : {}),
-  };
-}
-
-export function commonFields(form: FormData, isNew: boolean) {
-  const name = both(form, "nameEs", "nameEn");
-  const description = both(form, "descriptionEs", "descriptionEn");
-  return {
-    name,
-    ...(description ? { description } : {}),
-    images: form.getAll("images").map(String),
-    ...(isNew
-      ? { slug: value(form, "slug") || slugify(name?.es ?? name?.en ?? "") }
-      : {}),
-  };
-}
-
-export function CommonInputs({
-  item,
-  kind,
-  t,
-}: {
-  item?: Pick<AdminService, "name" | "description" | "images">;
-  kind: "services" | "packages" | "products";
-  t: AdminText;
-}) {
-  return (
-    <>
-      <ImagesField
-        kind={kind}
-        label={t.images.photo}
-        defaultValue={item?.images}
-        t={t.images}
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Field
-          name="nameEs"
-          label={t.common.nameEs}
-          required
-          maxLength={80}
-          defaultValue={item?.name.es}
-        />
-        <Field
-          name="nameEn"
-          label={t.common.nameEn}
-          maxLength={80}
-          defaultValue={item?.name.en}
-        />
-        <Field
-          name="descriptionEs"
-          label={t.common.descriptionEs}
-          maxLength={500}
-          defaultValue={item?.description?.es}
-        />
-        <Field
-          name="descriptionEn"
-          label={t.common.descriptionEn}
-          maxLength={500}
-          defaultValue={item?.description?.en}
-        />
-      </div>
-      {!item && (
-        <Field name="slug" label={t.common.slug} hint={t.common.slugHint} />
-      )}
-    </>
-  );
-}
-
-function ServiceForm({
-  service,
-  onDone,
-  currency,
-  t,
-}: Props & { service?: AdminService; onDone?: () => void }) {
-  const action = useAdminAction();
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    action.mutate(
-      {
-        method: service ? "PATCH" : "POST",
-        path: service ? `services/${service.id}` : "services",
-        body: {
-          ...commonFields(form, !service),
-          durationMin: Number(value(form, "durationMin")),
-          priceMinor: toMinor(value(form, "price"), currency) ?? -1,
-        },
-      },
-      { onSuccess: (result) => result.ok && onDone?.() },
-    );
-  }
-  return (
-    <form onSubmit={submit} className="grid gap-4">
-      <CommonInputs item={service} kind="services" t={t} />
-      <div className="grid grid-cols-2 gap-3">
-        <Field
-          name="durationMin"
-          type="number"
-          min={5}
-          max={720}
-          step={5}
-          label={t.services.duration}
-          required
-          defaultValue={service?.durationMin ?? 30}
-        />
-        <Field
-          name="price"
-          inputMode="decimal"
-          label={t.services.price}
-          required
-          defaultValue={service ? toMajor(service.priceMinor, currency) : ""}
-        />
-      </div>
-      <Result result={action.data} t={t.common} />
-      <Button type="submit" disabled={action.isPending}>
-        {service ? t.common.save : t.services.newService}
-      </Button>
-    </form>
-  );
-}
-
-function PackageForm({
-  pkg,
-  services,
-  onDone,
-  locale,
-  currency,
-  t,
-}: Props & {
-  pkg?: AdminPackage;
-  services: AdminService[];
-  onDone?: () => void;
-}) {
-  const action = useAdminAction();
-  const [picked, setPicked] = useState<string[]>(
-    pkg?.items.map((item) => item.serviceId) ?? [],
-  );
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    action.mutate(
-      {
-        method: pkg ? "PATCH" : "POST",
-        path: pkg ? `packages/${pkg.id}` : "packages",
-        body: {
-          ...commonFields(form, !pkg),
-          priceMinor: toMinor(value(form, "price"), currency) ?? -1,
-          items: picked.map((serviceId) => ({ serviceId })),
-        },
-      },
-      { onSuccess: (result) => result.ok && onDone?.() },
-    );
-  }
-  return (
-    <form onSubmit={submit} className="grid gap-4">
-      <CommonInputs item={pkg} kind="packages" t={t} />
-      <Field
-        name="price"
-        inputMode="decimal"
-        label={t.services.price}
-        required
-        defaultValue={pkg ? toMajor(pkg.priceMinor, currency) : ""}
-      />
-      <fieldset className="grid gap-1">
-        <legend className="mb-1 text-sm font-medium">{t.services.items}</legend>
-        {services
-          .filter(
-            (s) => s.active && (!s.branchId || s.branchId === pkg?.branchId),
-          )
-          .map((s) => (
-            <Toggle
-              key={s.id}
-              label={`${pick(s.name, locale)} · ${s.durationMin} ${t.common.minutes}`}
-              checked={picked.includes(s.id)}
-              onChange={(on) =>
-                setPicked((list) =>
-                  on ? [...list, s.id] : list.filter((id) => id !== s.id),
-                )
-              }
-            />
-          ))}
-      </fieldset>
-      <Result result={action.data} t={t.common} />
-      <Button type="submit" disabled={action.isPending || picked.length < 2}>
-        {pkg ? t.common.save : t.services.newPackage}
-      </Button>
-    </form>
-  );
-}
-
-export function ServicesManager(props: Props) {
+export function ServicesManager(props: CatalogProps) {
   const { locale, currency, t } = props;
+  const text = t.services;
   const services = useQuery(servicesQuery);
   const packages = useQuery(packagesQuery);
-  const toggle = useAdminAction();
-  const [editing, setEditing] = useState<string | null>(null);
-  const [adding, setAdding] = useState<"service" | "package" | null>(null);
-  const price = (minor: number) => formatMoney(minor, currency, locale);
+  const barbers = useQuery(barbersQuery);
+  const branches = useQuery(branchesQuery);
+  const action = useAdminAction();
+  const [tab, setTab] = useState<Tab>("services");
+  const [status, setStatus] = useState<StatusFilter>("active");
+  const [query, setQuery] = useState("");
+  const [editing, setEditing] = useState<Editing | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const money = (minor: number) => formatMoney(minor, currency, locale);
+  const words = {
+    minutes: text.durationMin,
+    hours: text.durationH,
+    hoursMinutes: text.durationHM,
+  };
+  const branchName = (id?: string) =>
+    branches.data?.find((b) => b.id === id)?.name ?? "";
+  const serviceName = (id: string) => {
+    const found = services.data?.find((s) => s.id === id);
+    return found ? pick(found.name, locale) : "";
+  };
+  const all = (tab === "services" ? services.data : packages.data) ?? [];
+  const ordered = [...all].sort((a, b) => a.position - b.position);
+  const shown = filterCatalog(ordered, status, query);
+  // Reordering only makes sense on the whole, unfiltered list.
+  const canMove =
+    status === "all" || all.every((i) => i.active === (status === "active"));
+  const sortable = canMove && query.trim() === "";
 
-  const activeButton = (
-    kind: "services" | "packages",
-    item: AdminService | AdminPackage,
-  ) => (
-    <button
-      type="button"
-      className={smallButton}
-      disabled={toggle.isPending}
-      onClick={() =>
-        toggle.mutate({
-          method: "PATCH",
-          path: `${kind}/${item.id}`,
-          body: { active: !item.active },
-        })
-      }
-    >
-      {item.active ? t.common.deactivate : t.common.activate}
-    </button>
-  );
-  const editButton = (id: string) => (
-    <button
-      type="button"
-      className={smallButton}
-      onClick={() => setEditing(editing === id ? null : id)}
-    >
-      {editing === id ? t.common.close : t.common.edit}
-    </button>
-  );
-  const addButton = (kind: "service" | "package", label: string) => (
-    <button
-      type="button"
-      className={smallButton}
-      onClick={() => setAdding(adding === kind ? null : kind)}
-    >
-      {adding === kind ? t.common.close : label}
-    </button>
-  );
+  const open = (next: Editing) => {
+    setNotice(null);
+    setEditing(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const done = (message: string) => {
+    setEditing(null);
+    setNotice(message);
+  };
+  async function move(id: string, direction: -1 | 1) {
+    for (const change of moveTo(ordered, id, direction)) {
+      await action.mutateAsync({
+        method: "PATCH",
+        path: `${tab}/${change.id}`,
+        body: { position: change.position },
+      });
+    }
+  }
+  const setActive = (item: AdminService | AdminPackage, active: boolean) =>
+    action.mutate({
+      method: "PATCH",
+      path: `${tab}/${item.id}`,
+      body: { active },
+    });
+
+  const tabs: { key: Tab; label: string; count: number }[] = [
+    {
+      key: "services",
+      label: text.services,
+      count: services.data?.length ?? 0,
+    },
+    {
+      key: "packages",
+      label: text.packages,
+      count: packages.data?.length ?? 0,
+    },
+  ];
+  const filters: [StatusFilter, string][] = [
+    ["active", text.filterActive],
+    ["inactive", text.filterInactive],
+    ["all", text.filterAll],
+  ];
 
   return (
-    <div className="grid gap-6">
-      <Panel
-        title={t.services.services}
-        action={addButton("service", t.services.newService)}
-      >
-        {adding === "service" && (
-          <ServiceForm {...props} onDone={() => setAdding(null)} />
-        )}
-        <Result result={toggle.data} t={t.common} />
-        {services.isPending ? (
-          <p className="text-fg-muted">{t.common.loading}</p>
-        ) : (
-          <ul className="grid gap-2">
-            {services.data?.map((s) => (
-              <Row
-                key={s.id}
-                muted={!s.active}
-                image={s.image ?? ""}
-                title={pick(s.name, locale)}
-                meta={`${s.durationMin} ${t.common.minutes} · ${price(s.priceMinor)} · ${s.active ? t.common.active : t.common.inactive}`}
+    <div className="grid gap-5">
+      {notice && (
+        <div
+          role="status"
+          className="flex items-start justify-between gap-3 rounded-2xl border border-accent bg-card px-4 py-3 text-sm"
+        >
+          <p className="flex items-start gap-2">
+            <CircleCheck
+              size={18}
+              aria-hidden="true"
+              className="mt-0.5 shrink-0 text-accent-text"
+            />
+            {notice}
+          </p>
+          <button
+            type="button"
+            aria-label={t.common.close}
+            className="-m-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-fg-muted hover:text-fg"
+            onClick={() => setNotice(null)}
+          >
+            <X size={16} aria-hidden="true" />
+          </button>
+        </div>
+      )}
+
+      {editing && (
+        <Panel
+          title={
+            editing.item
+              ? `${t.common.edit}: ${pick(editing.item.name, locale)}`
+              : editing.kind === "services"
+                ? text.newService
+                : text.newPackage
+          }
+          action={
+            <Button variant="secondary" onClick={() => setEditing(null)}>
+              <X size={18} aria-hidden="true" />
+              {t.common.close}
+            </Button>
+          }
+        >
+          {editing.kind === "services" ? (
+            <ServiceForm
+              key={editing.item?.id ?? "new"}
+              {...props}
+              branches={branches.data ?? []}
+              {...(editing.item
+                ? { service: editing.item as AdminService }
+                : {})}
+              onDone={done}
+            />
+          ) : (
+            services.data && (
+              <PackageForm
+                key={editing.item?.id ?? "new"}
+                {...props}
+                services={services.data}
+                {...(editing.item ? { pkg: editing.item as AdminPackage } : {})}
+                onDone={done}
+              />
+            )
+          )}
+        </Panel>
+      )}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          role="tablist"
+          aria-label={t.nav.services}
+          className="inline-flex rounded-full border border-line bg-card p-1"
+        >
+          {tabs.map(({ key, label, count }) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              onClick={() => setTab(key)}
+              className={`inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors ${tab === key ? "bg-accent text-accent-fg" : "text-fg-muted hover:text-fg"}`}
+            >
+              {key === "services" ? (
+                <Scissors size={16} aria-hidden="true" />
+              ) : (
+                <Package size={16} aria-hidden="true" />
+              )}
+              {label}
+              <span className="tabular-nums opacity-80">{count}</span>
+            </button>
+          ))}
+        </div>
+        <Button
+          onClick={() => open({ kind: tab, item: null })}
+          disabled={tab === "packages" && !services.data}
+        >
+          <Plus size={18} aria-hidden="true" />
+          {tab === "services" ? text.newService : text.newPackage}
+        </Button>
+      </div>
+
+      <div className="flex flex-wrap items-end gap-3">
+        <Field
+          name="q"
+          type="search"
+          label={text.search}
+          value={query}
+          autoComplete="off"
+          icon={<Search size={18} />}
+          onChange={(event) => setQuery(event.target.value)}
+          className="min-w-56 flex-1"
+        />
+        <div role="radiogroup" className="flex flex-wrap gap-2 pb-1">
+          {filters.map(([key, label]) => (
+            <label key={key} className={pill}>
+              <input
+                type="radio"
+                name="status"
+                checked={status === key}
+                onChange={() => setStatus(key)}
+                className="sr-only"
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </div>
+      {sortable && shown.length > 1 && (
+        <p className="-mt-2 text-sm text-fg-muted">{text.orderHint}</p>
+      )}
+      {action.data && !action.data.ok && (
+        <Result result={action.data} t={t.common} />
+      )}
+
+      {(tab === "services" ? services : packages).isPending ? (
+        <p className="text-fg-muted">{t.common.loading}</p>
+      ) : shown.length === 0 ? (
+        <p className="text-fg-muted">
+          {query.trim()
+            ? text.nothingFound.replace("{q}", query.trim())
+            : tab === "services"
+              ? text.noServices
+              : text.noPackages}
+        </p>
+      ) : (
+        <ul className="grid gap-3">
+          {shown.map((item, index) => {
+            const isService = tab === "services";
+            const service = item as AdminService;
+            const pkg = item as AdminPackage;
+            const minutes = isService ? service.durationMin : pkg.durationMin;
+            const people = isService
+              ? offeredBy(item.id, barbers.data ?? [])
+              : null;
+            const saves = isService ? 0 : savingsOf(pkg);
+            const photo = item.image ?? item.images[0];
+            return (
+              <li
+                key={item.id}
+                className={`grid grid-cols-[5.5rem_minmax(0,1fr)] gap-4 rounded-3xl border border-line bg-card p-3 text-sm ${item.active ? "" : "opacity-60"}`}
               >
-                {editButton(s.id)}
-                {activeButton("services", s)}
-                {editing === s.id && (
-                  <div className="w-full">
-                    <ServiceForm
-                      {...props}
-                      service={s}
-                      onDone={() => setEditing(null)}
+                <div className="relative grid aspect-square place-items-center overflow-hidden rounded-2xl bg-surface text-fg-muted">
+                  {photo ? (
+                    <Image
+                      src={photo}
+                      alt=""
+                      fill
+                      sizes="88px"
+                      className="object-cover"
                     />
+                  ) : isService ? (
+                    <Scissors size={26} aria-hidden="true" />
+                  ) : (
+                    <Package size={26} aria-hidden="true" />
+                  )}
+                </div>
+                <div className="grid min-w-0 content-between gap-2">
+                  <div className="grid gap-1">
+                    <p className="flex items-start justify-between gap-2">
+                      <span className="text-base font-medium">
+                        {pick(item.name, locale)}
+                      </span>
+                      <span className="shrink-0 text-base font-semibold tabular-nums">
+                        {money(item.priceMinor)}
+                      </span>
+                    </p>
+                    {item.description && (
+                      <p className="line-clamp-1 text-fg-muted">
+                        {pick(item.description, locale)}
+                      </p>
+                    )}
+                    <p className="flex flex-wrap gap-x-3 gap-y-1 text-fg-muted">
+                      {minutes !== null && (
+                        <span className="inline-flex items-center gap-1">
+                          <Clock size={14} aria-hidden="true" />
+                          {formatDuration(minutes, words)}
+                        </span>
+                      )}
+                      {people !== null &&
+                        (people === 0 ? (
+                          <span className="inline-flex items-center gap-1 text-danger">
+                            <TriangleAlert size={14} aria-hidden="true" />
+                            {text.offeredByNone}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1">
+                            <Users size={14} aria-hidden="true" />
+                            {people === 1
+                              ? text.offeredByOne
+                              : text.offeredBy.replace("{n}", String(people))}
+                          </span>
+                        ))}
+                      {item.branchId && (
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin size={14} aria-hidden="true" />
+                          {text.onlyAt.replace(
+                            "{branch}",
+                            branchName(item.branchId),
+                          )}
+                        </span>
+                      )}
+                    </p>
+                    {!isService && (
+                      <p className="text-fg-muted">
+                        {text.includes.replace(
+                          "{list}",
+                          pkg.items
+                            .map((i) => serviceName(i.serviceId))
+                            .join(" + "),
+                        )}
+                        {saves > 0 && (
+                          <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-xs text-accent-fg">
+                            {text.saves.replace("{amount}", money(saves))}
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    {!isService && !pkg.servicesActive && (
+                      <p className="inline-flex items-center gap-1 text-danger">
+                        <TriangleAlert size={14} aria-hidden="true" />
+                        {text.inactiveServices}
+                      </p>
+                    )}
                   </div>
-                )}
-              </Row>
-            ))}
-          </ul>
-        )}
-      </Panel>
-      <Panel
-        title={t.services.packages}
-        action={addButton("package", t.services.newPackage)}
-      >
-        {adding === "package" && services.data && (
-          <PackageForm
-            {...props}
-            services={services.data}
-            onDone={() => setAdding(null)}
-          />
-        )}
-        {packages.isPending ? (
-          <p className="text-fg-muted">{t.common.loading}</p>
-        ) : packages.data && packages.data.length > 0 ? (
-          <ul className="grid gap-2">
-            {packages.data.map((p) => (
-              <Row
-                key={p.id}
-                muted={!p.active}
-                image={p.image ?? ""}
-                title={pick(p.name, locale)}
-                meta={[
-                  p.durationMin !== null
-                    ? `${p.durationMin} ${t.common.minutes}`
-                    : "",
-                  price(p.priceMinor),
-                  p.listPriceMinor !== null
-                    ? `${price(p.listPriceMinor)} ${t.services.separately}`
-                    : "",
-                  p.servicesActive ? "" : t.services.inactiveServices,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              >
-                {editButton(p.id)}
-                {activeButton("packages", p)}
-                {editing === p.id && services.data && (
-                  <div className="w-full">
-                    <PackageForm
-                      {...props}
-                      pkg={p}
-                      services={services.data}
-                      onDone={() => setEditing(null)}
-                    />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 pr-1">
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        aria-checked={item.active}
+                        checked={item.active}
+                        disabled={action.isPending}
+                        onChange={(event) =>
+                          setActive(item, event.target.checked)
+                        }
+                        className="peer sr-only"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className="relative h-6 w-11 rounded-full bg-line transition-colors peer-checked:bg-accent peer-focus-visible:outline-2 peer-focus-visible:outline-accent after:absolute after:top-0.5 after:left-0.5 after:size-5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5"
+                      />
+                      <span>{text.activeLabel}</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => open({ kind: tab, item })}
+                      className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line px-4 hover:border-accent"
+                    >
+                      <Pencil size={14} aria-hidden="true" />
+                      {t.common.edit}
+                    </button>
+                    {sortable && (
+                      <span className="ml-auto inline-flex gap-1">
+                        <button
+                          type="button"
+                          aria-label={text.moveUp}
+                          title={text.moveUp}
+                          disabled={index === 0 || action.isPending}
+                          onClick={() => void move(item.id, -1)}
+                          className="grid size-11 place-items-center rounded-full border border-line hover:border-accent disabled:opacity-30"
+                        >
+                          <ArrowUp size={16} aria-hidden="true" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={text.moveDown}
+                          title={text.moveDown}
+                          disabled={
+                            index === shown.length - 1 || action.isPending
+                          }
+                          onClick={() => void move(item.id, 1)}
+                          className="grid size-11 place-items-center rounded-full border border-line hover:border-accent disabled:opacity-30"
+                        >
+                          <ArrowDown size={16} aria-hidden="true" />
+                        </button>
+                      </span>
+                    )}
                   </div>
-                )}
-              </Row>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-fg-muted">{t.common.empty}</p>
-        )}
-      </Panel>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

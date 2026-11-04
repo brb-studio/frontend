@@ -15,6 +15,7 @@ export function Pager({
   shown,
   onPage,
   onPageSize,
+  sizes = PAGE_SIZES,
   t,
 }: {
   label: string;
@@ -25,6 +26,8 @@ export function Pager({
   shown: number;
   onPage: (page: number) => void;
   onPageSize: (size: number) => void;
+  /** The choices of "per page"; the notices use 5, 10 and 20. */
+  sizes?: readonly number[];
   t: Dictionary["account"];
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
@@ -38,7 +41,7 @@ export function Pager({
           onPage(1);
         }}
       >
-        {PAGE_SIZES.map((size) => (
+        {sizes.map((size) => (
           <option key={size} value={size}>
             {size}
           </option>

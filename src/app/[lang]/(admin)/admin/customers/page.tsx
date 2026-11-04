@@ -9,7 +9,7 @@ export default async function CustomersAdminPage() {
   return (
     <div className="grid gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.customers}</h1>
-      <Customers locale={locale} t={dict.admin} />
+      <Customers locale={locale} t={dict.admin} pagerText={dict.account} />
     </div>
   );
 }

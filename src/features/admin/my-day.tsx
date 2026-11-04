@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { CalendarCheck } from "lucide-react";
+import { CalendarCheck, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import * as z from "zod";
 import type { Dictionary } from "@/shared/i18n/en";
@@ -11,6 +11,7 @@ import { ButtonLink } from "@/shared/ui/button";
 import { adminQuery } from "./api";
 import { BecomeBarber } from "./become-barber";
 import { staffAppointmentSchema } from "./schemas";
+import { phaseOf, shopClock, splitMyDay } from "./visit-phase";
 
 const myDayQuery = adminQuery(
   "appointments/my-day",
@@ -58,62 +59,84 @@ export function MyDay({
   }
   const { appointments, timeZone = "UTC" } = data;
   const now = Date.now();
-  const next = appointments.find(
-    (a) => a.status === "confirmed" && new Date(a.endAt).getTime() > now,
-  );
+  const { current, next, active, done } = splitMyDay(appointments, now);
+  const clock = shopClock(timeZone, locale);
   const total =
     appointments.length === 1
       ? t.myDay.one
       : t.myDay.other.replace("{n}", String(appointments.length));
 
-  const isDone = (a: (typeof appointments)[number]) =>
-    a.status !== "confirmed" && a.status !== "pending_payment";
-  const active = appointments.filter((a) => !isDone(a));
-  const done = appointments.filter(isDone);
-  const row = (a: (typeof appointments)[number]) => (
-    <li
-      key={a.id}
-      className={`grid gap-1 rounded-3xl border bg-card px-4 py-3 text-sm ${a.id === next?.id ? "border-accent" : "border-line"} ${isDone(a) ? "opacity-60" : ""}`}
-    >
-      <p className="flex justify-between gap-3 font-medium">
-        <span>
-          {hour(a.startAt, timeZone, locale)}
-          {a.id === next?.id && (
-            <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-xs text-accent-fg">
-              {t.myDay.next}
-            </span>
-          )}
-        </span>
-        <span className="text-fg-muted">{status[a.status]}</span>
-      </p>
-      <p>
-        {a.customer?.name} ·{" "}
-        {a.items.map((item) => pick(item.name, locale)).join(" + ")}
-      </p>
-      {a.customer?.phone && (
-        <Link
-          href={`tel:${a.customer.phone}`}
-          className="inline-flex min-h-11 w-fit items-center text-fg-muted underline-offset-2 hover:underline"
-        >
-          {a.customer.phone}
-        </Link>
-      )}
-    </li>
-  );
+  const row = (a: (typeof appointments)[number]) => {
+    const phase = phaseOf(a, now);
+    const badge =
+      a.id === current?.id
+        ? t.myDay.inProgress
+        : a.id === next?.id
+          ? t.myDay.next
+          : null;
+    return (
+      <li
+        key={a.id}
+        className={`grid gap-1 rounded-3xl border bg-card px-4 py-3 text-sm ${badge ? "border-accent" : "border-line"} ${phase === "closed" ? "opacity-60" : ""}`}
+      >
+        <p className="flex justify-between gap-3 font-medium">
+          <span>
+            {hour(a.startAt, timeZone, locale)}
+            {badge && (
+              <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-xs text-accent-fg">
+                {badge}
+              </span>
+            )}
+          </span>
+          <span
+            className={
+              phase === "toClose" ? "text-accent-text" : "text-fg-muted"
+            }
+          >
+            {phase === "toClose" ? t.agenda.toClose : status[a.status]}
+          </span>
+        </p>
+        <p>
+          {a.customer?.name} ·{" "}
+          {a.items.map((item) => pick(item.name, locale)).join(" + ")}
+        </p>
+        {a.customer?.phone && (
+          <Link
+            href={`tel:${a.customer.phone}`}
+            className="inline-flex min-h-11 w-fit items-center text-fg-muted underline-offset-2 hover:underline"
+          >
+            {a.customer.phone}
+          </Link>
+        )}
+      </li>
+    );
+  };
 
   return (
     <section aria-labelledby="my-day-count" className="grid gap-3">
-      <p
-        id="my-day-count"
-        className="flex items-center gap-2 text-xl font-medium"
-      >
-        <CalendarCheck size={22} aria-hidden="true" className="text-accent" />
-        {appointments.length > 0 ? total : t.myDay.empty}
-      </p>
+      <div className="grid gap-1">
+        <p
+          id="my-day-count"
+          className="flex items-center gap-2 text-xl font-medium"
+        >
+          <CalendarCheck size={22} aria-hidden="true" className="text-accent" />
+          {appointments.length > 0 ? total : t.myDay.empty}
+        </p>
+        {clock && (
+          <p className="text-sm text-fg-muted">
+            {t.myDay.shopTime.replace("{time}", clock)}
+          </p>
+        )}
+      </div>
       <ul className="grid gap-2">{active.map(row)}</ul>
       {done.length > 0 && (
         <details className="group grid gap-2">
-          <summary className="flex min-h-11 w-fit cursor-pointer items-center text-sm text-fg-muted">
+          <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 text-sm text-fg-muted [&::-webkit-details-marker]:hidden">
+            <ChevronDown
+              size={16}
+              aria-hidden="true"
+              className="transition-transform group-open:rotate-180"
+            />
             {t.myDay.finished.replace("{n}", String(done.length))}
           </summary>
           <ul className="mt-2 grid gap-2">{done.map(row)}</ul>

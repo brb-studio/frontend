@@ -106,6 +106,8 @@ export const staffSchema = z.object({
   role: z.enum(["owner", "admin", "manager", "barber", "customer"]),
   branchId: z.string().optional(),
   active: z.boolean(),
+  /** Still on the temporary password: hasn't signed in and chosen their own yet. */
+  mustChangePassword: z.boolean().optional(),
 });
 export type AdminStaff = z.output<typeof staffSchema>;
 
@@ -279,6 +281,9 @@ export type Pickup = z.output<typeof pickupSchema>;
 
 export const customerListSchema = z.object({
   currency: z.string(),
+  total: z.number().int().optional(),
+  page: z.number().int().optional(),
+  pageSize: z.number().int().optional(),
   customers: z.array(
     z.object({
       id: z.string(),

@@ -9,7 +9,11 @@ export default async function EarningsAdminPage() {
   return (
     <div className="grid gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.earnings}</h1>
-      <EarningsManager locale={locale} t={dict.platform} />
+      <EarningsManager
+        locale={locale}
+        t={dict.admin}
+        errors={dict.platform.earnings.errors}
+      />
     </div>
   );
 }

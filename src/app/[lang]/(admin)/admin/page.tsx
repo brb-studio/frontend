@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTenant } from "@/entities/tenant/api";
 import { adminSession } from "@/features/admin/access";
+import { TodayAgenda } from "@/features/admin/today-agenda";
 import { TodayStats } from "@/features/admin/today-stats";
 import { getSession } from "@/features/auth/session";
 import { getPushKey } from "@/features/staff/data";
@@ -20,11 +21,12 @@ export default async function AdminHome() {
     getPushKey(),
     getTenant(),
   ]);
+  const timeZone = tenant.branches[0]?.timeZone;
   const date = new Intl.DateTimeFormat(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",
-    timeZone: tenant.branches[0]?.timeZone,
+    timeZone,
   }).format(new Date());
   return (
     <div className="grid gap-6">
@@ -37,9 +39,16 @@ export default async function AdminHome() {
       <TodayStats
         locale={locale}
         currency={tenant.currency}
+        timeZone={timeZone}
         t={dict.admin.home}
       />
       {pushKey && <PushToggle publicKey={pushKey} t={dict.account.push} />}
+      <TodayAgenda
+        locale={locale}
+        t={dict.admin}
+        status={dict.account.status}
+        timeZone={timeZone}
+      />
       <LiveDesk locale={locale} t={dict.account} />
     </div>
   );

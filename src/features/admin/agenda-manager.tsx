@@ -1,24 +1,25 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { CalendarPlus, CircleCheck, X } from "lucide-react";
 import { useState } from "react";
 import * as z from "zod";
-import { type TicketText, ticketLine } from "@/features/payments/model";
+import type { TicketText } from "@/features/payments/model";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
-import { pick } from "@/shared/i18n/localized";
-import { formatMoney } from "@/shared/i18n/money";
+import { Button } from "@/shared/ui/button";
+import { Select } from "@/shared/ui/select";
+import { groupAgenda } from "./agenda-groups";
+import { AgendaRow } from "./agenda-row";
 import { adminQuery, useAdminAction } from "./api";
+import { Fold } from "./fold";
 import { NewAppointmentForm } from "./new-appointment-form";
-import { RescheduleForm } from "./reschedule-form";
 import {
   type AdminAppointment,
-  COUNTER_METHODS,
-  type CounterMethod,
+  branchSchema,
   staffAppointmentSchema,
 } from "./schemas";
-import { type AdminText, Result, Row, smallButton } from "./ui";
+import { type AdminText, Panel, Result } from "./ui";
 
 export const today = () => {
   const now = new Date();
@@ -27,8 +28,14 @@ export const today = () => {
     .slice(0, 10);
 };
 
-export const dayQuery = (day: string) =>
-  adminQuery(`appointments?date=${day}`, z.array(staffAppointmentSchema));
+export const dayQuery = (day: string, branchId = "") =>
+  adminQuery(
+    `appointments?date=${day}${branchId ? `&branchId=${branchId}` : ""}`,
+    z.array(staffAppointmentSchema),
+  );
+
+const branchesQuery = adminQuery("branches", z.array(branchSchema));
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 export function AgendaManager({
   locale,
@@ -36,6 +43,9 @@ export function AgendaManager({
   status,
   ticket,
   canRefund,
+  initialDay,
+  initialBranch = "",
+  currency,
 }: {
   locale: Locale;
   t: AdminText;
@@ -43,242 +53,166 @@ export function AgendaManager({
   ticket: TicketText;
   /** Owner and admin give money back; the API refuses everyone else anyway. */
   canRefund: boolean;
+  /** From the URL (`?date=`), e.g. the "see all" link of the home page. */
+  initialDay?: string | undefined;
+  /** From the URL (`?branch=`). */
+  initialBranch?: string | undefined;
+  /** The shop's currency, for prices in the new-appointment form. */
+  currency: string;
 }) {
-  const [refunding, setRefunding] = useState<string | null>(null);
-  const [moving, setMoving] = useState<string | null>(null);
-  const [day, setDay] = useState(today);
+  const [day, setDay] = useState(() =>
+    initialDay && DAY.test(initialDay) ? initialDay : today(),
+  );
+  const [branchId, setBranchId] = useState(initialBranch);
   const [adding, setAdding] = useState(false);
-  const appointments = useQuery(dayQuery(day));
+  /** The last thing saved, in words: the row it touched may have moved to a folded group. */
+  const [notice, setNotice] = useState<string | null>(null);
+  const branches = useQuery(branchesQuery);
+  const appointments = useQuery(dayQuery(day, branchId));
   const action = useAdminAction();
-  const change = (
-    a: AdminAppointment,
-    next: "completed" | "no_show" | "cancelled",
-    paidWith?: CounterMethod,
-  ) =>
-    action.mutate({
-      method: "PATCH",
-      path: `appointments/${a.id}`,
-      body: { status: next, ...(paidWith && { paidWith }) },
-    });
-  const time = (a: AdminAppointment) =>
-    new Intl.DateTimeFormat(locale, {
-      hour: "numeric",
-      minute: "2-digit",
-      timeZone: a.timeZone,
-    }).format(new Date(a.startAt));
+  const groups = groupAgenda(appointments.data ?? []);
+  // A single branch (chosen, or the only one visible) needs no heading.
+  const headings = groups.length > 1;
+  const row = (a: AdminAppointment) => (
+    <AgendaRow
+      key={a.id}
+      a={a}
+      locale={locale}
+      t={t}
+      status={status}
+      ticket={ticket}
+      canRefund={canRefund}
+      action={action}
+      onMoved={setDay}
+      onDone={setNotice}
+    />
+  );
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <label className="flex items-center gap-2 text-sm">
-          <span className="text-fg-muted">{t.agenda.day}</span>
-          <input
-            type="date"
-            value={day}
-            onChange={(event) => setDay(event.target.value || today())}
-            className="h-11 rounded-xl border border-line-strong bg-surface px-3 text-fg"
-          />
-        </label>
-        <button
-          type="button"
-          className={smallButton}
-          onClick={() => setAdding(!adding)}
-        >
-          {adding ? t.common.close : t.agenda.newAppointment}
-        </button>
+      {/* One row always: day and branch shrink, the button shortens ("Nueva cita" → "Nueva" → icon). */}
+      <div className="@container">
+        <div className="flex items-end gap-2 @md:gap-3">
+          <label className="grid min-w-0 shrink gap-2 text-sm">
+            <span className="font-medium">{t.agenda.day}</span>
+            <input
+              type="date"
+              value={day}
+              onChange={(event) => setDay(event.target.value || today())}
+              className="h-13 w-full min-w-0 rounded-2xl border border-line-strong bg-surface px-3 text-fg @md:px-4"
+            />
+          </label>
+          {branches.data && branches.data.length > 1 && (
+            <Select
+              name="branchId"
+              label={t.agenda.branch}
+              value={branchId}
+              className="min-w-0 flex-1 @3xl:max-w-xs @3xl:flex-none"
+              onChange={(event) => setBranchId(event.target.value)}
+            >
+              <option value="">{t.agenda.allBranches}</option>
+              {branches.data.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </Select>
+          )}
+          <Button
+            variant={adding ? "secondary" : "primary"}
+            aria-label={adding ? t.common.close : t.agenda.newAppointment}
+            title={adding ? t.common.close : t.agenda.newAppointment}
+            className="ml-auto h-13! shrink-0 px-4! @md:px-5!"
+            onClick={() => setAdding(!adding)}
+          >
+            {adding ? (
+              <X size={18} aria-hidden="true" />
+            ) : (
+              <CalendarPlus size={18} aria-hidden="true" />
+            )}
+            <span aria-hidden="true" className="hidden @2xl:inline">
+              {adding ? t.common.close : t.agenda.newAppointment}
+            </span>
+            <span aria-hidden="true" className="hidden @md:inline @2xl:hidden">
+              {adding ? t.common.close : t.agenda.newShort}
+            </span>
+          </Button>
+        </div>
       </div>
       {adding && (
-        <NewAppointmentForm
-          locale={locale}
-          t={t}
-          day={day}
-          onBooked={(date) => {
-            setDay(date);
-            setAdding(false);
-          }}
-        />
+        <Panel title={t.agenda.newAppointment}>
+          <NewAppointmentForm
+            locale={locale}
+            t={t}
+            day={day}
+            currency={currency}
+            onBooked={(date, message) => {
+              setDay(date);
+              setAdding(false);
+              setNotice(message);
+            }}
+          />
+        </Panel>
       )}
-      <Result result={action.data} t={t.common} />
+      {notice && (
+        <div
+          role="status"
+          className="flex items-start justify-between gap-3 rounded-2xl border border-accent bg-card px-4 py-3 text-sm"
+        >
+          <p className="flex items-start gap-2">
+            <CircleCheck
+              size={18}
+              aria-hidden="true"
+              className="mt-0.5 shrink-0 text-accent-text"
+            />
+            {notice}
+          </p>
+          <button
+            type="button"
+            aria-label={t.common.close}
+            className="-m-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-fg-muted hover:text-fg"
+            onClick={() => setNotice(null)}
+          >
+            <X size={16} aria-hidden="true" />
+          </button>
+        </div>
+      )}
+      {/* Errors only: a success is told by the notice above, with who and what. */}
+      {action.data && !action.data.ok && (
+        <Result result={action.data} t={t.common} />
+      )}
       {appointments.isPending ? (
         <p className="text-fg-muted">{t.common.loading}</p>
-      ) : appointments.data && appointments.data.length > 0 ? (
-        <ul className="grid gap-2">
-          {appointments.data.map((a) => {
-            const started = Date.parse(a.startAt) <= Date.now();
-            return (
-              <Row
-                key={a.id}
-                muted={a.status === "cancelled"}
-                title={`${time(a)} · ${a.customer?.name ?? ""}`}
-                meta={
-                  <>
-                    <span className="block">
-                      {[
-                        a.items
-                          .map((item) => pick(item.name, locale))
-                          .join(" + "),
-                        formatMoney(a.totalMinor, a.currency, locale),
-                      ].join(" · ")}
-                    </span>
-                    <span className="block">
-                      {[a.barber?.name, status[a.status]]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                    {a.payment && (
-                      <span className="block">
-                        {ticketLine(a.payment, ticket, (minor) =>
-                          formatMoney(minor, a.currency, locale),
-                        )}
-                      </span>
-                    )}
-                    {a.counter && (
-                      <span className="block">
-                        {t.agenda.collected
-                          .replace("{method}", t.methods[a.counter.method])
-                          .replace(
-                            "{amount}",
-                            formatMoney(
-                              a.counter.amountMinor,
-                              a.currency,
-                              locale,
-                            ),
-                          )}
-                      </span>
-                    )}
-                    {a.notes && <span className="block">{a.notes}</span>}
-                    {a.customer?.phone && (
-                      <Link
-                        href={`tel:${a.customer.phone}`}
-                        className="inline-flex min-h-11 items-center underline-offset-2 hover:underline"
-                      >
-                        {a.customer.phone}
-                      </Link>
-                    )}
-                  </>
-                }
-              >
-                {canRefund &&
-                  a.payment?.provider === "stripe" &&
-                  a.payment.status === "paid" &&
-                  a.payment.method !== undefined &&
-                  (refunding === a.id ? (
-                    <>
-                      <span className="text-sm">{t.agenda.refundConfirm}</span>
-                      <button
-                        type="button"
-                        className={smallButton}
-                        disabled={action.isPending}
-                        onClick={() =>
-                          action.mutate(
-                            {
-                              method: "POST",
-                              path: `payments/appointments/${a.id}/refund`,
-                              body: {},
-                            },
-                            { onSettled: () => setRefunding(null) },
-                          )
-                        }
-                      >
-                        {t.agenda.refund}
-                      </button>
-                      <button
-                        type="button"
-                        className={smallButton}
-                        onClick={() => setRefunding(null)}
-                      >
-                        {t.common.close}
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className={smallButton}
-                      onClick={() => setRefunding(a.id)}
-                    >
-                      {t.agenda.refund}
-                    </button>
-                  ))}
-                {a.status === "confirmed" && (
-                  <>
-                    {started && (
-                      <>
-                        {a.dueMinor ? (
-                          <>
-                            <span className="self-center text-sm">
-                              {t.agenda.charge.replace(
-                                "{amount}",
-                                formatMoney(a.dueMinor, a.currency, locale),
-                              )}
-                            </span>
-                            {COUNTER_METHODS.map((method) => (
-                              <button
-                                key={method}
-                                type="button"
-                                className={smallButton}
-                                disabled={action.isPending}
-                                onClick={() => change(a, "completed", method)}
-                              >
-                                {t.methods[method]}
-                              </button>
-                            ))}
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            className={smallButton}
-                            disabled={action.isPending}
-                            onClick={() => change(a, "completed")}
-                          >
-                            {t.agenda.complete}
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          className={smallButton}
-                          disabled={action.isPending}
-                          onClick={() => change(a, "no_show")}
-                        >
-                          {t.agenda.noShow}
-                        </button>
-                      </>
-                    )}
-                    <button
-                      type="button"
-                      className={smallButton}
-                      aria-expanded={moving === a.id}
-                      onClick={() =>
-                        setMoving((current) => (current === a.id ? null : a.id))
-                      }
-                    >
-                      {moving === a.id ? t.common.close : t.agenda.reschedule}
-                    </button>
-                    <button
-                      type="button"
-                      className={smallButton}
-                      disabled={action.isPending}
-                      onClick={() => change(a, "cancelled")}
-                    >
-                      {t.agenda.cancel}
-                    </button>
-                    {moving === a.id && (
-                      <RescheduleForm
-                        appointment={a}
-                        t={t}
-                        onMoved={(date) => {
-                          setMoving(null);
-                          setDay(date);
-                        }}
-                      />
-                    )}
-                  </>
-                )}
-              </Row>
-            );
-          })}
-        </ul>
-      ) : (
+      ) : groups.length === 0 ? (
         <p className="text-fg-muted">{t.agenda.empty}</p>
+      ) : (
+        groups.map((group) => (
+          <section
+            key={group.branchId}
+            aria-label={group.branchName}
+            className="grid gap-3"
+          >
+            {headings && (
+              <h2 className="flex flex-wrap items-baseline gap-x-2 text-lg font-medium">
+                {group.branchName}
+                <span className="text-sm font-normal text-fg-muted">
+                  {t.home.toAttend.replace("{n}", String(group.open.length))}
+                </span>
+              </h2>
+            )}
+            {group.open.length > 0 ? (
+              <ul className="grid gap-2">{group.open.map(row)}</ul>
+            ) : (
+              <p className="text-sm text-fg-muted">{t.home.nothingLeft}</p>
+            )}
+            <Fold title={t.agenda.attended} count={group.done.length}>
+              {group.done.map(row)}
+            </Fold>
+            <Fold title={t.agenda.closedGroup} count={group.closed.length}>
+              {group.closed.map(row)}
+            </Fold>
+          </section>
+        ))
       )}
     </div>
   );

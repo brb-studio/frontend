@@ -4,27 +4,31 @@ import { useQuery } from "@tanstack/react-query";
 import { notificationsQuery } from "@/features/staff/model";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
-import { dayQuery, today } from "./agenda-manager";
+import { todayIn } from "./agenda-groups";
+import { dayQuery } from "./agenda-manager";
 import type { AdminText } from "./ui";
+import { nextToStart } from "./visit-phase";
 
 export function TodayStats({
   locale,
   currency,
+  timeZone,
   t,
 }: {
   locale: Locale;
   currency: string;
+  /** The shop's time zone: "today" is its date, not the browser's. */
+  timeZone: string | undefined;
   t: AdminText["home"];
 }) {
-  const appointments = useQuery(dayQuery(today()));
+  const appointments = useQuery(dayQuery(todayIn(timeZone)));
   const feed = useQuery(notificationsQuery());
   const day = (appointments.data ?? []).filter(
     (a) => a.status === "confirmed" || a.status === "completed",
   );
   const now = Date.now();
-  const next = day
-    .filter((a) => a.status === "confirmed" && Date.parse(a.endAt) > now)
-    .sort((a, b) => Date.parse(a.startAt) - Date.parse(b.startAt))[0];
+  // A visit being attended is not "next": the next one is the one still to start.
+  const next = nextToStart(day, now);
   const time = (at: string, timeZone: string) =>
     new Intl.DateTimeFormat(locale, {
       hour: "numeric",

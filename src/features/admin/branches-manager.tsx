@@ -1,162 +1,38 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { type FormEvent, useState } from "react";
+import {
+  CalendarClock,
+  Clock,
+  Globe,
+  MapPin,
+  Phone,
+  Plus,
+  Store,
+  TriangleAlert,
+  Users,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 import * as z from "zod";
 import type { Locale } from "@/shared/i18n/locales";
 import { Button } from "@/shared/ui/button";
-import { Field } from "@/shared/ui/field";
-import { adminQuery, useAdminAction } from "./api";
-import { HoursEditor } from "./hours-editor";
-import { ImagesField } from "./image-field";
 import {
-  type AdminBranch,
-  type BookingRules,
-  branchSchema,
-  type HoursRow,
-} from "./schemas";
-import { type AdminText, Panel, Result, Row, smallButton, value } from "./ui";
+  ActiveSwitch,
+  EditButton,
+  EntityCard,
+  Fact,
+  Notice,
+} from "./admin-kit";
+import { cityOf, hoursSummary, todayHours } from "./admin-view";
+import { adminQuery, useAdminAction } from "./api";
+import { BranchForm } from "./branch-form";
+import { formatDuration } from "./catalog-view";
+import { type AdminBranch, barberSchema, branchSchema } from "./schemas";
+import { type AdminText, Panel, Result } from "./ui";
 
 const branchesQuery = adminQuery("branches", z.array(branchSchema));
-const RULES: (keyof BookingRules)[] = [
-  "slotIntervalMin",
-  "bufferMin",
-  "minNoticeMin",
-  "windowDays",
-  "cancelNoticeMin",
-];
-
-function BranchForm({
-  branch,
-  locale,
-  t,
-  onDone,
-}: {
-  branch?: AdminBranch;
-  locale: Locale;
-  t: AdminText;
-  onDone: () => void;
-}) {
-  const action = useAdminAction();
-  const [hours, setHours] = useState<HoursRow[]>(branch?.hours ?? []);
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const phone = value(form, "phone");
-    const booking = Object.fromEntries(
-      RULES.map((rule) => [rule, Number(value(form, rule))]),
-    );
-    const body = {
-      name: value(form, "name"),
-      address: value(form, "address")
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean),
-      ...(phone ? { phone } : {}),
-      images: form.getAll("images").map(String),
-      timeZone: value(form, "timeZone"),
-      hours,
-      booking,
-      ...(branch ? {} : { slug: value(form, "slug") }),
-    };
-    action.mutate(
-      {
-        method: branch ? "PATCH" : "POST",
-        path: branch ? `branches/${branch.id}` : "branches",
-        body,
-      },
-      { onSuccess: (result) => result.ok && onDone() },
-    );
-  }
-
-  return (
-    <form onSubmit={submit} className="grid w-full gap-4">
-      <ImagesField
-        kind="branches"
-        label={t.images.photo}
-        defaultValue={branch?.images}
-        t={t.images}
-      />
-      <Field
-        name="name"
-        label={t.team.name}
-        required
-        defaultValue={branch?.name}
-      />
-      {!branch && (
-        <Field
-          name="slug"
-          label={t.common.slug}
-          hint={t.common.slugHint}
-          required
-        />
-      )}
-      <label className="grid gap-2 text-sm font-medium">
-        {t.branches.address}
-        <textarea
-          name="address"
-          rows={2}
-          required
-          defaultValue={branch?.address.join("\n")}
-          className="rounded-2xl border border-line-strong bg-surface p-3 font-normal text-fg focus:border-accent"
-        />
-      </label>
-      <Field
-        name="phone"
-        type="tel"
-        label={t.branches.phone}
-        defaultValue={branch?.phone}
-      />
-      <Field
-        name="timeZone"
-        label={t.branches.timeZone}
-        required
-        defaultValue={
-          branch?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-        }
-      />
-      <fieldset className="grid gap-2">
-        <legend className="mb-1 text-sm font-medium">{t.branches.hours}</legend>
-        <HoursEditor
-          value={hours}
-          onChange={setHours}
-          locale={locale}
-          t={t.hours}
-        />
-      </fieldset>
-      <fieldset className="grid grid-cols-2 gap-3">
-        <legend className="col-span-2 mb-1 text-sm font-medium">
-          {t.branches.rules}
-        </legend>
-        {RULES.map((rule) => (
-          <Field
-            key={rule}
-            name={rule}
-            type="number"
-            min={0}
-            label={t.branches[rule]}
-            required
-            defaultValue={
-              branch?.booking[rule] ??
-              {
-                slotIntervalMin: 15,
-                bufferMin: 0,
-                minNoticeMin: 60,
-                windowDays: 14,
-                cancelNoticeMin: 120,
-              }[rule]
-            }
-          />
-        ))}
-      </fieldset>
-      <Result result={action.data} t={t.common} />
-      <Button type="submit" disabled={action.isPending}>
-        {branch ? t.common.save : t.branches.newBranch}
-      </Button>
-    </form>
-  );
-}
+const barbersQuery = adminQuery("barbers", z.array(barberSchema));
 
 export function BranchesManager({
   locale,
@@ -167,77 +43,175 @@ export function BranchesManager({
   t: AdminText;
   canCreate: boolean;
 }) {
+  const text = t.branches;
   const branches = useQuery(branchesQuery);
-  const toggle = useAdminAction();
-  const [editing, setEditing] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false);
+  const barbers = useQuery(barbersQuery);
+  const action = useAdminAction();
+  const [editing, setEditing] = useState<AdminBranch | "new" | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const words = {
+    minutes: t.services.durationMin,
+    hours: t.services.durationH,
+    hoursMinutes: t.services.durationHM,
+  };
+  const span = (minutes: number) =>
+    minutes >= 1440 && minutes % 1440 === 0
+      ? text.days.replace("{n}", String(minutes / 1440))
+      : formatDuration(minutes, words);
+  const open = (next: AdminBranch | "new") => {
+    setNotice(null);
+    setEditing(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
-    <Panel
-      title={t.nav.branches}
-      action={
-        canCreate ? (
-          <button
-            type="button"
-            className={smallButton}
-            onClick={() => setAdding(!adding)}
-          >
-            {adding ? t.common.close : t.common.add}
-          </button>
-        ) : undefined
-      }
-    >
-      {adding && (
-        <BranchForm locale={locale} t={t} onDone={() => setAdding(false)} />
+    <div className="grid gap-5">
+      <Notice
+        message={notice}
+        closeLabel={t.common.close}
+        onClose={() => setNotice(null)}
+      />
+      {editing && (
+        <Panel
+          title={
+            editing === "new"
+              ? text.newBranch
+              : `${t.common.edit}: ${editing.name}`
+          }
+          action={
+            <Button variant="secondary" onClick={() => setEditing(null)}>
+              <X size={18} aria-hidden="true" />
+              {t.common.close}
+            </Button>
+          }
+        >
+          <BranchForm
+            key={editing === "new" ? "new" : editing.id}
+            {...(editing === "new" ? {} : { branch: editing })}
+            locale={locale}
+            t={t}
+            onDone={(message) => {
+              setEditing(null);
+              setNotice(message);
+            }}
+          />
+        </Panel>
       )}
-      <Result result={toggle.data} t={t.common} />
+      {canCreate && (
+        <Button className="w-fit" onClick={() => open("new")}>
+          <Plus size={18} aria-hidden="true" />
+          {text.newBranch}
+        </Button>
+      )}
+      {action.data && !action.data.ok && (
+        <Result result={action.data} t={t.common} />
+      )}
+
       {branches.isPending ? (
         <p className="text-fg-muted">{t.common.loading}</p>
+      ) : !branches.data || branches.data.length === 0 ? (
+        <p className="text-fg-muted">{text.empty}</p>
       ) : (
-        <ul className="grid gap-2">
-          {branches.data?.map((b) => (
-            <Row
-              key={b.id}
-              muted={!b.active}
-              image={b.image ?? ""}
-              title={b.name}
-              meta={`${b.address.join(", ")} · ${b.timeZone}`}
-            >
-              <button
-                type="button"
-                className={smallButton}
-                onClick={() => setEditing(editing === b.id ? null : b.id)}
+        <ul className="grid gap-3">
+          {branches.data.map((b) => {
+            const today = todayHours(b.hours, b.timeZone);
+            const week = hoursSummary(b.hours, locale);
+            const people = (barbers.data ?? []).filter(
+              (x) => x.active && x.branchId === b.id,
+            ).length;
+            const rules = b.booking;
+            return (
+              <EntityCard
+                key={b.id}
+                photo={b.image ?? b.images[0]}
+                icon={Store}
+                title={b.name}
+                muted={!b.active}
+                aside={
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${today ? "bg-accent text-accent-fg" : "border border-line text-fg-muted"}`}
+                  >
+                    {today
+                      ? text.today.replace("{hours}", today)
+                      : text.closedToday}
+                  </span>
+                }
+                actions={
+                  <>
+                    {canCreate && (
+                      <ActiveSwitch
+                        label={t.services.activeLabel}
+                        checked={b.active}
+                        disabled={action.isPending}
+                        onChange={(active) =>
+                          action.mutate({
+                            method: "PATCH",
+                            path: `branches/${b.id}`,
+                            body: { active },
+                          })
+                        }
+                      />
+                    )}
+                    <EditButton label={t.common.edit} onClick={() => open(b)} />
+                  </>
+                }
               >
-                {editing === b.id ? t.common.close : t.common.edit}
-              </button>
-              {canCreate && (
-                <button
-                  type="button"
-                  className={smallButton}
-                  disabled={toggle.isPending}
-                  onClick={() =>
-                    toggle.mutate({
-                      method: "PATCH",
-                      path: `branches/${b.id}`,
-                      body: { active: !b.active },
-                    })
-                  }
-                >
-                  {b.active ? t.common.deactivate : t.common.activate}
-                </button>
-              )}
-              {editing === b.id && (
-                <BranchForm
-                  branch={b}
-                  locale={locale}
-                  t={t}
-                  onDone={() => setEditing(null)}
-                />
-              )}
-            </Row>
-          ))}
+                <p className="flex flex-wrap gap-x-3 gap-y-1">
+                  <Fact icon={MapPin}>{b.address.join(", ")}</Fact>
+                  {b.phone && <Fact icon={Phone}>{b.phone}</Fact>}
+                  <Fact icon={Globe}>{cityOf(b.timeZone)}</Fact>
+                  {people === 0 ? (
+                    <Fact icon={TriangleAlert} tone="warn">
+                      {text.noBarbers}
+                    </Fact>
+                  ) : (
+                    <Fact icon={Users}>
+                      {people === 1
+                        ? text.barbersOne
+                        : text.barbersCount.replace("{n}", String(people))}
+                    </Fact>
+                  )}
+                </p>
+                {week ? (
+                  <Fact icon={CalendarClock}>{week}</Fact>
+                ) : (
+                  <Fact icon={TriangleAlert} tone="warn">
+                    {text.noHoursWarn}
+                  </Fact>
+                )}
+                <p className="flex flex-wrap gap-1.5 pt-1">
+                  {[
+                    text.ruleSlot.replace("{d}", span(rules.slotIntervalMin)),
+                    rules.bufferMin > 0
+                      ? text.ruleBuffer.replace("{d}", span(rules.bufferMin))
+                      : "",
+                    rules.minNoticeMin > 0
+                      ? text.ruleNotice.replace("{d}", span(rules.minNoticeMin))
+                      : text.ruleNoNotice,
+                    text.ruleWindow.replace("{n}", String(rules.windowDays)),
+                    rules.cancelNoticeMin > 0
+                      ? text.ruleCancel.replace(
+                          "{d}",
+                          span(rules.cancelNoticeMin),
+                        )
+                      : text.ruleNoCancel,
+                  ]
+                    .filter(Boolean)
+                    .map((rule) => (
+                      <span
+                        key={rule}
+                        className="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5 text-xs text-fg-muted"
+                      >
+                        <Clock size={12} aria-hidden="true" />
+                        {rule}
+                      </span>
+                    ))}
+                </p>
+              </EntityCard>
+            );
+          })}
         </ul>
       )}
-    </Panel>
+    </div>
   );
 }

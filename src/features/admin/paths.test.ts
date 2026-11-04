@@ -26,6 +26,7 @@ test("the admin proxy reaches the payment routes owners use, and nothing else", 
     "customers",
     "cash",
     "barbers/me",
+    `users/${id}/password`,
   ]) {
     expect(isAdminPath(path)).toBe(true);
   }
@@ -36,6 +37,8 @@ test("the admin proxy reaches the payment routes owners use, and nothing else", 
     "billing/payment",
     "../platform",
     "appointments/my-day/x",
+    "users/x/password",
+    `users/${id}/password/x`,
     "appointments/x/slots",
     `appointments/${id}/slots/x`,
     "product-orders/x/deliver",

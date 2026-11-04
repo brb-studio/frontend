@@ -13,10 +13,13 @@ export function PasswordForm({
   t,
   text,
   defaultOpen = false,
+  lead,
 }: {
   t: Dictionary["auth"];
   text: Dictionary["account"]["password"];
   defaultOpen?: boolean;
+  /** One line under the title on what changing it does. */
+  lead?: string;
 }) {
   const router = useRouter();
   const { state, formAction, pending, formRef, error } = useAuthForm(
@@ -38,6 +41,7 @@ export function PasswordForm({
         <KeyRound size={18} aria-hidden="true" className="text-accent" />
         {text.title}
       </summary>
+      {lead && <p className="mt-1 text-sm text-fg-muted">{lead}</p>}
       <form
         ref={formRef}
         action={formAction}
