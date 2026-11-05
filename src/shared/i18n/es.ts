@@ -384,11 +384,6 @@ const es: Dictionary = {
       error:
         "No pudimos enviar la solicitud. Revisa los datos e intenta de nuevo.",
     },
-    exportData: {
-      title: "Descargar mis datos",
-      lead: "Un archivo con tus citas, avisos, lista de espera y apartados en esta barbería.",
-      action: "Descargar",
-    },
     deleteAccount: {
       title: "Borrar mi cuenta",
       lead: "Borraremos tu nombre, correo, teléfono y contraseña, y cerraremos tu sesión en todos lados. Tus visitas pasadas quedan en la contabilidad de la barbería sin tus datos. No se puede deshacer.",
@@ -460,7 +455,6 @@ const es: Dictionary = {
     nextPage: "Página siguiente",
     goToPage: "Ir a la página {n}",
     live: "En vivo",
-    loadMore: "Ver más",
     appointmentAt: "Cita: {when}",
     noticeDays: { today: "Hoy", yesterday: "Ayer", earlier: "Anteriores" },
     ago: {
@@ -561,7 +555,7 @@ const es: Dictionary = {
       movements: "Movimientos",
       cut: "Corte",
       product: "Productos",
-      none: "No se cobró nada en mostrador este día.",
+      none: "No entró dinero este día.",
       unrecorded: "{n} cortes completados este día no tienen cobro registrado.",
       failed: "No se pudo cargar la caja. Intenta de nuevo.",
       total: "Total del día",
@@ -572,6 +566,10 @@ const es: Dictionary = {
       share: "{n} % del día",
       sharePct: "{n} %",
       shareOfDay: "del día",
+      transfer: "Transferencia confirmada",
+      acceptedBy: "aceptó {name}",
+      reference: "Clave de rastreo {ref}",
+      visit: "Cita del {day}",
     },
     customers: {
       search: "Nombre, correo o teléfono",
@@ -1660,6 +1658,14 @@ const es: Dictionary = {
       title: "Cambios a este aviso",
       body: "Publicaremos cualquier cambio en esta página con su fecha de actualización.",
     },
+  },
+  calendar: {
+    add: "Agregar a mi calendario",
+    google: "Google Calendar",
+    ics: "Calendario de Apple / Outlook",
+    with: "Con",
+    manage: "Reprogramar o cancelar:",
+    fileName: "cita",
   },
   notFound: {
     title: "Página no encontrada",

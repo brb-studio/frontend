@@ -40,6 +40,12 @@ export function themeCss(theme?: TenantTheme): string {
         ? `--color-${token}:${value}`
         : `--color-${token}:light-dark(${value.light},${value.dark})`,
     );
+  const canvas = theme?.canvas;
+  if (canvas && valid(canvas) && !(theme.sheet && valid(theme.sheet))) {
+    decls.push(
+      `--color-sheet:light-dark(color-mix(in srgb,${pick(canvas, false)} 96%,transparent),color-mix(in srgb,${pick(canvas, true)} 80%,transparent))`,
+    );
+  }
   return decls.length ? `:root{${decls.join(";")}}` : "";
 }
 

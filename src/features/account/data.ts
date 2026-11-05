@@ -25,5 +25,3 @@ const loyaltySchema = z.array(
 export type Loyalty = z.output<typeof loyaltySchema>;
 
 export const getMyLoyalty = () => backend("/v1/me/loyalty", loyaltySchema);
-
-export const getMyExport = () => backend("/v1/auth/me/export", z.unknown());

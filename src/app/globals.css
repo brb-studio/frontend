@@ -109,6 +109,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  html:has([data-tab-bar]) {
+    overscroll-behavior-y: none;
+  }
+
   h1,
   h2,
   h3 {

@@ -7,7 +7,7 @@ export default async function CashAdminPage() {
   const session = await adminSession("cash", locale);
   const dict = await getDictionary();
   return (
-    <div className="grid gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <h1 className="text-title font-medium">{dict.admin.nav.cash}</h1>
       <CashDesk
         locale={locale}

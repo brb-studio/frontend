@@ -16,6 +16,7 @@ import { Sheet } from "@/features/payments/sheet";
 import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { formatMoney } from "@/shared/i18n/money";
+import { AddToCalendar } from "@/shared/ui/add-to-calendar";
 import { Button, ButtonLink } from "@/shared/ui/button";
 import { Field } from "@/shared/ui/field";
 import { FormAlert, SubmitButton } from "@/shared/ui/form";
@@ -34,7 +35,13 @@ const selected =
   "has-checked:border-accent has-checked:bg-accent has-checked:text-accent-fg";
 const pill = `relative shrink-0 cursor-pointer snap-start rounded-full border border-line bg-card px-4 py-2.5 text-sm transition-colors duration-300 hover:border-accent ${selected} ${focusRing}`;
 
-type Summary = { barber: string; day: string; time: string };
+type Summary = {
+  barber: string;
+  day: string;
+  time: string;
+  startAt: string;
+  endAt: string;
+};
 type BookInput = Omit<Parameters<typeof book>[0], "payment">;
 
 export function BookingForm({
@@ -46,6 +53,7 @@ export function BookingForm({
   transfersOn,
   online,
   publishableKey,
+  calendar,
   t,
   tp,
 }: {
@@ -56,13 +64,14 @@ export function BookingForm({
     name: string;
     price: number;
   };
-  branches: { slug: string; name: string }[];
+  branches: { slug: string; name: string; address?: string[] }[];
   initialBranch: string;
   currency: string;
   transfersOn: boolean;
   /** The shop takes card and transfer payments through Stripe (with its deposit rule). */
   online?: OnlinePayments;
   publishableKey?: string;
+  calendar?: { t: Dictionary["calendar"]; shop: string };
   t: Dictionary["booking"];
   tp: Dictionary["payment"];
 }) {
@@ -138,6 +147,7 @@ export function BookingForm({
   }
 
   if (booking.data?.ok && summary) {
+    const place = branches.find((b) => b.slug === branch);
     return (
       <section
         role="status"
@@ -167,6 +177,21 @@ export function BookingForm({
         ) : (
           <p className="text-sm text-fg-muted">{t.confirmedLead}</p>
         )}
+        {calendar && (
+          <AddToCalendar
+            event={{
+              id: booking.data.appointment.id,
+              title: `${item.name} · ${calendar.shop}`,
+              startAt: summary.startAt,
+              endAt: summary.endAt,
+              location:
+                place && [place.name, ...(place.address ?? [])].join(", "),
+              details: `${calendar.t.with} ${summary.barber}`,
+            }}
+            managePath={`/${lang}/account`}
+            t={calendar.t}
+          />
+        )}
         <ButtonLink href={`/${lang}/home`} className="mt-2">
           {t.home}
         </ButtonLink>
@@ -184,6 +209,10 @@ export function BookingForm({
       barber: barber.name,
       day: day.long,
       time: `${slot.label} – ${slot.end}`,
+      startAt: slot.value,
+      endAt: new Date(
+        Date.parse(slot.value) + (options?.durationMin ?? 0) * 60_000,
+      ).toISOString(),
     });
     const input: BookInput = {
       ...target,

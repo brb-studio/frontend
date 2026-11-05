@@ -121,6 +121,7 @@ export function AdminTabBar({ locale, sections, labels, groups }: Props) {
   return (
     <nav
       aria-label={labels.label}
+      data-tab-bar
       className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-20 mx-auto max-w-md md:hidden"
     >
       <ul className="flex items-center gap-1 rounded-3xl bg-neutral-950 p-1.5 shadow-soft">
@@ -159,7 +160,7 @@ export function AdminTabBar({ locale, sections, labels, groups }: Props) {
         <div
           id="admin-more"
           popover="auto"
-          className="inset-x-3 top-auto bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+5rem)] m-0 mx-auto w-auto max-w-md rounded-3xl border border-line bg-surface p-3 text-fg shadow-soft backdrop:bg-black/40"
+          className="inset-x-3 top-auto bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+5rem)] m-0 mx-auto max-h-[calc(100dvh-max(0.75rem,env(safe-area-inset-bottom))-6rem)] w-auto max-w-md overflow-y-auto overscroll-contain rounded-3xl border border-line bg-surface p-3 text-fg shadow-soft backdrop:bg-black/40"
         >
           {grouped(more).map(({ group, items }) => (
             <div key={group} className="grid gap-2 p-1">
@@ -175,7 +176,7 @@ export function AdminTabBar({ locale, sections, labels, groups }: Props) {
                         href={href(section)}
                         aria-current={current(section)}
                         onClick={close}
-                        className="flex h-20 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-canvas px-1 text-center text-xs font-medium transition-colors hover:border-accent aria-[current=page]:border-accent aria-[current=page]:bg-accent aria-[current=page]:text-accent-fg"
+                        className="flex h-[4.5rem] flex-col items-center justify-center gap-1.5 rounded-2xl border border-line bg-canvas px-1 text-center text-xs font-medium transition-colors hover:border-accent aria-[current=page]:border-accent aria-[current=page]:bg-accent aria-[current=page]:text-accent-fg"
                       >
                         <Icon size={22} aria-hidden="true" />
                         {labels[section]}

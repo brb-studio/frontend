@@ -159,12 +159,14 @@ export default async function ServicePage({
               branches={tenant.branches.map((b) => ({
                 slug: b.slug,
                 name: b.name,
+                address: b.address,
               }))}
               initialBranch={branch.slug}
               currency={tenant.currency}
               transfersOn={tenant.paymentsTransfer}
               online={tenant.paymentsOnline}
               publishableKey={publishableKey()}
+              calendar={{ t: dict.calendar, shop: tenant.name }}
               t={dict.booking}
               tp={dict.payment}
             />

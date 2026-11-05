@@ -8,6 +8,7 @@ import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
 import { formatMoney } from "@/shared/i18n/money";
+import { AddToCalendar } from "@/shared/ui/add-to-calendar";
 import { Button, ButtonLink } from "@/shared/ui/button";
 import { FormAlert } from "@/shared/ui/form";
 import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
@@ -36,11 +37,17 @@ export function MyAppointments({
   t,
   tp,
   invoicesOn = false,
+  calendar,
 }: {
   locale: Locale;
   t: Dictionary["account"];
   tp: Dictionary["payment"];
   invoicesOn?: boolean;
+  calendar?: {
+    t: Dictionary["calendar"];
+    shop: string;
+    places: Record<string, string>;
+  };
 }) {
   const queryClient = useQueryClient();
   const appointments = useQuery(myAppointmentsQuery());
@@ -141,6 +148,23 @@ export function MyAppointments({
           </span>
         )}
       </p>
+      {calendar && a.status === "confirmed" && Date.parse(a.endAt) > now && (
+        <div className="flex justify-end">
+          <AddToCalendar
+            event={{
+              id: a.id,
+              title: `${a.items.map((item) => pick(item.name, locale)).join(" + ")} · ${calendar.shop}`,
+              startAt: a.startAt,
+              endAt: a.endAt,
+              location:
+                (a.branch && calendar.places[a.branch.slug]) ?? a.branch?.name,
+              details: a.barber && `${calendar.t.with} ${a.barber.name}`,
+            }}
+            managePath={`/${locale}/account`}
+            t={calendar.t}
+          />
+        </div>
+      )}
       {a.status === "pending_payment" && (
         <p className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2 text-fg-muted">
           <span>{tp.payBefore.replace("{time}", deadline(a) || "")}</span>

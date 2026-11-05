@@ -65,6 +65,15 @@ export function CashDesk({
       minute: "2-digit",
       timeZone,
     }).format(new Date(at));
+  const visit = (at: string, timeZone: string) =>
+    new Intl.DateTimeFormat(locale, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone,
+    }).format(new Date(at));
   const dayLabel = new Intl.DateTimeFormat(locale, {
     weekday: "long",
     day: "numeric",
@@ -75,7 +84,7 @@ export function CashDesk({
   const count = data?.movements.length ?? 0;
 
   return (
-    <div className="grid gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end gap-3">
         <label className="grid gap-2 text-sm">
           <span className="font-medium">{text.day}</span>
@@ -110,8 +119,8 @@ export function CashDesk({
         </p>
       ) : (
         <>
-          <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            <div className="col-span-2 grid gap-1 rounded-3xl border border-accent bg-card p-4 md:col-span-1">
+          <dl className="grid gap-3 md:grid-cols-4">
+            <div className="grid gap-1 rounded-3xl border border-accent bg-card p-4">
               <dt className="text-sm text-fg-muted">{text.total}</dt>
               <dd className="text-2xl font-semibold tabular-nums">
                 {money(dayTotal)}
@@ -122,7 +131,7 @@ export function CashDesk({
               return (
                 <div
                   key={method}
-                  className="grid gap-1 rounded-3xl border border-line bg-card p-4"
+                  className="flex items-center justify-between gap-3 rounded-3xl border border-line bg-card p-4 md:grid md:justify-normal md:gap-1"
                 >
                   <dt className="flex items-center gap-1.5 text-sm text-fg-muted">
                     <Icon size={16} aria-hidden="true" />
@@ -141,7 +150,9 @@ export function CashDesk({
             </p>
           )}
           {count === 0 ? (
-            <p className="text-fg-muted">{text.none}</p>
+            <p className="flex flex-1 items-center justify-center text-center text-fg-muted">
+              {text.none}
+            </p>
           ) : (
             <>
               <Panel title={text.people}>
@@ -228,25 +239,55 @@ export function CashDesk({
                           {time(m.at, m.timeZone)}
                         </time>
                         <div className="grid min-w-0 gap-0.5 @2xl:contents">
-                          <p className="flex min-w-0 items-center gap-1.5">
+                          <p className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
                             <span className="truncate font-medium">
                               {m.customer}
                             </span>
                             <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-1.5 py-0.5 text-xs text-fg-muted">
                               <Kind size={12} aria-hidden="true" />
-                              {m.kind === "cut" ? text.cut : text.product}
+                              {m.source === "transfer"
+                                ? text.transfer
+                                : m.kind === "cut"
+                                  ? text.cut
+                                  : text.product}
                             </span>
                           </p>
-                          <p className="flex min-w-0 items-center gap-1.5 text-fg-muted">
-                            <Method
-                              size={14}
-                              aria-hidden="true"
-                              className="shrink-0"
-                            />
-                            <span className="truncate">
-                              {t.methods[m.method]} · {m.receivedBy}
-                            </span>
-                          </p>
+                          <div className="grid min-w-0 gap-0.5 text-fg-muted">
+                            <p className="flex min-w-0 items-start gap-1.5">
+                              <Method
+                                size={14}
+                                aria-hidden="true"
+                                className="mt-0.5 shrink-0"
+                              />
+                              <span className="min-w-0">
+                                {t.methods[m.method]} ·{" "}
+                                {m.source === "transfer"
+                                  ? text.acceptedBy.replace(
+                                      "{name}",
+                                      m.receivedBy,
+                                    )
+                                  : m.receivedBy}
+                              </span>
+                            </p>
+                            {m.source === "transfer" && (
+                              <p className="text-xs">
+                                {[
+                                  m.reference &&
+                                    text.reference.replace(
+                                      "{ref}",
+                                      m.reference,
+                                    ),
+                                  m.visitAt &&
+                                    text.visit.replace(
+                                      "{day}",
+                                      visit(m.visitAt, m.timeZone),
+                                    ),
+                                ]
+                                  .filter(Boolean)
+                                  .join(" · ")}
+                              </p>
+                            )}
+                          </div>
                         </div>
                         <span className="font-semibold tabular-nums">
                           {money(m.amountMinor)}

@@ -315,12 +315,15 @@ export const cashDaySchema = z.object({
   movements: z.array(
     z.object({
       kind: z.enum(["cut", "product"]),
+      source: z.enum(["counter", "transfer"]).default("counter"),
       method: z.enum(COUNTER_METHODS),
       amountMinor: z.number().int(),
       at: z.string(),
       timeZone: z.string(),
       receivedBy: z.string(),
       customer: z.string(),
+      reference: z.string().optional(),
+      visitAt: z.string().optional(),
     }),
   ),
   unrecorded: z.number().int(),

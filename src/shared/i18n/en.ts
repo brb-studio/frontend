@@ -374,11 +374,6 @@ const en = {
       sent: "Request sent. The barbershop will issue your invoice.",
       error: "We couldn't send the request. Check the data and try again.",
     },
-    exportData: {
-      title: "Download my data",
-      lead: "A file with your visits, notifications, waitlist and product orders at this shop.",
-      action: "Download",
-    },
     deleteAccount: {
       title: "Delete my account",
       lead: "We'll erase your name, email, phone and password, and sign you out everywhere. Your past visits stay in the shop's books without your details. This can't be undone.",
@@ -449,7 +444,6 @@ const en = {
     nextPage: "Next page",
     goToPage: "Go to page {n}",
     live: "Live",
-    loadMore: "Show more",
     appointmentAt: "Appointment: {when}",
     noticeDays: { today: "Today", yesterday: "Yesterday", earlier: "Earlier" },
     ago: {
@@ -549,7 +543,7 @@ const en = {
       movements: "Movements",
       cut: "Cut",
       product: "Products",
-      none: "Nothing was collected at the counter this day.",
+      none: "No money came in this day.",
       unrecorded: "{n} completed cuts this day have no payment recorded.",
       failed: "Couldn't load the cash report. Try again.",
       total: "Day total",
@@ -561,6 +555,10 @@ const en = {
       share: "{n}% of the day",
       sharePct: "{n}%",
       shareOfDay: "of the day",
+      transfer: "Confirmed transfer",
+      acceptedBy: "accepted by {name}",
+      reference: "Tracking key {ref}",
+      visit: "Appointment on {day}",
     },
     customers: {
       search: "Name, email or phone",
@@ -1637,6 +1635,14 @@ const en = {
       title: "Changes to this notice",
       body: "We'll publish any change on this page with its update date.",
     },
+  },
+  calendar: {
+    add: "Add to calendar",
+    google: "Google Calendar",
+    ics: "Apple Calendar / Outlook",
+    with: "With",
+    manage: "Reschedule or cancel:",
+    fileName: "appointment",
   },
   notFound: {
     title: "Page not found",

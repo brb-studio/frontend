@@ -99,7 +99,7 @@ export default async function AdminLayout({
           {signOut}
         </div>
       </aside>
-      <div className="min-w-0">
+      <div className="flex min-h-dvh min-w-0 flex-col">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-3 border-b border-line bg-canvas/85 px-4 backdrop-blur-xl md:hidden">
           <span className="flex min-w-0 items-center gap-2 font-medium">
             <BrandMark logo={tenant.logo} />
@@ -113,7 +113,7 @@ export default async function AdminLayout({
         <main
           id="main"
           tabIndex={-1}
-          className="mx-auto w-full max-w-5xl px-4 pt-6 pb-32 outline-none md:px-10 md:pt-10 md:pb-12"
+          className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 pt-6 pb-32 outline-none md:px-10 md:pt-10 md:pb-12"
         >
           <Providers>{children}</Providers>
         </main>

@@ -7,6 +7,7 @@ import type { Dictionary } from "@/shared/i18n/en";
 import type { Locale } from "@/shared/i18n/locales";
 import { pick } from "@/shared/i18n/localized";
 import { Button } from "@/shared/ui/button";
+import { PAGE_SIZES, Pager } from "@/shared/ui/pager";
 import { markAllRead } from "./actions";
 import {
   notificationSchema,
@@ -15,11 +16,6 @@ import {
   type StaffNotification,
 } from "./model";
 import { byNoticeDay, noticeAgo } from "./notice-time";
-
-/** Notices shown first, added per "show more", and the most the API returns in one page. */
-const FIRST = 5;
-const STEP = 10;
-const MAX = 50;
 
 /** The appointment's local start ("YYYY-MM-DDTHH:MM", already in the branch's zone). */
 const localStart = (start: string, locale: Locale) =>
@@ -54,10 +50,16 @@ export function LiveDesk({
   const now = useNow();
   const [live, setLive] = useState(false);
   const [latest, setLatest] = useState<StaffNotification | null>(null);
-  const [shown, setShown] = useState(FIRST);
-  const feed = useQuery(notificationsQuery(1, shown));
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZES[0]);
+  const feed = useQuery(notificationsQuery(page, pageSize));
   const items = feed.data?.items ?? [];
-  const more = items.length < Math.min(feed.data?.total ?? 0, MAX);
+  const total = feed.data?.total ?? 0;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+
+  useEffect(() => {
+    if (feed.data && page > pages) setPage(pages);
+  }, [feed.data, page, pages]);
   const reading = useMutation({
     mutationFn: markAllRead,
     onSuccess: () =>
@@ -168,14 +170,17 @@ export function LiveDesk({
                 </ul>
               </div>
             ))}
-            {more && (
-              <Button
-                variant="secondary"
-                onClick={() => setShown((n) => Math.min(n + STEP, MAX))}
-                disabled={feed.isFetching}
-              >
-                {t.loadMore}
-              </Button>
+            {total > PAGE_SIZES[0] && (
+              <Pager
+                label={t.notificationsTitle}
+                page={page}
+                pageSize={pageSize}
+                total={total}
+                shown={items.length}
+                onPage={setPage}
+                onPageSize={setPageSize}
+                t={t}
+              />
             )}
           </>
         ) : (
