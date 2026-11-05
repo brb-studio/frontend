@@ -13,6 +13,9 @@
   --color-accent-fg: #111111;
   --color-accent-text: light-dark(#111111, #ffffff);
   --color-danger: light-dark(#b42318, #f97066);
+  --color-money-in: light-dark(#067647, #47cd89);
+  --color-money-out: light-dark(#b42318, #f97066);
+  --color-money-adjust: light-dark(#3538cd, #8098f9);
 
   --shadow-glow: 0 12px 32px -12px
     color-mix(in oklab, var(--color-accent) 60%, transparent);

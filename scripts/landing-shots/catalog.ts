@@ -219,13 +219,10 @@ const LIST: Shot[] = [
     devices: ["desktop"],
     prepare: async (page, t) => {
       await page
-        .getByText(t.admin.revenue.periods.month, { exact: true })
-        .click();
-      await page
-        .getByText(t.admin.revenue.byDay, { exact: true })
+        .getByText(t.admin.revenue.chart, { exact: true })
         .waitFor({ state: "visible", timeout: 20_000 });
     },
-    expect: (t) => [t.admin.revenue.byDay],
+    expect: (t) => [t.admin.revenue.chart],
   },
   {
     screen: "settings",

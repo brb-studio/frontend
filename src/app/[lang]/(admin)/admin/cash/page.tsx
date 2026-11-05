@@ -13,6 +13,7 @@ export default async function CashAdminPage() {
         locale={locale}
         t={dict.admin}
         chooseBranch={session.role === "owner" || session.role === "admin"}
+        canWrite={session.role === "owner" || session.role === "admin"}
       />
     </div>
   );

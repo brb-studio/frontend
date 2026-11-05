@@ -1,39 +1,3 @@
-const DAY = 864e5;
-const at = (day: string) => Date.parse(`${day}T00:00:00Z`);
-const iso = (ms: number) => new Date(ms).toISOString().slice(0, 10);
-
-/** The same number of days right before `from`–`to`: what a period is compared with. */
-export function previousRange(from: string, to: string) {
-  const days = Math.round((at(to) - at(from)) / DAY) + 1;
-  return { from: iso(at(from) - days * DAY), to: iso(at(from) - DAY) };
-}
-
-/** How much a number moved against the one before, as a whole percentage (null when there was nothing before). */
-export const changeOf = (now: number, before: number) =>
-  before > 0 ? Math.round(((now - before) / before) * 100) : null;
-
-/** Each way money came in, with its share of the total, biggest first (none that are zero). */
-export function breakdown<K extends string>(parts: [K, number][]) {
-  const total = parts.reduce((sum, [, minor]) => sum + minor, 0);
-  return parts
-    .filter(([, minor]) => minor > 0)
-    .map(([key, minor]) => ({
-      key,
-      minor,
-      share: total > 0 ? Math.round((minor / total) * 100) : 0,
-    }))
-    .sort((a, b) => b.minor - a.minor);
-}
-
-/** The day that made the most (none when nothing was made). */
-export function bestDay<D extends { totalMinor: number }>(days: D[]) {
-  let best: D | undefined;
-  for (const day of days)
-    if (day.totalMinor > 0 && (!best || day.totalMinor > best.totalMinor))
-      best = day;
-  return best;
-}
-
 /** Minutes left until a transfer expires (0 or less once it has). */
 export const minutesLeft = (expiresAt: string, now = new Date()) =>
   Math.floor((Date.parse(expiresAt) - now.getTime()) / 60_000);

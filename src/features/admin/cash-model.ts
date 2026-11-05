@@ -1,16 +1,16 @@
-type ByMethod = { cashMinor: number; cardMinor: number; transferMinor: number };
+export type Tone = "in" | "out" | "adjust";
 
-/** Everything a row collected, whatever the method. */
-export const totalOf = (row: ByMethod) =>
-  row.cashMinor + row.cardMinor + row.transferMinor;
+const DAY = 864e5;
 
-/** Who received the most first; ties keep the API's order. */
-export const byCollected = <P extends ByMethod>(people: P[]) =>
-  people
-    .map((person, i) => ({ person, i, total: totalOf(person) }))
-    .sort((a, b) => b.total - a.total || a.i - b.i)
-    .map(({ person, total }) => ({ ...person, totalMinor: total }));
+export const shiftDay = (day: string, days: number) =>
+  new Date(Date.parse(`${day}T00:00:00Z`) + days * DAY)
+    .toISOString()
+    .slice(0, 10);
 
-/** A part of the day as a whole percentage (0 when the day is empty). */
-export const shareOf = (part: number, whole: number) =>
-  whole > 0 ? Math.round((part / whole) * 100) : 0;
+export const toneOf = (entry: {
+  direction: "in" | "out";
+  type: string;
+}): Tone => (entry.type === "adjustment" ? "adjust" : entry.direction);
+
+export const signed = (direction: "in" | "out", text: string) =>
+  `${direction === "in" ? "+" : "−"}${text}`;

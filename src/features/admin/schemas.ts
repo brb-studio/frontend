@@ -301,31 +301,54 @@ export const customerListSchema = z.object({
 });
 export type CustomerList = z.output<typeof customerListSchema>;
 
-const byMethod = {
-  cashMinor: z.number().int(),
-  cardMinor: z.number().int(),
-  transferMinor: z.number().int(),
-};
+export const LEDGER_TYPES = [
+  "service_payment",
+  "product_sale",
+  "refund",
+  "chargeback",
+  "online_fee",
+  "payout",
+  "expense",
+  "adjustment",
+] as const;
+export type LedgerType = (typeof LEDGER_TYPES)[number];
+
+const flow = z.object({
+  inMinor: z.number().int(),
+  outMinor: z.number().int(),
+  netMinor: z.number().int(),
+});
 
 export const cashDaySchema = z.object({
   currency: z.string(),
   date: z.string(),
-  totals: z.object(byMethod),
-  people: z.array(z.object({ id: z.string(), name: z.string(), ...byMethod })),
-  movements: z.array(
+  ...flow.shape,
+  byMethod: z.partialRecord(z.enum(COUNTER_METHODS), flow),
+  pending: z.object({
+    count: z.number().int(),
+    amountMinor: z.number().int(),
+  }),
+  entries: z.array(
     z.object({
-      kind: z.enum(["cut", "product"]),
-      source: z.enum(["counter", "transfer"]).default("counter"),
-      method: z.enum(COUNTER_METHODS),
-      amountMinor: z.number().int(),
+      id: z.string(),
       at: z.string(),
       timeZone: z.string(),
-      receivedBy: z.string(),
-      customer: z.string(),
+      direction: z.enum(["in", "out"]),
+      type: z.enum(LEDGER_TYPES),
+      amountMinor: z.number().int(),
+      concept: z.string(),
+      method: z.enum(COUNTER_METHODS).optional(),
+      channel: z.enum(["counter", "online", "spei"]).optional(),
+      customer: z.string().optional(),
+      recordedBy: z.string().optional(),
       reference: z.string().optional(),
       visitAt: z.string().optional(),
+      appointmentId: z.string().optional(),
+      reverses: z.string().optional(),
+      reversed: z.boolean().optional(),
+      note: z.string().optional(),
+      approximate: z.boolean().optional(),
     }),
   ),
-  unrecorded: z.number().int(),
 });
 export type CashDay = z.output<typeof cashDaySchema>;

@@ -3,165 +3,171 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   ArrowDownRight,
-  ArrowLeftRight,
   ArrowUpRight,
-  Banknote,
-  CircleHelp,
-  CreditCard,
-  Globe,
-  HandCoins,
-  type LucideIcon,
-  Receipt,
-  Scissors,
-  Trophy,
+  ChevronLeft,
+  ChevronRight,
+  Download,
 } from "lucide-react";
 import { useState } from "react";
 import * as z from "zod";
 import type { Locale } from "@/shared/i18n/locales";
-import { formatMoney } from "@/shared/i18n/money";
+import { formatMoney, toMajor } from "@/shared/i18n/money";
+import { Select } from "@/shared/ui/select";
 import { today } from "./agenda-manager";
 import { adminQuery } from "./api";
-import { bestDay, breakdown, changeOf, previousRange } from "./money-view";
-import { PERIODS, type Period, rangeOf } from "./periods";
-import { type AdminText, pill } from "./ui";
+import { signed, toneOf } from "./cash-model";
+import {
+  changeOf,
+  csvOf,
+  groupFor,
+  MODES,
+  type Mode,
+  type Range,
+  rangeFor,
+  shareOf,
+  shift,
+} from "./revenue-model";
+import { branchSchema, COUNTER_METHODS, LEDGER_TYPES } from "./schemas";
+import { type AdminText, Panel, pill } from "./ui";
 
+const flow = {
+  inMinor: z.number().int(),
+  outMinor: z.number().int(),
+  netMinor: z.number().int(),
+};
 const summarySchema = z.object({
   currency: z.string(),
-  cuts: z.number(),
-  servicesMinor: z.number(),
-  productsMinor: z.number(),
-  commissionMinor: z.number(),
-  collected: z.object({
-    onlineMinor: z.number(),
-    cashMinor: z.number(),
-    cardMinor: z.number(),
-    transferMinor: z.number(),
-    unrecordedMinor: z.number(),
-  }),
-  days: z.array(z.object({ date: z.string(), totalMinor: z.number() })),
+  ...flow,
+  servicesMinor: z.number().int(),
+  productsMinor: z.number().int(),
+  byMethod: z.partialRecord(z.enum(COUNTER_METHODS), z.object(flow)),
+  series: z.array(z.object({ period: z.string(), ...flow })),
+  previous: z.object(flow),
 });
-type Summary = z.output<typeof summarySchema>;
-type Day = Summary["days"][number];
-const summaryQuery = (from: string, to: string) => ({
-  ...adminQuery(`earnings/summary?from=${from}&to=${to}`, summarySchema),
-  placeholderData: keepPreviousData,
+const movementsSchema = z.object({
+  currency: z.string(),
+  page: z.number().int(),
+  pageSize: z.number().int(),
+  total: z.number().int(),
+  rows: z.array(
+    z.object({
+      id: z.string(),
+      at: z.string(),
+      localDate: z.string(),
+      timeZone: z.string(),
+      direction: z.enum(["in", "out"]),
+      type: z.enum(LEDGER_TYPES),
+      amountMinor: z.number().int(),
+      concept: z.string(),
+      method: z.enum(COUNTER_METHODS).optional(),
+      customer: z.string().optional(),
+      reference: z.string().optional(),
+    }),
+  ),
 });
+type Row = z.output<typeof movementsSchema>["rows"][number];
+type Series = z.output<typeof summarySchema>["series"];
 
-/** "↑ 12 %" in the accent, "↓ 8 %" muted; nothing to compare reads as such. */
+const branchesQuery = adminQuery("branches", z.array(branchSchema));
+const FILTERS = {
+  all: "",
+  in: "&direction=in",
+  out: "&direction=out",
+  refund: "&type=refund",
+  adjustment: "&type=adjustment",
+} as const;
+type Filter = keyof typeof FILTERS;
+const PAGE_SIZE = 25;
+const TONE_TEXT = {
+  in: "text-money-in",
+  out: "text-money-out",
+  adjust: "text-money-adjust",
+} as const;
+
 function Change({ value, label }: { value: number | null; label: string }) {
   if (value === null) return null;
-  const up = value >= 0;
-  const Icon = up ? ArrowUpRight : ArrowDownRight;
+  const Icon = value >= 0 ? ArrowUpRight : ArrowDownRight;
   return (
-    <span
-      className={`inline-flex items-center gap-0.5 text-sm ${up ? "text-accent-text" : "text-fg-muted"}`}
-    >
+    <span className="inline-flex items-center gap-0.5 text-sm text-fg-muted">
       <Icon size={16} aria-hidden="true" />
       {Math.abs(value)} %<span className="sr-only"> {label}</span>
     </span>
   );
 }
 
-function Bars({
-  days,
+function Chart({
+  series,
   money,
   label,
-  locale,
-  best,
+  tick,
+  text,
 }: {
-  days: Day[];
+  series: Series;
   money: (minor: number) => string;
-  label: (date: string) => string;
-  locale: Locale;
-  best?: Day | undefined;
+  label: (period: string) => string;
+  tick: (period: string) => string;
+  text: AdminText["revenue"];
 }) {
-  const [active, setActive] = useState(days.length - 1);
-  const max = Math.max(1, ...days.map((d) => d.totalMinor));
-  const shown = days[active] ?? days[days.length - 1];
-  const tick = (date: string) =>
-    new Intl.DateTimeFormat(locale, {
-      timeZone: "UTC",
-      ...(days.length <= 7 ? { weekday: "short" } : { day: "numeric" }),
-    }).format(new Date(`${date}T00:00:00Z`));
-
+  const [active, setActive] = useState(() => {
+    const last = series.findLastIndex((s) => s.inMinor > 0 || s.outMinor > 0);
+    return last >= 0 ? last : series.length - 1;
+  });
+  const max = Math.max(1, ...series.flatMap((s) => [s.inMinor, s.outMinor]));
+  const shown = series[active] ?? series[series.length - 1];
+  const every = Math.ceil(series.length / 8);
   return (
     <div className="grid gap-3">
-      <p aria-live="polite" className="flex justify-between gap-3 text-sm">
-        <span className="capitalize text-fg-muted">
-          {shown && label(shown.date)}
+      <p
+        aria-live="polite"
+        className="flex flex-wrap justify-between gap-x-3 text-sm"
+      >
+        <span className="text-fg-muted first-letter:uppercase">
+          {shown && label(shown.period)}
         </span>
-        <strong className="tabular-nums">
-          {shown && money(shown.totalMinor)}
-        </strong>
+        {shown && (
+          <span className="flex gap-3 tabular-nums">
+            <span className="text-money-in">
+              {signed("in", money(shown.inMinor))}
+            </span>
+            <span className="text-money-out">
+              {signed("out", money(shown.outMinor))}
+            </span>
+          </span>
+        )}
       </p>
-      <div className="flex h-44 items-end gap-0.5 border-b border-line">
-        {days.map((d, i) => (
+      <div className="flex h-44 items-end gap-1 border-b border-line">
+        {series.map((s, i) => (
           <button
-            key={d.date}
+            key={s.period}
             type="button"
-            aria-label={`${label(d.date)}: ${money(d.totalMinor)}`}
+            aria-label={`${label(s.period)}: ${text.in} ${money(s.inMinor)}, ${text.out} ${money(s.outMinor)}`}
             aria-pressed={i === active}
             onPointerEnter={() => setActive(i)}
             onFocus={() => setActive(i)}
             onClick={() => setActive(i)}
-            className="flex h-full min-w-0 flex-1 cursor-pointer items-end focus-visible:outline-2 focus-visible:outline-accent"
+            className={`flex h-full min-w-0 flex-1 cursor-pointer items-end justify-center gap-px focus-visible:outline-2 focus-visible:outline-accent ${i === active ? "" : "opacity-60"}`}
           >
             <span
-              className={`mx-auto w-full max-w-12 rounded-t-[4px] transition-opacity ${d === best ? "bg-accent" : "bg-accent/70"} ${i === active ? "" : "opacity-60"}`}
-              style={{ height: `${(d.totalMinor / max) * 100}%` }}
+              className="w-full max-w-5 rounded-t-[3px] bg-money-in"
+              style={{ height: `${(s.inMinor / max) * 100}%` }}
+            />
+            <span
+              className="w-full max-w-5 rounded-t-[3px] bg-money-out"
+              style={{ height: `${(s.outMinor / max) * 100}%` }}
             />
           </button>
         ))}
       </div>
-      <div aria-hidden className="flex gap-0.5 text-xs text-fg-muted">
-        {days.map((d, i) => (
-          <span key={d.date} className="min-w-0 flex-1 text-center">
-            {(days.length <= 7 || i % 7 === 0) && tick(d.date)}
+      <div aria-hidden className="flex gap-1 text-xs text-fg-muted">
+        {series.map((s, i) => (
+          <span key={s.period} className="min-w-0 flex-1 truncate text-center">
+            {i % every === 0 && tick(s.period)}
           </span>
         ))}
       </div>
     </div>
   );
 }
-
-/** A figure that uses its whole card: label and icon on top, the number, and how it moved. */
-function Kpi({
-  icon: Icon,
-  label,
-  value,
-  change,
-  detail,
-  vs,
-}: {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  change: number | null;
-  detail?: string | undefined;
-  vs: string;
-}) {
-  return (
-    <div className="grid content-between gap-2 rounded-3xl border border-line bg-card p-4">
-      <dt className="flex items-center gap-2 text-sm text-fg-muted">
-        <Icon size={16} aria-hidden="true" />
-        {label}
-      </dt>
-      <dd className="flex flex-wrap items-baseline justify-between gap-x-2">
-        <span className="text-2xl font-semibold tabular-nums">{value}</span>
-        <Change value={change} label={vs} />
-      </dd>
-      {detail && <dd className="text-sm text-fg-muted">{detail}</dd>}
-    </div>
-  );
-}
-
-const METHOD_ICON: Record<string, LucideIcon> = {
-  cash: Banknote,
-  card: CreditCard,
-  transfer: ArrowLeftRight,
-  online: Globe,
-  unrecorded: CircleHelp,
-};
 
 export function Revenue({
   locale,
@@ -173,122 +179,296 @@ export function Revenue({
   t: AdminText;
 }) {
   const text = t.revenue;
-  const [period, setPeriod] = useState<Period>("today");
-  const { from, to } = rangeOf(period, today());
-  const before = previousRange(from, to);
-  const query = useQuery(summaryQuery(from, to));
-  const previous = useQuery(summaryQuery(before.from, before.to));
-  const data = query.data;
-  const past = previous.data;
-  const money = (minor: number) =>
-    data ? formatMoney(minor, data.currency, locale) : "…";
-  const label = (date: string) =>
+  const [mode, setMode] = useState<Mode>("month");
+  const [range, setRange] = useState<Range>(() => rangeFor("month", today()));
+  const [branchId, setBranchId] = useState("");
+  const [filter, setFilter] = useState<Filter>("all");
+  const [page, setPage] = useState(1);
+  const [exporting, setExporting] = useState(false);
+  const groupBy = groupFor(range);
+  const scope = `from=${range.from}&to=${range.to}${branchId ? `&branchId=${branchId}` : ""}`;
+  const branches = useQuery(branchesQuery);
+  const summary = useQuery({
+    ...adminQuery(`money/summary?${scope}&groupBy=${groupBy}`, summarySchema),
+    placeholderData: keepPreviousData,
+  });
+  const movements = useQuery({
+    ...adminQuery(
+      `money/movements?${scope}${FILTERS[filter]}&page=${page}&pageSize=${PAGE_SIZE}`,
+      movementsSchema,
+    ),
+    placeholderData: keepPreviousData,
+  });
+  const data = summary.data;
+  const currency = data?.currency ?? movements.data?.currency ?? "MXN";
+  const money = (minor: number) => formatMoney(minor, currency, locale);
+  const dayFormat = (options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, { timeZone: "UTC", ...options });
+  const asDate = (day: string) => new Date(`${day}T12:00:00Z`);
+  const full = dayFormat({ day: "numeric", month: "short", year: "numeric" });
+  const short = dayFormat({ day: "numeric", month: "short" });
+  const rangeLabel =
+    range.from === range.to
+      ? full.format(asDate(range.from))
+      : `${(range.from.slice(0, 4) === range.to.slice(0, 4) ? short : full).format(asDate(range.from))} – ${full.format(asDate(range.to))}`;
+  const periodLabel = (period: string) =>
+    groupBy === "month"
+      ? dayFormat({ month: "long", year: "numeric" }).format(
+          asDate(`${period}-01`),
+        )
+      : groupBy === "week"
+        ? `${short.format(asDate(period))} – ${short.format(new Date(asDate(period).getTime() + 6 * 864e5))}`
+        : dayFormat({
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+          }).format(asDate(period));
+  const tick = (period: string) =>
+    groupBy === "month"
+      ? dayFormat({ month: "short" }).format(asDate(`${period}-01`))
+      : groupBy === "week"
+        ? dayFormat({ day: "numeric", month: "short" }).format(asDate(period))
+        : dayFormat({ day: "numeric" }).format(asDate(period));
+  const stamp = (row: Row, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, {
-      timeZone: "UTC",
-      weekday: "long",
-      day: "numeric",
-      month: "short",
-    }).format(new Date(`${date}T00:00:00Z`));
+      timeZone: row.timeZone,
+      ...options,
+    }).format(new Date(row.at));
 
-  const totalOf = (s?: Summary) => (s ? s.servicesMinor + s.productsMinor : 0);
-  const total = totalOf(data);
-  const net = data ? total - data.commissionMinor : 0;
-  const average = data?.cuts ? Math.round(data.servicesMinor / data.cuts) : 0;
-  const pastAverage = past?.cuts
-    ? Math.round(past.servicesMinor / past.cuts)
-    : 0;
-  const ways = data
-    ? breakdown([
-        ["cash", data.collected.cashMinor],
-        ["card", data.collected.cardMinor],
-        ["transfer", data.collected.transferMinor],
-        ["online", data.collected.onlineMinor],
-        ["unrecorded", data.collected.unrecordedMinor],
-      ])
-    : [];
-  const wayLabel = (key: string) =>
-    key === "online"
-      ? text.online
-      : key === "unrecorded"
-        ? text.unrecorded
-        : t.methods[key as keyof AdminText["methods"]];
-  const best = data ? bestDay(data.days) : undefined;
-  const servicesShare =
-    total > 0 && data ? (data.servicesMinor / total) * 100 : 0;
+  const go = (next: Range) => {
+    setRange(next);
+    setPage(1);
+  };
+  const choose = (next: Mode) => {
+    setMode(next);
+    if (next !== "range") go(rangeFor(next, today()));
+  };
+
+  async function exportCsv() {
+    setExporting(true);
+    try {
+      const rows: Row[] = [];
+      for (let p = 1; ; p++) {
+        const response = await fetch(
+          `/api/admin/money/movements?${scope}${FILTERS[filter]}&page=${p}&pageSize=100`,
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        const chunk = movementsSchema.parse(await response.json());
+        rows.push(...chunk.rows);
+        if (rows.length >= chunk.total || chunk.rows.length === 0) break;
+      }
+      const c = text.columns;
+      const csv = csvOf([
+        [
+          c.date,
+          c.time,
+          c.type,
+          c.concept,
+          c.customer,
+          c.method,
+          c.reference,
+          c.amount,
+        ],
+        ...rows.map((r) => [
+          r.localDate,
+          stamp(r, { hour: "2-digit", minute: "2-digit", hour12: false }),
+          t.cash.types[r.type],
+          r.concept,
+          r.customer ?? "",
+          r.method ? t.methods[r.method] : "",
+          r.reference ?? "",
+          `${r.direction === "out" ? "-" : ""}${toMajor(r.amountMinor, currency)}`,
+        ]),
+      ]);
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(
+        new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8" }),
+      );
+      link.download = `movimientos-${range.from}-${range.to}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  const list = movements.data;
+  const pages = list ? Math.max(1, Math.ceil(list.total / PAGE_SIZE)) : 1;
+  const income = data ? data.servicesMinor + data.productsMinor : 0;
 
   return (
     <div className="grid gap-5">
-      <fieldset className="flex flex-wrap gap-2">
-        <legend className="sr-only">{text.period}</legend>
-        {PERIODS.map((p) => (
-          <label key={p} className={pill}>
-            <input
-              type="radio"
-              name="period"
-              className="sr-only"
-              checked={period === p}
-              onChange={() => setPeriod(p)}
-            />
-            {text.periods[p]}
-          </label>
-        ))}
-      </fieldset>
-      {query.isError ? (
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="grid gap-3">
+          <fieldset className="flex flex-wrap gap-2">
+            <legend className="sr-only">{text.period}</legend>
+            {MODES.map((m) => (
+              <label key={m} className={pill}>
+                <input
+                  type="radio"
+                  name="mode"
+                  className="sr-only"
+                  checked={mode === m}
+                  onChange={() => choose(m)}
+                />
+                {text.modes[m]}
+              </label>
+            ))}
+          </fieldset>
+          {mode === "range" ? (
+            <div className="grid grid-cols-2 gap-2 sm:flex">
+              <label className="grid gap-1 text-xs text-fg-muted">
+                {text.from}
+                <input
+                  type="date"
+                  value={range.from}
+                  max={range.to}
+                  onChange={(e) =>
+                    e.target.value && go({ ...range, from: e.target.value })
+                  }
+                  className="h-11 rounded-full border border-line-strong bg-surface px-4 text-sm text-fg"
+                />
+              </label>
+              <label className="grid gap-1 text-xs text-fg-muted">
+                {text.to}
+                <input
+                  type="date"
+                  value={range.to}
+                  min={range.from}
+                  onChange={(e) =>
+                    e.target.value && go({ ...range, to: e.target.value })
+                  }
+                  className="h-11 rounded-full border border-line-strong bg-surface px-4 text-sm text-fg"
+                />
+              </label>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => go(shift(mode, range, -1))}
+                aria-label={text.previous}
+                className="grid size-11 place-items-center rounded-full border border-line-strong"
+              >
+                <ChevronLeft size={18} aria-hidden="true" />
+              </button>
+              <p className="min-w-40 text-center font-medium">{rangeLabel}</p>
+              <button
+                type="button"
+                onClick={() => go(shift(mode, range, 1))}
+                aria-label={text.next}
+                className="grid size-11 place-items-center rounded-full border border-line-strong"
+              >
+                <ChevronRight size={18} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+        </div>
+        {branches.data && branches.data.length > 1 && (
+          <Select
+            name="branchId"
+            label={text.branch}
+            value={branchId}
+            onChange={(event) => {
+              setBranchId(event.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">{text.allBranches}</option>
+            {branches.data.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </Select>
+        )}
+      </div>
+      {summary.isError ? (
         <p role="alert" className="text-sm text-danger">
           {text.failed}
         </p>
+      ) : !data ? (
+        <p className="text-fg-muted">{t.common.loading}</p>
       ) : (
         <div
-          className={`grid gap-5 transition-opacity ${query.isFetching && query.isPlaceholderData ? "opacity-60" : ""}`}
+          className={`grid gap-5 transition-opacity ${summary.isFetching && summary.isPlaceholderData ? "opacity-60" : ""}`}
         >
-          <section className="grid gap-4 rounded-[1.75rem] border border-accent bg-card p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
-            <div className="grid gap-1">
-              <p className="text-sm text-fg-muted">{text.total}</p>
-              <p className="flex flex-wrap items-baseline gap-x-3">
-                <span className="text-4xl font-semibold tabular-nums">
-                  {money(total)}
-                </span>
-                <Change
-                  value={past ? changeOf(total, totalOf(past)) : null}
-                  label={text.vsBefore}
-                />
-              </p>
-              <p className="text-sm text-fg-muted">
-                {past && totalOf(past) > 0 ? text.vsBefore : text.noBefore}
-              </p>
-            </div>
-            {data && data.commissionMinor > 0 && (
-              <div className="grid gap-0.5 md:text-right">
-                <p className="text-sm text-fg-muted">{text.net}</p>
-                <p className="text-2xl font-semibold tabular-nums">
-                  {money(net)}
-                </p>
-                <p className="text-sm text-fg-muted">
-                  {text.commission} −{money(data.commissionMinor)}
-                </p>
+          <dl className="grid gap-2 sm:grid-cols-3 sm:gap-3">
+            {[
+              {
+                label: text.in,
+                minor: data.inMinor,
+                before: data.previous.inMinor,
+                tone: "text-money-in",
+              },
+              {
+                label: text.out,
+                minor: data.outMinor,
+                before: data.previous.outMinor,
+                tone: "text-money-out",
+              },
+              {
+                label: text.net,
+                minor: data.netMinor,
+                before: data.previous.netMinor,
+                tone: "",
+              },
+            ].map(({ label, minor, before, tone }, i) => (
+              <div
+                key={label}
+                className={`flex items-center justify-between gap-3 rounded-3xl border bg-card px-4 py-3 sm:grid sm:justify-normal sm:gap-1 sm:py-4 ${i === 2 ? "border-line-strong" : "border-line"}`}
+              >
+                <dt className="text-sm text-fg-muted">{label}</dt>
+                <dd className="flex flex-wrap items-baseline justify-end gap-x-2 sm:justify-between">
+                  <span
+                    className={`text-xl font-semibold tabular-nums sm:text-2xl ${minor === 0 ? "text-fg-muted" : tone}`}
+                  >
+                    {money(minor)}
+                  </span>
+                  <Change
+                    value={changeOf(minor, before)}
+                    label={text.vsBefore}
+                  />
+                </dd>
               </div>
-            )}
-            {productsEnabled && data && total > 0 && (
-              <div className="grid gap-2 md:col-span-2">
+            ))}
+          </dl>
+
+          {data.series.length > 1 && (
+            <Panel title={text.chart}>
+              <Chart
+                key={`${range.from}:${range.to}:${groupBy}`}
+                series={data.series}
+                money={money}
+                label={periodLabel}
+                tick={tick}
+                text={text}
+              />
+            </Panel>
+          )}
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            {productsEnabled && (
+              <Panel title={text.split}>
                 <div
                   className="flex h-2.5 overflow-hidden rounded-full bg-line"
                   role="img"
                   aria-label={`${text.services} ${money(data.servicesMinor)} · ${text.products} ${money(data.productsMinor)}`}
                 >
                   <span
-                    className="bg-accent"
-                    style={{ width: `${servicesShare}%` }}
+                    className="bg-money-in"
+                    style={{ width: `${shareOf(data.servicesMinor, income)}%` }}
                   />
                   <span
-                    className="bg-accent/40"
-                    style={{ width: `${100 - servicesShare}%` }}
+                    className="bg-money-in/40"
+                    style={{ width: `${shareOf(data.productsMinor, income)}%` }}
                   />
                 </div>
                 <p className="flex flex-wrap justify-between gap-2 text-sm">
                   <span className="inline-flex items-center gap-1.5">
                     <span
                       aria-hidden="true"
-                      className="size-2.5 rounded-full bg-accent"
+                      className="size-2.5 rounded-full bg-money-in"
                     />
                     {text.services} ·{" "}
                     <strong className="tabular-nums">
@@ -298,7 +478,7 @@ export function Revenue({
                   <span className="inline-flex items-center gap-1.5">
                     <span
                       aria-hidden="true"
-                      className="size-2.5 rounded-full bg-accent/40"
+                      className="size-2.5 rounded-full bg-money-in/40"
                     />
                     {text.products} ·{" "}
                     <strong className="tabular-nums">
@@ -306,114 +486,153 @@ export function Revenue({
                     </strong>
                   </span>
                 </p>
-              </div>
+              </Panel>
             )}
-          </section>
-
-          <dl className="grid gap-3 sm:grid-cols-3">
-            <Kpi
-              icon={Scissors}
-              label={text.cuts}
-              value={data ? String(data.cuts) : "…"}
-              change={data && past ? changeOf(data.cuts, past.cuts) : null}
-              vs={text.vsBefore}
-            />
-            <Kpi
-              icon={Receipt}
-              label={text.average}
-              value={data?.cuts ? money(average) : "—"}
-              change={
-                data?.cuts && pastAverage
-                  ? changeOf(average, pastAverage)
-                  : null
-              }
-              vs={text.vsBefore}
-            />
-            <Kpi
-              icon={HandCoins}
-              label={text.commission}
-              value={data ? money(data.commissionMinor) : "…"}
-              change={
-                data && past
-                  ? changeOf(data.commissionMinor, past.commissionMinor)
-                  : null
-              }
-              detail={
-                data && total > 0 && data.commissionMinor > 0
-                  ? text.ofTotal.replace(
-                      "{n}",
-                      String(Math.round((data.commissionMinor / total) * 100)),
-                    )
-                  : undefined
-              }
-              vs={text.vsBefore}
-            />
-          </dl>
-
-          {data && total === 0 ? (
-            <p className="text-fg-muted">{text.nothing}</p>
-          ) : (
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
-              <section className="grid content-start gap-3 rounded-[1.75rem] border border-line bg-card p-5">
-                <h2 className="text-lg font-medium">{text.howCollected}</h2>
-                <ul className="grid gap-3">
-                  {ways.map((w) => {
-                    const Icon = METHOD_ICON[w.key] ?? CircleHelp;
-                    const warn = w.key === "unrecorded";
-                    return (
-                      <li key={w.key} className="grid gap-1.5 text-sm">
-                        <p className="flex items-center justify-between gap-2">
-                          <span
-                            className={`inline-flex items-center gap-2 ${warn ? "text-danger" : ""}`}
-                          >
-                            <Icon size={16} aria-hidden="true" />
-                            {wayLabel(w.key)}
+            <Panel title={text.byMethod}>
+              <ul className="grid gap-3 text-sm">
+                {COUNTER_METHODS.map((method) => {
+                  const m = data.byMethod[method];
+                  return (
+                    <li key={method} className="grid gap-1.5">
+                      <p className="flex items-center justify-between gap-2">
+                        <span>{t.methods[method]}</span>
+                        <span className="flex gap-3 tabular-nums">
+                          <span className="text-money-in">
+                            {signed("in", money(m?.inMinor ?? 0))}
                           </span>
-                          <span className="tabular-nums">
-                            <strong>{money(w.minor)}</strong>
-                            <span className="ml-2 text-fg-muted">
-                              {w.share} %
-                            </span>
+                          <span className="text-money-out">
+                            {signed("out", money(m?.outMinor ?? 0))}
                           </span>
-                        </p>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-line">
-                          <div
-                            className={`h-full rounded-full ${warn ? "bg-danger" : "bg-accent"}`}
-                            style={{ width: `${w.share}%` }}
-                          />
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-              {data && data.days.length > 1 && (
-                <section className="grid content-start gap-3 rounded-[1.75rem] border border-line bg-card p-5">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h2 className="text-lg font-medium">{text.byDay}</h2>
-                    {best && (
-                      <p className="inline-flex items-center gap-1.5 text-sm text-accent-text">
-                        <Trophy size={14} aria-hidden="true" />
-                        {text.bestDay
-                          .replace("{day}", label(best.date))
-                          .replace("{amount}", money(best.totalMinor))}
+                        </span>
                       </p>
-                    )}
-                  </div>
-                  <Bars
-                    key={`${from}:${to}`}
-                    days={data.days}
-                    money={money}
-                    label={label}
-                    locale={locale}
-                    best={best}
-                  />
-                </section>
-              )}
-            </div>
-          )}
+                      <div className="h-1.5 overflow-hidden rounded-full bg-line">
+                        <div
+                          className="h-full rounded-full bg-money-in"
+                          style={{
+                            width: `${shareOf(m?.inMinor ?? 0, data.inMinor)}%`,
+                          }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Panel>
+          </div>
         </div>
       )}
+      <Panel
+        title={text.movements}
+        action={
+          <button
+            type="button"
+            onClick={() => void exportCsv()}
+            disabled={exporting || !list?.total}
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-sm font-medium disabled:opacity-50"
+          >
+            <Download size={16} aria-hidden="true" />
+            {exporting ? text.exporting : text.export}
+          </button>
+        }
+      >
+        <fieldset className="flex flex-wrap gap-2">
+          <legend className="sr-only">{text.movements}</legend>
+          {(Object.keys(FILTERS) as Filter[]).map((f) => (
+            <label key={f} className={pill}>
+              <input
+                type="radio"
+                name="filter"
+                className="sr-only"
+                checked={filter === f}
+                onChange={() => {
+                  setFilter(f);
+                  setPage(1);
+                }}
+              />
+              {text.filters[f]}
+            </label>
+          ))}
+        </fieldset>
+        {movements.isError ? (
+          <p role="alert" className="text-sm text-danger">
+            {text.failed}
+          </p>
+        ) : !list ? (
+          <p className="text-fg-muted">{t.common.loading}</p>
+        ) : list.rows.length === 0 ? (
+          <p className="py-6 text-center text-fg-muted">{text.none}</p>
+        ) : (
+          <>
+            <ul
+              className={`grid gap-2 text-sm transition-opacity ${movements.isFetching && movements.isPlaceholderData ? "opacity-60" : ""}`}
+            >
+              {list.rows.map((r) => (
+                <li
+                  key={r.id}
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-0.5 rounded-2xl border border-line bg-surface px-3 py-2.5 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:px-4"
+                >
+                  <time
+                    dateTime={r.at}
+                    className="col-span-2 text-xs text-fg-muted tabular-nums sm:col-span-1 sm:text-sm"
+                  >
+                    {stamp(r, {
+                      day: "numeric",
+                      month: "short",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </time>
+                  <span className="grid min-w-0 gap-0.5">
+                    <span className="truncate font-medium">
+                      {r.concept || t.cash.types[r.type]}
+                    </span>
+                    <span className="truncate text-fg-muted">
+                      {[
+                        t.cash.types[r.type],
+                        r.customer,
+                        r.method && t.methods[r.method],
+                        r.reference,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  </span>
+                  <span
+                    className={`font-semibold tabular-nums ${TONE_TEXT[toneOf(r)]}`}
+                  >
+                    {signed(r.direction, money(r.amountMinor))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {pages > 1 && (
+              <nav className="flex items-center justify-between gap-3 text-sm">
+                <button
+                  type="button"
+                  onClick={() => setPage(page - 1)}
+                  disabled={page <= 1}
+                  className="h-10 rounded-full border border-line-strong px-4 disabled:opacity-50"
+                >
+                  {text.prevPage}
+                </button>
+                <span className="text-fg-muted">
+                  {text.pageOf
+                    .replace("{page}", String(page))
+                    .replace("{pages}", String(pages))}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPage(page + 1)}
+                  disabled={page >= pages}
+                  className="h-10 rounded-full border border-line-strong px-4 disabled:opacity-50"
+                >
+                  {text.nextPage}
+                </button>
+              </nav>
+            )}
+          </>
+        )}
+      </Panel>
     </div>
   );
 }

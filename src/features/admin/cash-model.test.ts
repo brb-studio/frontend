@@ -1,32 +1,18 @@
 import { expect, test } from "bun:test";
-import { byCollected, shareOf, totalOf } from "./cash-model";
+import { shiftDay, signed, toneOf } from "./cash-model";
 
-const row = (id: string, cash: number, card: number, transfer: number) => ({
-  id,
-  cashMinor: cash,
-  cardMinor: card,
-  transferMinor: transfer,
+test("moving between days crosses months and years", () => {
+  expect(shiftDay("2026-11-30", 1)).toBe("2026-12-01");
+  expect(shiftDay("2026-01-01", -1)).toBe("2025-12-31");
 });
 
-test("a person's total adds every method", () => {
-  expect(totalOf(row("a", 100, 250, 50))).toBe(400);
+test("adjustments get their own tone; the rest follow the direction", () => {
+  expect(toneOf({ direction: "in", type: "service_payment" })).toBe("in");
+  expect(toneOf({ direction: "out", type: "refund" })).toBe("out");
+  expect(toneOf({ direction: "out", type: "adjustment" })).toBe("adjust");
 });
 
-test("whoever collected most comes first; ties keep their order", () => {
-  const ranked = byCollected([
-    row("ana", 100, 0, 0),
-    row("beto", 0, 500, 0),
-    row("caro", 50, 50, 0),
-  ]);
-  expect(ranked.map((p) => [p.id, p.totalMinor])).toEqual([
-    ["beto", 500],
-    ["ana", 100],
-    ["caro", 100],
-  ]);
-});
-
-test("share of the day, safe on an empty day", () => {
-  expect(shareOf(250, 1000)).toBe(25);
-  expect(shareOf(1, 3)).toBe(33);
-  expect(shareOf(0, 0)).toBe(0);
+test("money out carries a real minus sign", () => {
+  expect(signed("in", "$250.00")).toBe("+$250.00");
+  expect(signed("out", "$600.00")).toBe("−$600.00");
 });
