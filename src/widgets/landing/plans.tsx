@@ -132,7 +132,8 @@ export function Platforms({
     <Section
       id="plataformas"
       labelledBy="platforms-title"
-      tone="paper"
+      tone="photo"
+      photo="/images/sample/bg-industrial.jpg"
       className="lp-platforms"
     >
       <div className="lp-copy lp-plans__head">

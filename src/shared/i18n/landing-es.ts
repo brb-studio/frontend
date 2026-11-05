@@ -13,6 +13,8 @@ const landingEs: LandingDictionary = {
     nav: "Principal",
     language: "Idioma",
     footer: "Pie de página",
+    menu: "Abrir menú",
+    closeMenu: "Cerrar menú",
   },
   nav: {
     product: "Producto",
@@ -339,6 +341,24 @@ const landingEs: LandingDictionary = {
     subBoth: "Abre la de ejemplo o agenda 20 minutos con nosotros.",
     subDemo: "Agenda 20 minutos con nosotros.",
     subSample: "Abre la barbería de ejemplo y recórrela.",
+  },
+  contactForm: {
+    label: "Escríbenos",
+    title: "Cuéntanos de tu barbería",
+    name: "Tu nombre",
+    shop: "Nombre de la barbería",
+    phone: "WhatsApp o teléfono",
+    size: "¿Cuántas sillas?",
+    sizes: ["1 silla", "2 a 4 sillas", "5 o más", "Varias sucursales"],
+    message: "Mensaje (opcional)",
+    messageHint: "¿Qué te gustaría resolver primero?",
+    submit: "Enviar mensaje",
+    sending: "Enviando…",
+    sentTitle: "¡Listo, {name}!",
+    sentBody:
+      "Recibimos tu mensaje. Te escribimos por WhatsApp en menos de 24 horas.",
+    again: "Enviar otro mensaje",
+    demo: "Formulario de demostración: no envía ni guarda datos.",
   },
   footer: {
     privacy: "Aviso de privacidad",

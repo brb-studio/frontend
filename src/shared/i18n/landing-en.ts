@@ -15,6 +15,8 @@ const landingEn = {
     nav: "Main",
     language: "Language",
     footer: "Footer",
+    menu: "Open menu",
+    closeMenu: "Close menu",
   },
   nav: {
     product: "Product",
@@ -319,6 +321,24 @@ const landingEn = {
     subBoth: "Open the sample shop or book 20 minutes with us.",
     subDemo: "Book 20 minutes with us.",
     subSample: "Open the sample shop and look around.",
+  },
+  contactForm: {
+    label: "Write to us",
+    title: "Tell us about your shop",
+    name: "Your name",
+    shop: "Shop name",
+    phone: "WhatsApp or phone",
+    size: "How many chairs?",
+    sizes: ["1 chair", "2 to 4 chairs", "5 or more", "Several branches"],
+    message: "Message (optional)",
+    messageHint: "What would you like to sort out first?",
+    submit: "Send message",
+    sending: "Sending…",
+    sentTitle: "Done, {name}!",
+    sentBody:
+      "We got your message. We'll write to you on WhatsApp within 24 hours.",
+    again: "Send another message",
+    demo: "Demo form: it doesn't send or store anything.",
   },
   footer: {
     privacy: "Privacy notice",

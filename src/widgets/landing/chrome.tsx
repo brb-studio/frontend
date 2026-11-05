@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { MarketingContact } from "@/shared/api/marketing-host";
 import type { LandingDictionary } from "@/shared/i18n/landing";
 import { type Locale, localeNames, locales } from "@/shared/i18n/locales";
+import { MobileNav } from "./mobile-nav";
 import { type Cta, CtaLink } from "./parts";
 
 export function SkipLink({ t }: { t: LandingDictionary }) {
@@ -79,6 +80,7 @@ export function SiteHeader({
               {t.cta.demo}
             </CtaLink>
           )}
+          {showSections && <MobileNav nav={t.nav} a11y={t.a11y} />}
         </div>
       </div>
     </header>

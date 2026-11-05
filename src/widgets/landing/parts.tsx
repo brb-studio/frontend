@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 import {
   type MarketingContact,
@@ -41,12 +42,14 @@ export function Section({
   id,
   labelledBy,
   tone = "ink",
+  photo,
   className = "",
   children,
 }: {
   id?: string;
   labelledBy: string;
-  tone?: "ink" | "paper";
+  tone?: "ink" | "photo";
+  photo?: string;
   className?: string;
   children: ReactNode;
 }) {
@@ -56,6 +59,11 @@ export function Section({
       aria-labelledby={labelledBy}
       className={`lp-section lp-section--${tone} ${className}`}
     >
+      {photo && (
+        <div className="lp-section__photo" aria-hidden="true">
+          <Image src={photo} alt="" fill sizes="100vw" className="lp-cover" />
+        </div>
+      )}
       <div className="lp-wrap">{children}</div>
     </section>
   );

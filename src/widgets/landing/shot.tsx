@@ -33,12 +33,7 @@ export function ShotFrame({
   return (
     <figure
       className={frame}
-      style={
-        {
-          "--lp-ar": `${shot.width} / ${shot.height}`,
-          "--lp-fx": shot.focusX,
-        } as CSSProperties
-      }
+      style={{ "--lp-ar": `${shot.width} / ${shot.height}` } as CSSProperties}
     >
       {shot.device === "desktop" && (
         <span className="lp-frame__dots" aria-hidden="true">

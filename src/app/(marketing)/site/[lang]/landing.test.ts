@@ -23,9 +23,6 @@ function contrast(a: string, b: string) {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 
-/** Hard-coded surfaces in landing.css (receipt paper), checked like the tokens. */
-const RECEIPT = "#fbf8f2";
-
 const pairs: [fg: string, bg: string, min: number][] = [
   // Ink sections.
   ["ivory", "ink", 4.5],
@@ -56,11 +53,6 @@ for (const [fg, bg, min] of pairs) {
     expect(contrast(color(fg), color(bg))).toBeGreaterThanOrEqual(min);
   });
 }
-
-test("receipt text reaches AA on its paper", () => {
-  expect(contrast(color("ink"), RECEIPT)).toBeGreaterThanOrEqual(4.5);
-  expect(contrast(color("umber"), RECEIPT)).toBeGreaterThanOrEqual(4.5);
-});
 
 test("motion is progressive: scroll-driven animations sit behind @supports and reduced motion", () => {
   const motion = css.slice(

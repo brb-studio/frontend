@@ -22,8 +22,6 @@ export type Shot = {
   /** Intrinsic size used until the manifest says otherwise (a crop may differ). */
   width: number;
   height: number;
-  /** Phones zoom desktop captures; 0 = left edge, 1 = right edge of the overflow. */
-  focusX?: number;
 };
 
 const phone = (id: ShotCopyId, scheme: Scheme): Shot => ({
@@ -53,10 +51,10 @@ export const SHOTS = {
   branches: desktop("branches", "dark"),
   agenda: desktop("agenda", "dark"),
   loyalty: phone("loyalty", "dark"),
-  customers: desktop("customers", "light"),
-  counter: phone("counter", "light"),
-  cash: desktop("cash", "light"),
-  revenue: desktop("revenue", "light"),
+  customers: desktop("customers", "dark"),
+  counter: phone("counter", "dark"),
+  cash: desktop("cash", "dark"),
+  revenue: desktop("revenue", "dark"),
   settings: desktop("settings", "dark"),
   "app-home": phone("app-home", "dark"),
   "app-staff": phone("app-staff", "dark"),

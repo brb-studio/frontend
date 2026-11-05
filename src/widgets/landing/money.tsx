@@ -57,7 +57,7 @@ export function Loyalty({
   );
 }
 
-/** S6 · closing the day: cash desk and the month's revenue. The climax, on paper. */
+/** S6 · closing the day: cash desk and the month's revenue. The climax. */
 export function Ledger({
   locale,
   t,
@@ -67,7 +67,12 @@ export function Ledger({
 }) {
   const r = t.ledger.receipt;
   return (
-    <Section labelledBy="ledger-title" tone="paper" className="lp-ledger">
+    <Section
+      labelledBy="ledger-title"
+      tone="photo"
+      photo="/images/sample/bg-brick-lamps.jpg"
+      className="lp-ledger"
+    >
       <div className="lp-split">
         <div className="lp-copy lp-reveal">
           <Timecode time={t.ledger.time} label={t.ledger.label} />

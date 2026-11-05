@@ -49,7 +49,12 @@ export function Brand({ locale, t }: { locale: Locale; t: LandingDictionary }) {
 /** S8 · the rest, as a numbered index (never an icon grid). */
 export function Rest({ t }: { t: LandingDictionary }) {
   return (
-    <Section labelledBy="rest-title" tone="paper" className="lp-rest">
+    <Section
+      labelledBy="rest-title"
+      tone="photo"
+      photo="/images/sample/bg-storefront.webp"
+      className="lp-rest"
+    >
       <Headline id="rest-title" parts={t.rest.title} className="lp-reveal" />
       <ol className="lp-index">
         {t.rest.items.map((item, i) => (
